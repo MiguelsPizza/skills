@@ -16,10 +16,83 @@ Use this skill when the project needs maintainability doctrine, not just local c
 
 ## Reading order
 
-1. Start with the relevant files in [`references/`](references/).
-2. If the repo matches the house stack, read [`opinionated-stack/start-here.md`](opinionated-stack/start-here.md) first, then the specific files in [`opinionated-stack/`](opinionated-stack/).
-3. Use [`references/maintainability-equals-correctness.md`](references/maintainability-equals-correctness.md), [`references/ssot-or-die.md`](references/ssot-or-die.md), and [`references/integration-first-testing.md`](references/integration-first-testing.md) as the default backbone.
-4. Pull in narrower files only when the task actually touches that doctrine.
+Do not read the whole skill directory by default.
+
+1. Read this file first.
+2. Decide whether the task needs only portable rules or the full house stack.
+3. Load only the doctrine files relevant to the task.
+4. Treat the rest of the skill as reference material, not required context.
+
+Default portable backbone:
+
+- [`references/maintainability-equals-correctness.md`](references/maintainability-equals-correctness.md)
+- [`references/ssot-or-die.md`](references/ssot-or-die.md)
+- [`references/integration-first-testing.md`](references/integration-first-testing.md)
+
+If the repo matches the house stack, read [`opinionated-stack/start-here.md`](opinionated-stack/start-here.md) before any stack-specific files.
+
+## Task Router
+
+Use the smallest relevant set.
+
+### Cleanup, deletion, and refactor
+
+- [`references/maintainability-equals-correctness.md`](references/maintainability-equals-correctness.md)
+- [`references/clean-up-what-you-touch.md`](references/clean-up-what-you-touch.md)
+- [`references/delete-obsolete-code.md`](references/delete-obsolete-code.md)
+- [`references/no-backwards-compat-shims.md`](references/no-backwards-compat-shims.md)
+- [`references/your-pattern-will-be-copied.md`](references/your-pattern-will-be-copied.md)
+
+### Package boundaries and shared runtime code
+
+- [`references/monorepo-package-boundaries.md`](references/monorepo-package-boundaries.md)
+- [`references/treat-critical-code-like-a-library.md`](references/treat-critical-code-like-a-library.md)
+- [`references/naming-is-navigation.md`](references/naming-is-navigation.md)
+- [`references/no-re-exports.md`](references/no-re-exports.md)
+- [`references/no-barrel-exports.md`](references/no-barrel-exports.md)
+
+### API, schemas, and OpenAPI
+
+- [`references/ssot-or-die.md`](references/ssot-or-die.md)
+- [`opinionated-stack/design-openapi-for-inference.md`](opinionated-stack/design-openapi-for-inference.md)
+- [`opinionated-stack/errors-are-schema.md`](opinionated-stack/errors-are-schema.md)
+- [`opinionated-stack/document-fields-in-derived-zod-schemas.md`](opinionated-stack/document-fields-in-derived-zod-schemas.md)
+- [`opinionated-stack/use-canonical-named-types.md`](opinionated-stack/use-canonical-named-types.md)
+
+### Types, constants, and documentation
+
+- [`references/ssot-or-die.md`](references/ssot-or-die.md)
+- [`opinionated-stack/jsdoc-with-first-party-sources.md`](opinionated-stack/jsdoc-with-first-party-sources.md)
+- [`opinionated-stack/no-magic-values.md`](opinionated-stack/no-magic-values.md)
+- [`opinionated-stack/use-branded-scalar-types.md`](opinionated-stack/use-branded-scalar-types.md)
+- [`opinionated-stack/use-canonical-named-types.md`](opinionated-stack/use-canonical-named-types.md)
+
+### Testing and high-risk logic
+
+- [`references/integration-first-testing.md`](references/integration-first-testing.md)
+- [`references/treat-critical-code-like-a-library.md`](references/treat-critical-code-like-a-library.md)
+- [`references/no-type-casts.md`](references/no-type-casts.md)
+- [`references/boundaries-validate-internals-trust.md`](references/boundaries-validate-internals-trust.md)
+
+### Frontend and React state
+
+- [`opinionated-stack/do-not-synchronize-state-with-useeffect.md`](opinionated-stack/do-not-synchronize-state-with-useeffect.md)
+- [`opinionated-stack/use-the-design-system-not-ad-hoc-tailwind.md`](opinionated-stack/use-the-design-system-not-ad-hoc-tailwind.md)
+- [`opinionated-stack/test-react-apps-in-real-browsers.md`](opinionated-stack/test-react-apps-in-real-browsers.md)
+
+### Toolchain, dependencies, and database workflow
+
+- [`opinionated-stack/stack-overview.md`](opinionated-stack/stack-overview.md)
+- [`opinionated-stack/catalog-dependencies.md`](opinionated-stack/catalog-dependencies.md)
+- [`opinionated-stack/schema-migrations-are-generated.md`](opinionated-stack/schema-migrations-are-generated.md)
+- [`references/use-mature-dependencies-dont-roll-your-own.md`](references/use-mature-dependencies-dont-roll-your-own.md)
+- [`references/maintainability-tooling.md`](references/maintainability-tooling.md)
+
+### Full doctrine review or editing this skill itself
+
+- read all of [`references/`](references/)
+- read all of [`opinionated-stack/`](opinionated-stack/)
+- use the bundled verification scripts before finishing
 
 ## Audit workflow
 
