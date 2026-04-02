@@ -4,21 +4,31 @@ Opinionated rules that make AI coding agents write maintainable code instead of 
 
 ## Why this exists
 
-Claude Code's source code was recently leaked. 500,000 lines of TypeScript across thousands of files. The whole thing was vibe-coded — built iteratively with Claude Code itself as the models got smarter over time. The result was what you'd expect: dead code everywhere, hundreds of helper files (many unused or duplicated), functions commented out but still shipped, `as any` scattered throughout, and no coherent architecture holding it together.
+I was pretty strict about code quality before coding agents existed.
 
-This is the team that *makes* the model. If they can't prevent agent-driven codebase decay, nobody gets it for free.
+I was the first engineering hire at a startup that grew, and I got to see what bad code does when a codebase actually has to survive: dead abstractions, compatibility layers nobody wants to touch, duplicated types, weird helper modules, and features that become slower and riskier to change every month. Once a codebase crosses that line, recovery is expensive. Eventually tech debt hits a point where it kills velocity, and product and stakeholders notice.
 
-I've spent the last year bashing my head against coding agents, trying to get them to write code I'd actually want to maintain. The default behavior is always the same: agents optimize for "make it work right now" at the cost of everything that matters six months later. They leave dead code because removing it might break something. They add compatibility shims instead of making clean changes. They wrap everything in defensive try/catch blocks. They create abstractions for things that happen once.
+TypeScript makes this problem more visible, not less. Modern monorepos accumulate types, schemas, generated artifacts, package boundaries, and framework glue very quickly. If the structure is sloppy, the repo stops feeling like a system and starts feeling like debris.
 
-These are the opinions I've written down — 44 rules I use across my own projects to push back on those defaults. They treat maintainability as equal priority to working code. They're specific, actionable, and designed for the way agents actually fail.
+Then coding agents showed up and turned those failure modes up to 11.
+
+I've been using coding agents heavily since the beginning, and I've watched some of my own repos drift into complete disarray when I let them. AI code tends to be especially hard to salvage because you often do not have the same mental map you would have if you had written every piece yourself. The code may work, but it is frequently littered with duplicated concepts, defensive noise, dead branches, tiny files with fake ownership, and architecture that only makes sense locally in the diff that created it.
+
+That is why I do not buy the argument that code quality no longer matters in the age of AI. If anything, maintainability matters more now. Agents let you ship faster than ever, which means they also let you destroy a codebase faster than ever if you are not disciplined. The Claude Code leak was a good example of that mindset failing in public. The people closest to these tools still produced a codebase full of obvious slop, and the result has not been "coding is solved." It has been bugs, instability, and a product that still has to pay the normal cost of bad software.
+
+That is what this repo is for.
+
+These are the rules I use to push agents away from their default behavior: optimize for "works right now" and ignore what the codebase will feel like in six months. The goal here is not style purity. It is to keep a TypeScript codebase legible, changeable, and worth inheriting after hundreds of agent-written edits.
+
+I am open-sourcing this as a skill because I wanted something concrete I could reuse across projects, and because other teams are running into the same problem. If you are building with agents in a modern TypeScript repo, you need stronger defaults than the models come with out of the box.
 
 ## What's in here
 
-**`opinions/`** is an uploadable [Claude Skill](https://github.com/anthropics/agent-skills-spec) with two tiers:
+**`opinions/`** is an uploadable skill with two tiers:
 
-- **`opinions/references/`** — 30 portable rules for any strict TypeScript repo. Things like "delete obsolete code," "no defensive null checks," "boundaries validate, internals trust." These survive a stack change.
+- **`opinions/references/`** — portable rules for strict TypeScript repos. Things like "delete obsolete code," "no defensive null checks," and "boundaries validate, internals trust." These should survive a stack change.
 
-- **`opinions/opinionated-stack/`** — 14 stack-specific rules for a Vite+ / TanStack Router / Drizzle / oRPC / Cloudflare architecture. Things like "errors are schema, not strings," "test React apps in real browsers," "do not use Next.js." These assume the house stack.
+- **`opinions/opinionated-stack/`** — stack-specific rules for a Vite+ / TanStack Router / Drizzle / oRPC / Cloudflare architecture. Things like "errors are schema, not strings," "test React apps in real browsers," and "do not use Next.js." These assume the house stack.
 
 **`tooling/`** — Portable config templates for dead code detection (knip), circular dependency enforcement (dependency-cruiser), duplicate code reporting (jscpd), and custom AST rules (ast-grep). Copy them into any TypeScript repo.
 
