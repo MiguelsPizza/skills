@@ -18,11 +18,24 @@ The doctrine is opinionated on purpose. It treats maintainability as a correctne
 
 ## Install
 
+**Vercel Skills CLI**
+
+```bash
+npx skills add miguelspizza/skills --skill maintainable-typescript
+```
+
+This works with any agent that supports skills (Claude Code, Cursor, etc.). Use `--list` to see all available skills in this repo, or `--all` to install everything:
+
+```bash
+npx skills add miguelspizza/skills --list
+npx skills add miguelspizza/skills --all
+```
+
 **Claude Code plugin**
 
 ```text
-/plugin marketplace add miguelspizza/agent-opinions
-/plugin install agent-opinions@agent-opinion-skills
+/plugin marketplace add miguelspizza/skills
+/plugin install skills@miguelspizza-skills
 ```
 
 This repo ships [plugin.json](/Users/alexmnahas/personalRepos/agent-opinions/.claude-plugin/plugin.json) and [marketplace.json](/Users/alexmnahas/personalRepos/agent-opinions/.claude-plugin/marketplace.json) at the repo root, so Claude Code can install it as a plugin.

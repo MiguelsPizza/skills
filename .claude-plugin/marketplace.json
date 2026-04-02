@@ -1,5 +1,5 @@
 {
-  "name": "agent-opinion-skills",
+  "name": "miguelspizza-skills",
   "owner": {
     "name": "Alex Nahas",
     "email": "alexmnahas@gmail.com"
@@ -10,10 +10,10 @@
   },
   "plugins": [
     {
-      "name": "agent-opinions",
+      "name": "skills",
       "source": {
         "source": "github",
-        "repo": "miguelspizza/agent-opinions"
+        "repo": "miguelspizza/skills"
       }
     }
   ]

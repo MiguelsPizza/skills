@@ -11,11 +11,23 @@ Opinionated skills and tooling for making AI coding agents leave TypeScript code
 
 ## Install
 
+**Vercel Skills CLI**
+
+```bash
+npx skills add miguelspizza/skills
+```
+
+Or install just the maintainable-typescript skill:
+
+```bash
+npx skills add miguelspizza/skills --skill maintainable-typescript
+```
+
 **Claude Code plugin**
 
 ```text
-/plugin marketplace add miguelspizza/agent-opinions
-/plugin install agent-opinions@agent-opinion-skills
+/plugin marketplace add miguelspizza/skills
+/plugin install skills@miguelspizza-skills
 ```
 
 **Claude.ai standalone skill**
