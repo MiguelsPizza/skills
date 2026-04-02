@@ -4,10 +4,10 @@ Opinionated skills and tooling for making AI coding agents leave TypeScript code
 
 ## Repo Layout
 
-- [Maintainable TypeScript](/Users/alexmnahas/personalRepos/agent-opinions/skills/maintainable-typescript/README.md) is the current published skill. Its source lives in [skills/maintainable-typescript](/Users/alexmnahas/personalRepos/agent-opinions/skills/maintainable-typescript), and its uploadable archive lives at [skills/maintainable-typescript.zip](skills/maintainable-typescript.zip).
-- [tooling/README.md](/Users/alexmnahas/personalRepos/agent-opinions/tooling/README.md) documents the standalone TypeScript maintenance tooling templates.
-- [AGENTS.md](/Users/alexmnahas/personalRepos/agent-opinions/AGENTS.md) is the contributor guide for editing the Maintainable TypeScript doctrine in this repo.
-- [how-to-write-skill-guide/README.md](/Users/alexmnahas/personalRepos/agent-opinions/how-to-write-skill-guide/README.md) is the reference copy of Anthropic’s skill-building guide.
+- [Maintainable TypeScript](skills/maintainable-typescript/README.md) is the current published skill. Its source lives in [skills/maintainable-typescript](skills/maintainable-typescript), and its uploadable archive lives at [skills/maintainable-typescript.zip](skills/maintainable-typescript.zip).
+- [tooling/README.md](tooling/README.md) documents the standalone TypeScript maintenance tooling templates.
+- [AGENTS.md](AGENTS.md) is the contributor guide for editing the Maintainable TypeScript doctrine in this repo.
+- [how-to-write-skill-guide/README.md](how-to-write-skill-guide/README.md) is the reference copy of Anthropic’s skill-building guide.
 
 ## Install
 
@@ -40,4 +40,4 @@ Upload [skills/maintainable-typescript.zip](skills/maintainable-typescript.zip) 
 ./scripts/build-skill-archive.sh
 ```
 
-That regenerates [skills/maintainable-typescript.zip](skills/maintainable-typescript.zip) from [skills/maintainable-typescript](/Users/alexmnahas/personalRepos/agent-opinions/skills/maintainable-typescript).
+That regenerates [skills/maintainable-typescript.zip](skills/maintainable-typescript.zip) from [skills/maintainable-typescript](skills/maintainable-typescript).
