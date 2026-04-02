@@ -31,8 +31,10 @@ This doesn't mean refactor entire files you're passing through. It means:
 ## Example
 
 ```typescript
-import type { ReviewRunId } from '@repo/shared-types/review-run-id';
-import { REVIEW_RUN_STATUS } from '@repo/shared-types/review-run-status';
+import {
+  REVIEW_RUN_STATUS,
+  type ReviewRunId,
+} from '@repo/shared-types/review-runs/review-run';
 import { getReviewRun } from '@repo/db/review-runs/get-review-run';
 import { updateReviewRun } from '@repo/db/review-runs/update-review-run';
 

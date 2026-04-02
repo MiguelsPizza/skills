@@ -81,7 +81,7 @@ One source, everything derived.
 - React state ownership: [Do Not Synchronize State with useEffect](do-not-synchronize-state-with-useeffect.md)
 - Dependency and toolchain policy: [Catalog Dependencies](catalog-dependencies.md)
 - Error contracts: [Errors Are Schema, Not Strings](errors-are-schema.md)
-- Docs and provenance: [JSDoc with First-Party Sources](jsdoc-with-first-party-sources.md)
+- Comments, JSDoc, and provenance: [Comments and JSDoc Must Carry Information](jsdoc-with-first-party-sources.md)
 - Constants and literals: [No Magic Values](no-magic-values.md)
 - Branded domain scalars: [Use Branded Scalar Types](use-branded-scalar-types.md)
 - Observability naming: [OTEL Conventions from Day One](otel-conventions-from-day-one.md)

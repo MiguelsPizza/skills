@@ -30,11 +30,10 @@ If the answer to any of these is no, the task isn't done.
 ## Example
 
 ```typescript
-import { completeReviewRunInputSchema, REVIEW_RUN_STATUS } from '@repo/shared-types/review-runs/complete-review-run';
-import {
-  getReviewRun,
-  updateReviewRunStatus,
-} from '@repo/db/review-runs/review-run-repository';
+import { completeReviewRunInputSchema } from '@repo/shared-types/review-runs/complete-review-run';
+import { REVIEW_RUN_STATUS } from '@repo/shared-types/review-runs/review-run';
+import { getReviewRun } from '@repo/db/review-runs/get-review-run';
+import { updateReviewRunStatus } from '@repo/db/review-runs/update-review-run-status';
 import { publicProcedure } from '../orpc';
 import { emitReviewRunStatusChange } from '@/features/review-runs/emit-review-run-status-change';
 

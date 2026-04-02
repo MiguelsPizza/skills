@@ -36,7 +36,7 @@ function formatUser(user: User): string {
 Nullable type
 
 ```typescript
-import type { PendingInvite } from '@repo/shared-types/pending-invite';
+import type { PendingInvite } from '@repo/shared-types/invites/pending-invite';
 
 function formatInvite(invite: PendingInvite): string {
   return `${invite.displayName ?? invite.email} <${invite.email}>`;

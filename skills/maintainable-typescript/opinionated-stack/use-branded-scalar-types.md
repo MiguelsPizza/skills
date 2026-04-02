@@ -39,16 +39,30 @@ Use branded scalars for IDs, slugs, codes, and other primitives where accidental
 
 ## Example
 
-Shared types package
+Review run owner
 
 ```typescript
 import { z } from 'zod';
 
 export const reviewRunIdSchema = z.string().min(1).brand<'ReviewRunId'>();
 export type ReviewRunId = z.infer<typeof reviewRunIdSchema>;
+```
+
+Installation owner
+
+```typescript
+import { z } from 'zod';
 
 export const installationIdSchema = z.string().min(1).brand<'InstallationId'>();
 export type InstallationId = z.infer<typeof installationIdSchema>;
+```
+
+Procedure contract
+
+```typescript
+import { z } from 'zod';
+import { installationIdSchema } from '@repo/shared-types/installations/installation';
+import { reviewRunIdSchema } from '@repo/shared-types/review-runs/review-run';
 
 export const completeReviewRunInputSchema = z.object({
   reviewRunId: reviewRunIdSchema,

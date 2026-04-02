@@ -121,7 +121,7 @@ See [tooling/README.md](/Users/alexmnahas/personalRepos/agent-opinions/tooling/R
 - [Errors Are Schema, Not Strings](/Users/alexmnahas/personalRepos/agent-opinions/skills/maintainable-typescript/opinionated-stack/errors-are-schema.md)
 
 **Types & Schemas**
-- [JSDoc with First-Party Sources](/Users/alexmnahas/personalRepos/agent-opinions/skills/maintainable-typescript/opinionated-stack/jsdoc-with-first-party-sources.md)
+- [Comments and JSDoc Must Carry Information](/Users/alexmnahas/personalRepos/agent-opinions/skills/maintainable-typescript/opinionated-stack/jsdoc-with-first-party-sources.md)
 - [No Magic Values](/Users/alexmnahas/personalRepos/agent-opinions/skills/maintainable-typescript/opinionated-stack/no-magic-values.md)
 - [Use Branded Scalar Types](/Users/alexmnahas/personalRepos/agent-opinions/skills/maintainable-typescript/opinionated-stack/use-branded-scalar-types.md)
 - [Use Canonical Named Types, Not Inline Object Shapes](/Users/alexmnahas/personalRepos/agent-opinions/skills/maintainable-typescript/opinionated-stack/use-canonical-named-types.md)

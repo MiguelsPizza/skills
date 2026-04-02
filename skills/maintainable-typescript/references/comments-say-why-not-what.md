@@ -9,35 +9,21 @@ example:
 ---
 # Comments Say Why, Not What
 
-**Rule:** No inline `//` comments that describe what code does. If documentation is needed, use JSDoc on the export with source attribution. Code should be self-explanatory; documentation should explain *why* and link to *where*.
+**Rule:** Do not narrate code with inline comments. Put real documentation on the owning export, and only when it adds information the code does not already carry.
 
-See also: [JSDoc with First-Party Sources](../opinionated-stack/jsdoc-with-first-party-sources.md) for the full source attribution convention.
-
-## Why agents get this wrong
-
-Agents scatter `// explanation` throughout function bodies. These comments are invisible to tooling — IDEs don't show them on hover, documentation generators skip them, and they go stale when code changes. Agents also add JSDoc that restates the function signature in English, which is pure noise when TypeScript already provides the types.
+See also: [Comments and JSDoc Must Carry Information](../opinionated-stack/jsdoc-with-first-party-sources.md) for the full comment and JSDoc policy.
 
 ## What to do instead
 
-Write self-documenting code. If the code needs a "what" comment to be understood, rename the variable or extract a well-named function instead.
+Use this file as the short version:
+- code should explain what
+- comments should explain why, constraints, provenance, or guarantees
+- most line comments should be deleted
+- reusable public exports deserve better JSDoc than ordinary app code
 
-When documentation IS needed, use JSDoc on the export — not inline comments in the body. JSDoc is visible on hover, surfaced by tooling, and has a structured place for source links via `@see`.
+For the full rule, examples, and authoritative-source guidance, use the main doctrine file above.
 
 ## Example
-
-```typescript
-/**
- * GitHub REST pagination starts at page 1, but the UI pager is 0-indexed.
- *
- * @see https://docs.github.com/en/rest/using-the-rest-api/using-pagination-in-the-rest-api
- */
-export function toGitHubPageNumber(zeroIndexedPage: number): number {
-  return zeroIndexedPage + 1;
-}
-```
-
-Example implements: [Comments Say Why, Not What](comments-say-why-not-what.md), [JSDoc with First-Party Sources](../opinionated-stack/jsdoc-with-first-party-sources.md), [Naming Is Navigation](naming-is-navigation.md).
-## The only acceptable inline comment
 
 A single-line `//` is acceptable when explaining a non-obvious constraint that applies to one specific line and doesn't warrant a full JSDoc block. These should be rare.
 
@@ -46,4 +32,4 @@ const repo = await octokit.repos.get({ owner, repo });
 // GitHub returns 404 for non-members even on public repos — must fetch before checking membership
 ```
 
-If you're writing more than one line of inline comment, it belongs in JSDoc on the enclosing function.
+Example implements: [Comments Say Why, Not What](comments-say-why-not-what.md), [Comments and JSDoc Must Carry Information](../opinionated-stack/jsdoc-with-first-party-sources.md), [Naming Is Navigation](naming-is-navigation.md).

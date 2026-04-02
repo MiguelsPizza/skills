@@ -54,10 +54,9 @@ This is a startup rule. Spend custom code on product differentiation, not on reb
 ```typescript
 import pRetry from 'p-retry';
 import type { GitHubInstallation } from '@repo/github-client/installation';
-import type { InstallationId } from '@repo/shared-types/installation-id';
+import { MAX_GITHUB_FETCH_ATTEMPTS } from '@repo/github-client/github-retry-policy';
+import type { InstallationId } from '@repo/shared-types/installations/installation';
 import { githubClient } from '@/lib/github-client';
-
-const MAX_GITHUB_FETCH_ATTEMPTS = 3;
 
 export async function fetchInstallation(
   installationId: InstallationId,

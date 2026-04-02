@@ -21,13 +21,15 @@ Agents append to existing files. Need a new type? Add it to `types.ts`. New cons
 
 Split files by domain concept, not by artifact type:
 - `users/user.ts`, not `types.ts`
-- `review-run-status.ts`, not `constants.ts`
-- `webhook-signature.ts`, not `github.ts` with four unrelated responsibilities
+- `review-runs/review-run.ts`, not `review-run-id.ts` plus `review-run-status.ts`
+- `webhook-auth/verify-webhook-signature.ts`, not `github.ts` with four unrelated responsibilities
 - `github/connect-repository.ts`, not one file per request schema, response schema, and error payload
 
 Do not hide multiple concepts behind `index.ts`. If the file is only there to gather sibling exports, delete it and import from the owning module instead.
 
 For the house stack, one concept can be one domain aggregate or one feature boundary. A well-documented `users/user.ts` file may own the related schemas and inferred types for the user domain. Splitting every exported value into its own file is not the goal.
+
+An owning module is not a junk drawer. `review-runs/review-run.ts` is a good path only while it still represents one review-run concept. If it starts mixing unrelated helpers, transport-specific code, or values that only half the consumers need, split it again by concept rather than introducing generic buckets.
 
 Split when:
 - the file has two responsibilities
@@ -38,8 +40,8 @@ Split when:
 
 ```text
 users/user.ts
-review-run-status.ts
-verify-webhook-signature.ts
+review-runs/review-run.ts
+webhook-auth/verify-webhook-signature.ts
 github/connect-repository.ts
 ```
 

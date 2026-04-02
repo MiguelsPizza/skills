@@ -21,6 +21,8 @@ Agents create packages eagerly. They see shared logic and immediately extract it
 
 Keep code in the app until there is a second real consumer. When extraction is justified, make the package single-purpose, expose leaf modules through `package.json` subpath exports, and keep dependency flow one-way.
 
+Those leaf modules are ownership signals, not excuses for giant domain files. Export `./review-runs/review-run` while that file still owns one review-run concept; if the module grows multiple responsibilities, split the module and expose the new owning leaves instead.
+
 Use this boundary model:
 
 ```

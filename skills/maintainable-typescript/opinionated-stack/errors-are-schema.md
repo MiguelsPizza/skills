@@ -91,7 +91,8 @@ Shared types owner
 
 ```typescript
 import { z } from 'zod';
-import { installationIdSchema } from '@repo/shared-types/installation-id';
+
+export const installationIdSchema = z.string().min(1).brand<'InstallationId'>();
 
 /**
  * Installation contracts owned together because they describe one aggregate.

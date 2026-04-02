@@ -42,7 +42,7 @@ Slice integration test
 ```typescript
 import { createReviewRunResponseSchema } from '@repo/shared-types/review-runs/create-review-run';
 import { TEST_INSTALLATION_ID } from '@/test/test-installation-id';
-import { getReviewRun } from '@repo/db/review-runs/review-run-repository';
+import { getReviewRun } from '@repo/db/review-runs/get-review-run';
 import { createApp } from '@/routes/app';
 import { createTestDatabase } from '@/test/create-test-database';
 

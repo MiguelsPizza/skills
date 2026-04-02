@@ -46,7 +46,7 @@ This keeps naming consistent across logs now and spans later.
 
 ## Example
 
-Shared observability constants
+OTEL attribute keys
 
 ```typescript
 export const OTEL_ATTRS = {
@@ -56,7 +56,11 @@ export const OTEL_ATTRS = {
   GITHUB_INSTALLATION_ID: 'github.installation.id',
   REQUEST_DURATION_MS: 'server.request.duration_ms',
 } as const satisfies Record<string, string>;
+```
 
+Log event names
+
+```typescript
 export const LOG_EVENTS = {
   GITHUB_PULL_REQUEST_CREATED: 'github.pull_request.created',
 } as const satisfies Record<string, string>;
@@ -66,7 +70,8 @@ Boundary log
 
 ```typescript
 import { GITHUB_ENDPOINTS } from '@repo/github-client/endpoints';
-import { LOG_EVENTS, OTEL_ATTRS } from '@repo/shared-types/observability';
+import { LOG_EVENTS } from '@repo/shared-types/observability/log-events';
+import { OTEL_ATTRS } from '@repo/shared-types/observability/otel-attrs';
 
 const CREATE_PULL_REQUEST_STATUS_CODE = 201;
 

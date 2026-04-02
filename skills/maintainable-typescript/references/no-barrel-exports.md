@@ -23,6 +23,8 @@ Barrels hide where code lives, so humans and agents have to open more files to f
 
 Keep one concept per file and let the file own its export.
 
+The point is direct ownership, not "one forever-file per domain noun." If `review-runs/review-run.ts` stops being one concept, split it into better owning modules. Do not solve that problem with an `index.ts`.
+
 If a package needs public entrypoints, use `package.json` subpath exports so consumers import the exact module they need:
 
 ```json

@@ -11,7 +11,7 @@ example:
 
 **Rule:** For domain concepts, do not write inline object parameter types. Import the canonical named type or infer it from the source of truth.
 
-See also: [SSOT or Die](../references/ssot-or-die.md), [JSDoc with First-Party Sources](jsdoc-with-first-party-sources.md), and [Use Branded Scalar Types](use-branded-scalar-types.md).
+See also: [SSOT or Die](../references/ssot-or-die.md), [Comments and JSDoc Must Carry Information](jsdoc-with-first-party-sources.md), and [Use Branded Scalar Types](use-branded-scalar-types.md).
 
 ## Why agents get this wrong
 
@@ -36,11 +36,12 @@ Shared types package
 
 ```typescript
 import { z } from 'zod';
-import { installationIdSchema } from '@repo/shared-types/installation-id';
 
 /**
  * Installation domain contracts live together because they describe one aggregate.
  */
+export const installationIdSchema = z.string().min(1).brand<'InstallationId'>();
+
 export const installationSchema = z.object({
   installationId: installationIdSchema,
   repositoryName: z.string().min(1),

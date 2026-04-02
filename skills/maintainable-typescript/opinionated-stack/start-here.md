@@ -25,7 +25,7 @@ If the repo only needs portable maintainability rules, stay in [`../references/`
 - [`do-not-synchronize-state-with-useeffect.md`](do-not-synchronize-state-with-useeffect.md) for React state ownership
 - [`catalog-dependencies.md`](catalog-dependencies.md) for catalog and `vp` workflow
 - [`errors-are-schema.md`](errors-are-schema.md) for API error doctrine
-- [`jsdoc-with-first-party-sources.md`](jsdoc-with-first-party-sources.md) for docs, constants, and type provenance
+- [`jsdoc-with-first-party-sources.md`](jsdoc-with-first-party-sources.md) for comment policy, targeted JSDoc, and provenance
 - [`no-magic-values.md`](no-magic-values.md) for constant ownership
 - [`use-branded-scalar-types.md`](use-branded-scalar-types.md) for branded IDs and non-interchangeable scalars
 - [`use-canonical-named-types.md`](use-canonical-named-types.md) for domain type ownership

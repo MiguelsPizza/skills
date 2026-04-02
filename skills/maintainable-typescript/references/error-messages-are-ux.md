@@ -67,7 +67,7 @@ export const connectRepository = publicProcedure
 ```typescript
 import { OpenAPIHandler } from '@orpc/openapi/fetch';
 import { onError } from '@orpc/server';
-import { LOG_EVENTS } from '@repo/shared-types/observability';
+import { LOG_EVENTS } from '@repo/shared-types/observability/log-events';
 import { logger } from '@/observability/logger';
 import { appRouter } from '@/worker/orpc/router';
 

@@ -23,6 +23,8 @@ In internal monorepos this is usually needless. You control the code. Search for
 
 Import from the owning module directly.
 
+That path is a statement of ownership, not a promise that the owner will never split. If the owning module becomes too broad, rename imports to the new leaves in the same change instead of adding forwarding exports.
+
 If a package needs stable public entrypoints, define them in `package.json` subpath exports and point each subpath at the real file:
 
 ```json
