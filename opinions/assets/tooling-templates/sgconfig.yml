@@ -1,0 +1,4 @@
+ruleDirs:
+  - ast-grep
+
+testConfigs: []

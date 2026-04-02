@@ -1,0 +1,6 @@
+id: no-as-any
+language: TypeScript
+severity: warning
+message: Avoid `as any`. Fix the type at the source instead of erasing the contract.
+rule:
+  pattern: $EXPR as any
