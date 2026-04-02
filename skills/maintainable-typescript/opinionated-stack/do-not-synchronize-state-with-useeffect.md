@@ -55,22 +55,6 @@ For normal feature components, `useEffect` is effectively banned. React's own do
 There are narrow exceptions, but if you feel you need one, there is almost always an existing structural issue. Try to fix that first. Even then, keep the effect near the subtree that needs it. Do not place effectful providers at the top of the app unless the whole app truly depends on that external system.
 
 ## Example
-
-Search contract
-
-```typescript
-import { z } from "zod";
-
-export const userTabValues = ["all", "active"] as const;
-
-export const usersSearchSchema = z.object({
-  tab: z.enum(userTabValues).default("all").catch("all"),
-  query: z.string().trim().default("").catch(""),
-});
-```
-
-Route
-
 ```typescript
 import { useQuery } from "@tanstack/react-query";
 import { createFileRoute } from "@tanstack/react-router";

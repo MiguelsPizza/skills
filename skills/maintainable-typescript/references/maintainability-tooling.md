@@ -2,14 +2,14 @@
 
 Use these tools when the task is not just "make it work", but "leave the TypeScript repo easier to change next week."
 
-## When to run the scripts
+## When to run the bundled scripts
 
 - `scripts/audit-typescript-dead-code.sh` for unused exports, files, dependencies, and obvious type/lint drift
 - `scripts/audit-typescript-duplicate-code.sh` for copy-paste growth and repeated implementation blocks
 - `scripts/audit-typescript-architecture.sh` for circular imports, package-boundary violations, and custom AST rules
 - `scripts/audit-typescript-repo.sh` for a combined first pass
 
-These scripts target the project you are currently working in. They are not specific to this skill repo.
+These scripts are bundled with this skill and target the project you are currently working in. Resolve them from the skill root before running them.
 
 If the target repo uses Vite+, prefer its `vp` workflow for linting and validation. Do not install wrapped tools like Vitest, Oxfmt, Oxlint, or tsdown separately just to reach their binaries.
 

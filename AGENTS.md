@@ -1,6 +1,6 @@
 # Agent Opinions — Contributor Guide
 
-This repo is a collection of opinionated, narrow, focused rules for AI coding agents working in TypeScript monorepos. Each opinion is a standalone markdown file in `opinions/references/` or `opinions/opinionated-stack/`.
+This repo currently centers on one published skill: `Maintainable TypeScript`. Each opinion is a standalone markdown file in `skills/maintainable-typescript/references/` or `skills/maintainable-typescript/opinionated-stack/`.
 
 ## Goal
 
@@ -33,7 +33,7 @@ Code showing the bad pattern and the good pattern.
 
 Keep portable opinions under 100 lines. If it needs more, it's two opinions.
 
-Exception: `opinions/opinionated-stack/` files may exceed 100 lines when the doctrine is intentionally stack-specific and decision-complete. Do not use that exception for `opinions/references/`.
+Exception: `skills/maintainable-typescript/opinionated-stack/` files may exceed 100 lines when the doctrine is intentionally stack-specific and decision-complete. Do not use that exception for `skills/maintainable-typescript/references/`.
 
 ## Example metadata
 
@@ -59,8 +59,8 @@ Rules:
 
 ## Placement rules
 
-- Put a file in `opinions/references/` if the rule survives a stack change
-- Put a file in `opinions/opinionated-stack/` if the rule depends on the chosen architecture, docs policy, toolchain, or design system
+- Put a file in `skills/maintainable-typescript/references/` if the rule survives a stack change
+- Put a file in `skills/maintainable-typescript/opinionated-stack/` if the rule depends on the chosen architecture, docs policy, toolchain, or design system
 - Keep titles and filenames imperative
 - Avoid soft verbs like `prefer`
 
@@ -119,7 +119,7 @@ Key files to reference:
 | Data model docs | `/Users/alexmnahas/personalRepos/WebMCP-org/char-ai-saas/docs/codebase/data-model.md` |
 | System overview | `/Users/alexmnahas/personalRepos/WebMCP-org/char-ai-saas/docs/codebase/system-overview.md` |
 
-**Note on char's error pattern:** Char uses a three-layer error system (Effect classes → Zod schemas → ORPCError) with a conversion mapping. This works but has unnecessary ceremony. The opinion in `opinions/opinionated-stack/errors-are-schema.md` recommends a simpler approach: define Zod error schemas once, use them directly in procedure error contracts, and skip the domain error classes and conversion layer. Reference char's `error-schemas.ts` for the Zod schema + composable error set pattern (that part is good), but don't copy the Effect error classes or the `toORPCError` mapping.
+**Note on char's error pattern:** Char uses a three-layer error system (Effect classes → Zod schemas → ORPCError) with a conversion mapping. This works but has unnecessary ceremony. The opinion in `skills/maintainable-typescript/opinionated-stack/errors-are-schema.md` recommends a simpler approach: define Zod error schemas once, use them directly in procedure error contracts, and skip the domain error classes and conversion layer. Reference char's `error-schemas.ts` for the Zod schema + composable error set pattern (that part is good), but don't copy the Effect error classes or the `toORPCError` mapping.
 
 ### npm-packages — Testing Patterns
 **Path:** `/Users/alexmnahas/personalRepos/WebMCP-org/npm-packages`

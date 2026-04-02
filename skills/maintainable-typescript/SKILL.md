@@ -1,10 +1,9 @@
 ---
-name: opinions
-description: Maintainability-first doctrine for strict TypeScript repos and monorepos. Use when the user asks to clean up a TypeScript repo, remove dead code, review a PR for maintainability, refactor a monorepo, or set up dead-code, duplication, and boundary audits.
-compatibility: Best in environments with shell access and Bash. Bundled scripts target TypeScript repos and prefer Vite+ (`vp`) when available.
+name: maintainable-typescript
+description: Guides maintainability-first cleanup, refactoring, and review in strict TypeScript repos and monorepos. Use when improving code health, deleting dead code, reducing duplication, or enforcing boundaries.
 ---
 
-# Maintainable TypeScript Opinions
+# Maintainable TypeScript
 
 Use this skill when the project needs maintainability doctrine, not just local code changes.
 
@@ -24,10 +23,11 @@ Use this skill when the project needs maintainability doctrine, not just local c
 
 ## Audit workflow
 
-When the task is cleanup or review, run:
+When the task is cleanup or review, resolve the skill directory first and then run:
 
 ```bash
-bash scripts/audit-typescript-repo.sh .
+skill_dir="<path-to-this-skill>"
+bash "$skill_dir/scripts/audit-typescript-repo.sh" .
 ```
 
 Treat audit output as signal, not authority. Check real usage before deleting API surface or collapsing a pattern.

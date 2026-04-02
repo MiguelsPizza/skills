@@ -1,0 +1,20 @@
+{
+  "name": "agent-opinion-skills",
+  "owner": {
+    "name": "Alex Nahas",
+    "email": "alexmnahas@gmail.com"
+  },
+  "metadata": {
+    "description": "Maintainability-first skills and plugin distribution for strict TypeScript repos.",
+    "version": "1.0.0"
+  },
+  "plugins": [
+    {
+      "name": "agent-opinions",
+      "source": {
+        "source": "github",
+        "repo": "miguelspizza/agent-opinions"
+      }
+    }
+  ]
+}

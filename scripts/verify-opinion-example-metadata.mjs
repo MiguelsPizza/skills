@@ -4,7 +4,10 @@ import { readdir, readFile } from 'node:fs/promises';
 import path from 'node:path';
 
 const ROOT = process.cwd();
-const OPINION_DIRS = ['opinions/references', 'opinions/opinionated-stack'];
+const OPINION_DIRS = [
+  'skills/maintainable-typescript/references',
+  'skills/maintainable-typescript/opinionated-stack',
+];
 const ALLOWED_FORMATS = new Set(['code', 'text', 'workflow']);
 const FRONT_MATTER_START = '---\n';
 const MARKDOWN_LINK = /\[([^\]]+)\]\(([^)]+)\)/g;

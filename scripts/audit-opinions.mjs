@@ -4,16 +4,20 @@ import { readdir, readFile } from 'node:fs/promises';
 import path from 'node:path';
 
 const ROOT = process.cwd();
-const OPINION_DIRS = ['opinions/references', 'opinions/opinionated-stack'];
+const OPINION_ROOT = 'skills/maintainable-typescript';
+const OPINION_DIRS = [
+  `${OPINION_ROOT}/references`,
+  `${OPINION_ROOT}/opinionated-stack`,
+];
 const REQUIRED_H2 = [
   'Why agents get this wrong',
   'What to do instead',
   'Example',
 ];
 const IGNORED_FILES = new Set([
-  'opinions/references/maintainability-tooling.md',
-  'opinions/opinionated-stack/start-here.md',
-  'opinions/opinionated-stack/stack-overview.md',
+  `${OPINION_ROOT}/references/maintainability-tooling.md`,
+  `${OPINION_ROOT}/opinionated-stack/start-here.md`,
+  `${OPINION_ROOT}/opinionated-stack/stack-overview.md`,
 ]);
 
 async function listMarkdownFiles(dir) {
@@ -88,8 +92,8 @@ function validateOpinion(filePath, text) {
   const headings = getHeadings(content);
   const relativePath = formatRelative(filePath);
   const isPortableOpinion =
-    relativePath.startsWith('opinions/references/')
-    && !relativePath.endsWith('opinions/references/maintainability-tooling.md');
+    relativePath.startsWith(`${OPINION_ROOT}/references/`)
+    && !relativePath.endsWith(`${OPINION_ROOT}/references/maintainability-tooling.md`);
 
   if (nonEmptyLines[0]?.startsWith('# ') !== true) {
     issues.push('missing top-level title as the first non-empty line');
