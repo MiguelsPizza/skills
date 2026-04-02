@@ -1,0 +1,23 @@
+{
+  "threshold": 2,
+  "reporters": [
+    "consoleFull",
+    "html"
+  ],
+  "output": ".reports/jscpd",
+  "ignore": [
+    "**/dist/**",
+    "**/coverage/**",
+    "**/.turbo/**",
+    "**/*.d.ts",
+    "**/*.generated.*",
+    "**/pnpm-lock.yaml"
+  ],
+  "formats": [
+    "typescript",
+    "tsx",
+    "javascript",
+    "jsx"
+  ],
+  "minTokens": 80
+}

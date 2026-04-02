@@ -1,0 +1,6 @@
+id: no-ts-ignore
+language: TypeScript
+severity: warning
+message: Avoid `@ts-ignore`. Fix the type error or replace with a narrowly justified alternative.
+rule:
+  regex: '@ts-ignore'

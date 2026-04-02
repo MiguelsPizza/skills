@@ -1,0 +1,25 @@
+{
+  "$schema": "https://unpkg.com/knip@latest/schema.json",
+  "entry": [
+    "apps/*/src/**/*.{ts,tsx}",
+    "packages/*/src/**/*.{ts,tsx}",
+    "src/**/*.{ts,tsx}",
+    "scripts/**/*.{ts,mts,cts}"
+  ],
+  "project": [
+    "apps/*/**/*.{ts,tsx,js,mjs,cjs}",
+    "packages/*/**/*.{ts,tsx,js,mjs,cjs}",
+    "src/**/*.{ts,tsx,js,mjs,cjs}",
+    "scripts/**/*.{ts,mts,cts,js,mjs,cjs}"
+  ],
+  "ignore": [
+    "dist/**",
+    "coverage/**",
+    ".turbo/**"
+  ],
+  "ignoreBinaries": [
+    "vite",
+    "vitest",
+    "wrangler"
+  ]
+}
