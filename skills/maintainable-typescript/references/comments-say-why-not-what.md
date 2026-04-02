@@ -13,6 +13,10 @@ example:
 
 See also: [Comments and JSDoc Must Carry Information](../opinionated-stack/jsdoc-with-first-party-sources.md) for the full comment and JSDoc policy.
 
+## Why agents get this wrong
+
+Agents narrate code by default. They add `// fetch the user` above a `fetchUser()` call, `// check if valid` above an `isValid` branch, and `// return the result` above a return statement. Every line gets a caption that restates what the code already says. The result is twice the reading with zero additional understanding, and the comments rot the moment the code changes.
+
 ## What to do instead
 
 Use this file as the short version:

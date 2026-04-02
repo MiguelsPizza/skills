@@ -20,15 +20,7 @@ Agents treat important code the same way they treat leaf feature code. They leav
 
 That is exactly backwards for code where mistakes are expensive.
 
-Critical runtime code is the code most likely to:
-
-- create security vulnerabilities
-- corrupt access control
-- break protocol compatibility
-- produce subtle production incidents
-- get copied into more call sites over time
-
-If that code is sloppy, under-tested, or hard to navigate, the whole repo inherits the risk.
+Critical runtime code creates security vulnerabilities, corrupts access control, breaks protocol compatibility, and produces subtle production incidents. If that code is sloppy, under-tested, or hard to navigate, the whole repo inherits the risk.
 
 ## What to do instead
 
@@ -44,11 +36,9 @@ That means:
 
 This is where test-driven development makes the most sense. For security, auth, token handling, protocol validation, and high-risk business rules, TDD is not ceremony. It is a way to lock the contract before implementation details sprawl.
 
-Do not read this as "everything important must become a package." A one-off app feature can stay in the app. The point is that foundational code with multiple consumers or system-wide risk should look like a maintained library, not incidental app glue.
+Do not read this as "everything important must become a package." A one-off app feature can stay in the app. Foundational code with multiple consumers or system-wide risk should look like a maintained library, not incidental app glue.
 
 ## Example
-
-Directory layout
 
 ```text
 packages/auth/
@@ -107,12 +97,4 @@ Example implements: [Treat Critical Code Like a Library](treat-critical-code-lik
 
 ## The test
 
-Ask:
-
-- If this code failed in production, would it be a serious incident?
-- Does this code have multiple consumers or system-wide effect?
-- Is the public surface explicit enough that another developer or agent can use it without spelunking internals?
-- Does the test suite cover adversarial and edge-case behavior, not just the happy path?
-- Would I be comfortable publishing this module internally as the canonical implementation?
-
-If the answer to those questions is yes, treat it like a library. If not, the boundary and test discipline are probably too weak.
+Ask: would a production failure in this code be a serious incident? Does it have multiple consumers or system-wide effect? Is the public surface explicit enough to use without spelunking internals? Does the test suite cover adversarial and edge-case behavior? If yes, treat it like a library. If not, the boundary and test discipline are too weak.
