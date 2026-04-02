@@ -4,8 +4,7 @@ import { readdir, readFile, stat } from 'node:fs/promises';
 import path from 'node:path';
 
 const ROOT = process.cwd();
-const MARKDOWN_LINK = /\[([^\]]+)\]\(([^)]+)\)/g;
-const IGNORED_PREFIXES = ['how-to-write-skill-guide/'];
+const MARKDOWN_LINK = /(?<!!)\[([^\]]+)\]\(([^)]+)\)/g;
 
 async function listMarkdownFiles(dir) {
   const entries = await readdir(dir, { withFileTypes: true });
@@ -34,23 +33,42 @@ function slugify(heading) {
     .replace(/\s+/g, '-');
 }
 
-function extractHeadingSlugs(markdown) {
-  const slugs = new Set();
+function formatRelative(filePath) {
+  return path.relative(ROOT, filePath);
+}
+
+function isFenceDelimiter(line) {
+  return /^(```|~~~)/.test(line.trim());
+}
+
+function getContentLines(markdown) {
+  const lines = [];
   let inCodeFence = false;
 
-  for (const line of markdown.split('\n')) {
-    const trimmed = line.trim();
+  for (const [index, rawLine] of markdown.split('\n').entries()) {
+    const line = rawLine.trim();
 
-    if (trimmed.startsWith('```')) {
+    if (isFenceDelimiter(line)) {
       inCodeFence = !inCodeFence;
       continue;
     }
 
-    if (inCodeFence) {
-      continue;
+    if (!inCodeFence) {
+      lines.push({
+        lineNumber: index + 1,
+        text: rawLine,
+      });
     }
+  }
 
-    const match = /^(#{1,6})\s+(.+)$/.exec(trimmed);
+  return lines;
+}
+
+function extractHeadingSlugs(markdown) {
+  const slugs = new Set();
+
+  for (const { text } of getContentLines(markdown)) {
+    const match = /^(#{1,6})\s+(.+)$/.exec(text.trim());
     if (!match) {
       continue;
     }
@@ -61,8 +79,37 @@ function extractHeadingSlugs(markdown) {
   return slugs;
 }
 
+function* iterateMarkdownLinks(markdown) {
+  for (const { lineNumber, text } of getContentLines(markdown)) {
+    MARKDOWN_LINK.lastIndex = 0;
+
+    for (const match of text.matchAll(MARKDOWN_LINK)) {
+      yield {
+        lineNumber,
+        target: match[2].trim(),
+      };
+    }
+  }
+}
+
 function isExternalLink(target) {
-  return /^(https?:|mailto:|tel:)/.test(target);
+  return /^(https?:|mailto:|tel:|\/\/)/.test(target);
+}
+
+function isAbsoluteFilesystemPath(target) {
+  return (
+    target.startsWith('/')
+    || /^[A-Za-z]:[\\/]/.test(target)
+    || target.startsWith('file:')
+  );
+}
+
+function decodePathTarget(target) {
+  try {
+    return decodeURIComponent(target);
+  } catch {
+    return target;
+  }
 }
 
 async function exists(targetPath) {
@@ -74,13 +121,8 @@ async function exists(targetPath) {
   }
 }
 
-function formatRelative(filePath) {
-  return path.relative(ROOT, filePath);
-}
-
-function shouldIgnore(filePath) {
-  const relativePath = formatRelative(filePath);
-  return IGNORED_PREFIXES.some((prefix) => relativePath.startsWith(prefix));
+function formatFailure(filePath, lineNumber, message) {
+  return `${formatRelative(filePath)}:${lineNumber} -> ${message}`;
 }
 
 async function main() {
@@ -89,10 +131,6 @@ async function main() {
   const failures = [];
 
   for (const filePath of files) {
-    if (shouldIgnore(filePath)) {
-      continue;
-    }
-
     const markdown = await readFile(filePath, 'utf8');
     markdownCache.set(filePath, {
       markdown,
@@ -101,15 +139,21 @@ async function main() {
   }
 
   for (const filePath of files) {
-    if (shouldIgnore(filePath)) {
-      continue;
-    }
-
     const { markdown, slugs: currentSlugs } = markdownCache.get(filePath);
 
-    for (const match of markdown.matchAll(MARKDOWN_LINK)) {
-      const target = match[2].trim();
+    for (const { lineNumber, target } of iterateMarkdownLinks(markdown)) {
       if (!target || isExternalLink(target)) {
+        continue;
+      }
+
+      if (isAbsoluteFilesystemPath(target)) {
+        failures.push(
+          formatFailure(
+            filePath,
+            lineNumber,
+            `absolute path links are not allowed: ${target}`,
+          ),
+        );
         continue;
       }
 
@@ -117,18 +161,19 @@ async function main() {
         const anchor = slugify(target.slice(1));
         if (!currentSlugs.has(anchor)) {
           failures.push(
-            `${formatRelative(filePath)} -> missing anchor ${target}`,
+            formatFailure(filePath, lineNumber, `missing anchor ${target}`),
           );
         }
         continue;
       }
 
-      const [rawPath, rawAnchor] = target.split('#');
-      const resolvedPath = path.resolve(path.dirname(filePath), rawPath);
+      const [rawPath, rawAnchor] = target.split('#', 2);
+      const decodedPath = decodePathTarget(rawPath);
+      const resolvedPath = path.resolve(path.dirname(filePath), decodedPath);
 
       if (!(await exists(resolvedPath))) {
         failures.push(
-          `${formatRelative(filePath)} -> missing file ${target}`,
+          formatFailure(filePath, lineNumber, `missing file ${target}`),
         );
         continue;
       }
@@ -139,13 +184,20 @@ async function main() {
 
       const targetMarkdown = markdownCache.get(resolvedPath);
       if (!targetMarkdown) {
+        failures.push(
+          formatFailure(
+            filePath,
+            lineNumber,
+            `anchors are only supported for markdown files: ${target}`,
+          ),
+        );
         continue;
       }
 
       const anchor = slugify(rawAnchor);
       if (!targetMarkdown.slugs.has(anchor)) {
         failures.push(
-          `${formatRelative(filePath)} -> missing anchor ${target}`,
+          formatFailure(filePath, lineNumber, `missing anchor ${target}`),
         );
       }
     }
