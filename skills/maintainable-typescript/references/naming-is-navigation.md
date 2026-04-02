@@ -26,6 +26,12 @@ Name by domain and behavior, not by implementation bucket:
 - functions should read like an action on a domain concept
 - booleans should read like true/false questions
 
+Import paths are part of navigation too:
+- use short relative imports for nearby files
+- use an app alias such as `@/` for nonlocal imports within the same app
+- use package or subpath imports across package boundaries
+- avoid deep traversal imports like `../../../../foo` because they hide ownership and break easily when code moves
+
 If a name would force a new contributor to open the file just to learn what it contains, the name is too vague.
 
 This is why barrel files are bad navigation. `index.ts` tells you nothing about ownership.

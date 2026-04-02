@@ -32,18 +32,29 @@ project/
 
 ## Toolchain
 
-Everything runs through `vp` (Vite+). No direct `pnpm`, `npm`, or `yarn` usage in normal workflow.
+Everything runs through `vp` (Vite+). Treat it as the unified toolchain, not just a task alias. Vite+ wraps package management, runtime management, and the underlying frontend tools behind one CLI.
+
+In this stack:
+
+- do not use `pnpm`, `npm`, or `yarn` directly in normal workflow
+- do not install wrapped tools like `vitest`, `oxlint`, `oxfmt`, or `tsdown` just to reach their CLIs
+- use `vp run <script>` for custom package scripts, because `vp dev`, `vp build`, `vp test`, and similar built-ins always run the Vite+ tool, not a same-named script
+- import JavaScript modules from `vite-plus`, not from `vite` or `vitest`, when the repo is already on Vite+
 
 High-signal commands:
 
 - `vp install`
 - `vp dev`
 - `vp build`
+- `vp pack`
+- `vp preview`
 - `vp test`
 - `vp check`
 - `vp lint`
 - `vp fmt`
+- `vp run <script>`
 - `vp add <pkg>`
+- `vp remove <pkg>`
 - `vp dlx <bin>`
 
 For dependency ownership and install policy, see [Catalog Dependencies](catalog-dependencies.md).
@@ -59,7 +70,8 @@ For dependency ownership and install policy, see [Catalog Dependencies](catalog-
 - Database: Drizzle + D1
 - Validation: Zod, derived from schema where possible
 - Runtime: Cloudflare Workers + Durable Objects
-- Testing: Vitest Browser Mode + Playwright + MSW
+- Toolchain: Vite+ via `vp`
+- Testing: Vite+ browser testing + Playwright + MSW
 
 ## SSOT Chain
 
@@ -78,9 +90,11 @@ One source, everything derived.
 ## Canonical doctrine map
 
 - Framework boundaries: [Do Not Use Next.js](do-not-use-nextjs.md)
+- API contract and spec inference: [Design OpenAPI for Inference](design-openapi-for-inference.md)
 - React state ownership: [Do Not Synchronize State with useEffect](do-not-synchronize-state-with-useeffect.md)
 - Dependency and toolchain policy: [Catalog Dependencies](catalog-dependencies.md)
 - Error contracts: [Errors Are Schema, Not Strings](errors-are-schema.md)
+- Field semantics on contract schemas: [Document Fields in Derived Zod Schemas](document-fields-in-derived-zod-schemas.md)
 - Comments, JSDoc, and provenance: [Comments and JSDoc Must Carry Information](jsdoc-with-first-party-sources.md)
 - Constants and literals: [No Magic Values](no-magic-values.md)
 - Branded domain scalars: [Use Branded Scalar Types](use-branded-scalar-types.md)

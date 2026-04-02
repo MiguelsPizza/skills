@@ -29,7 +29,7 @@ This repo ships [plugin.json](/Users/alexmnahas/personalRepos/agent-opinions/.cl
 
 **Claude.ai standalone skill**
 
-1. Download [maintainable-typescript.zip](../maintainable-typescript.zip)
+1. Download the published `maintainable-typescript.zip` archive
 2. Go to **Customize > Skills**
 3. Upload that ZIP
 
@@ -39,7 +39,7 @@ This repo ships [plugin.json](/Users/alexmnahas/personalRepos/agent-opinions/.cl
 ./scripts/build-skill-archive.sh
 ```
 
-That regenerates [maintainable-typescript.zip](../maintainable-typescript.zip) from [skills/maintainable-typescript/](/Users/alexmnahas/personalRepos/agent-opinions/skills/maintainable-typescript).
+That regenerates [skills/maintainable-typescript.zip](/Users/alexmnahas/personalRepos/agent-opinions/skills/maintainable-typescript.zip) from [skills/maintainable-typescript/](/Users/alexmnahas/personalRepos/agent-opinions/skills/maintainable-typescript).
 
 ## Use Without The Skill
 
@@ -47,21 +47,23 @@ You can reference this doctrine from your own `AGENTS.md` or `CLAUDE.md`, or cop
 
 ## Use The TypeScript Tooling
 
-The tooling templates are independent of the skill. Copy them into any TypeScript repo:
+The tooling templates are independent of the skill. In the standalone skill archive, they live under `assets/tooling-templates/`:
 
 ```bash
-cp tooling/templates/.knip.json .
-cp tooling/templates/.dependency-cruiser.mjs .
-cp tooling/templates/.jscpd.json .
-cp tooling/templates/sgconfig.yml .
-cp -r tooling/templates/ast-grep/ .
+cp assets/tooling-templates/.knip.json .
+cp assets/tooling-templates/.dependency-cruiser.mjs .
+cp assets/tooling-templates/.jscpd.json .
+cp assets/tooling-templates/sgconfig.yml .
+cp -r assets/tooling-templates/ast-grep/ .
 
 pnpm add -D knip dependency-cruiser jscpd @ast-grep/cli oxlint typescript
 
 bash scripts/audit-typescript-repo.sh .
 ```
 
-See [tooling/README.md](/Users/alexmnahas/personalRepos/agent-opinions/tooling/README.md) for configuration details.
+If the target repo already uses Vite+, prefer its `vp` commands for linting, formatting, and testing instead of installing wrapped tool binaries just to reach them.
+
+If you are working from this repo instead of the standalone skill archive, the same files also exist in [tooling/templates/](/Users/alexmnahas/personalRepos/agent-opinions/tooling/templates) and are documented in [tooling/README.md](/Users/alexmnahas/personalRepos/agent-opinions/tooling/README.md).
 
 ## Opinions Index
 
@@ -97,6 +99,7 @@ See [tooling/README.md](/Users/alexmnahas/personalRepos/agent-opinions/tooling/R
 - [Commit Messages Describe Why](/Users/alexmnahas/personalRepos/agent-opinions/skills/maintainable-typescript/references/commit-messages-describe-why.md)
 - [Atomic Changes](/Users/alexmnahas/personalRepos/agent-opinions/skills/maintainable-typescript/references/atomic-changes.md)
 - [Maintainability Equals Correctness](/Users/alexmnahas/personalRepos/agent-opinions/skills/maintainable-typescript/references/maintainability-equals-correctness.md)
+- [Treat Critical Code Like a Library](/Users/alexmnahas/personalRepos/agent-opinions/skills/maintainable-typescript/references/treat-critical-code-like-a-library.md)
 
 **Agent-Specific**
 - [Your Pattern Will Be Copied](/Users/alexmnahas/personalRepos/agent-opinions/skills/maintainable-typescript/references/your-pattern-will-be-copied.md)
@@ -118,10 +121,12 @@ See [tooling/README.md](/Users/alexmnahas/personalRepos/agent-opinions/tooling/R
 - [Opinionated Stack Overview](/Users/alexmnahas/personalRepos/agent-opinions/skills/maintainable-typescript/opinionated-stack/stack-overview.md)
 
 **Error Handling & API Design**
+- [Design OpenAPI for Inference](/Users/alexmnahas/personalRepos/agent-opinions/skills/maintainable-typescript/opinionated-stack/design-openapi-for-inference.md)
 - [Errors Are Schema, Not Strings](/Users/alexmnahas/personalRepos/agent-opinions/skills/maintainable-typescript/opinionated-stack/errors-are-schema.md)
 
 **Types & Schemas**
 - [Comments and JSDoc Must Carry Information](/Users/alexmnahas/personalRepos/agent-opinions/skills/maintainable-typescript/opinionated-stack/jsdoc-with-first-party-sources.md)
+- [Document Fields in Derived Zod Schemas](/Users/alexmnahas/personalRepos/agent-opinions/skills/maintainable-typescript/opinionated-stack/document-fields-in-derived-zod-schemas.md)
 - [No Magic Values](/Users/alexmnahas/personalRepos/agent-opinions/skills/maintainable-typescript/opinionated-stack/no-magic-values.md)
 - [Use Branded Scalar Types](/Users/alexmnahas/personalRepos/agent-opinions/skills/maintainable-typescript/opinionated-stack/use-branded-scalar-types.md)
 - [Use Canonical Named Types, Not Inline Object Shapes](/Users/alexmnahas/personalRepos/agent-opinions/skills/maintainable-typescript/opinionated-stack/use-canonical-named-types.md)

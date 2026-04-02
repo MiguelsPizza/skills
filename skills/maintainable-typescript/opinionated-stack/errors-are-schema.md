@@ -9,72 +9,83 @@ example:
 ---
 # Errors Are Schema, Not Strings
 
-**Rule:** Every API error belongs in a Zod-backed `.errors()` contract. Define it once, reuse it directly, and do not build parallel error-class or conversion systems.
+**Rule:** API errors must be declared in oRPC's Zod-backed `.errors()` contracts so OpenAPI, clients, and docs are inferred from executable code instead of maintained in parallel.
 
-See also: [SSOT or Die](../references/ssot-or-die.md), [Error Messages Are UX](../references/error-messages-are-ux.md), and [Use Branded Scalar Types](use-branded-scalar-types.md).
+See also: [Design OpenAPI for Inference](design-openapi-for-inference.md), [SSOT or Die](../references/ssot-or-die.md), [Error Messages Are UX](../references/error-messages-are-ux.md), and [Use Branded Scalar Types](use-branded-scalar-types.md).
 
 ## Why agents get this wrong
 
-Agents often throw plain `Error` objects or ad-hoc `ORPCError` instances with only a message. That gives humans a string but gives OpenAPI, generated clients, and AI tool consumers no structured contract.
+Agents often treat errors as implementation detail instead of API contract. They throw plain `Error` objects or ad-hoc `ORPCError` instances with only a message. That gives humans a string, but it gives OpenAPI, generated clients, and AI tool consumers no structured response contract to infer from.
 
-The other common failure is ceremony: domain error classes, an error-to-HTTP mapping layer, then an oRPC conversion layer. That creates multiple representations of the same failure that will drift.
+The other common failure is parallel systems: domain error classes, an error-to-HTTP mapping layer, an oRPC conversion layer, and then hand-written OpenAPI prose explaining what the endpoint "really" returns. That turns one failure mode into multiple representations that will drift.
+
+Once the inference chain is broken, the team starts maintaining the spec by hand:
+
+- docs say one thing
+- thrown errors say another
+- generated clients only know part of the shape
+- operation metadata and error responses stop matching reality
 
 ## What to do instead
 
-Define error entries once as Zod-backed objects, compose them into reusable sets, attach those sets directly to `.errors()`, and throw them through oRPC's typed `errors` helpers.
+The point of this stack is not merely "typed errors." The point is to get the best possible OpenAPI spec from the code you already have to write. The broader doctrine lives in [Design OpenAPI for Inference](design-openapi-for-inference.md). This file is the error-contract slice of that rule.
 
-Most repo examples can assume the house `publicProcedure` already exposes typed `errors` helpers. This opinion is the exception: here the local `.errors(...)` contract should be explicit because the point is to show where those helpers come from.
+That means the owning chain should look like this:
+
+```text
+Zod schemas
+  -> oRPC input/output/error contracts
+  -> OpenAPI spec
+  -> generated clients and docs
+```
+
+Design for that chain directly:
+
+1. Define error payload schemas once in the owning domain/shared-types module.
+2. Put cross-cutting errors on the base procedure.
+3. Add local `.errors(...)` only when a procedure needs extra domain-specific failures.
+4. Put operation metadata on `.route(...)` so summaries, descriptions, tags, and operation IDs also flow into the generated spec.
+5. Do not maintain a second error model just to satisfy runtime code or documentation.
+
+This matches oRPC's own builder model: start from a base procedure, inherit shared errors, and add local `.errors(...)` only for the contract that belongs to one procedure or domain.
 
 ```typescript
 import { eq } from 'drizzle-orm';
-import { z } from 'zod';
+import { os } from '@orpc/server';
 import { db } from '@repo/db/client';
 import { installations } from '@repo/db/schema/installations';
 import {
   getInstallationInputSchema,
   installationSchema,
+  commonErrors,
+  readInstallationErrors,
 } from '@repo/shared-types/installations/installation';
 
-export const installationIdSchema = z.string().min(1).brand<'InstallationId'>();
-export type InstallationId = z.infer<typeof installationIdSchema>;
-
-export const errorSchemas = {
-  INTERNAL_SERVER_ERROR: {
-    message: 'An internal error occurred.',
-    data: z.object({
-      requestId: z.string(),
-    }),
-  },
-  NOT_FOUND: {
-    message: 'Resource not found',
-    data: z.object({
-      resource: z.string(),
-      id: installationIdSchema,
-    }).meta({
-      examples: [{ resource: 'installation', id: 'inst_abc123' }],
-    }),
-  },
-} as const;
-
-export const readErrors = {
-  INTERNAL_SERVER_ERROR: errorSchemas.INTERNAL_SERVER_ERROR,
-  NOT_FOUND: errorSchemas.NOT_FOUND,
-} as const;
+export const publicProcedure = os.errors(commonErrors);
 
 export const getInstallation = publicProcedure
+  .route({
+    method: 'GET',
+    path: '/installations/{id}',
+    summary: 'Get installation',
+    description: 'Return a single installation by ID.',
+    operationId: 'installations_get',
+    tags: ['Installations'],
+  })
   .input(getInstallationInputSchema)
   .output(installationSchema)
-  .errors(readErrors)
+  .errors(readInstallationErrors)
   .handler(async ({ input, errors }) => {
     const installation = await db.query.installations.findFirst({
-      where: eq(installations.id, input.installationId),
+      where: eq(installations.id, input.id),
     });
 
     if (!installation) {
       throw errors.NOT_FOUND({
         data: {
-          resource: 'installation',
-          id: input.installationId,
+          code: 'installation_not_found',
+          message: 'Installation not found.',
+          installationId: input.id,
         },
       });
     }
@@ -83,7 +94,9 @@ export const getInstallation = publicProcedure
   });
 ```
 
-Keep the user-facing wording in the error schema and the operational logging in the boundary code. Do not add a separate `toORPCError` translation file.
+Here, the request shape, success shape, error shape, path, summary, description, and operation ID all live in code that oRPC can use to generate the spec. That is the goal.
+
+The payload schema is the source of truth for user-facing error fields. The base procedure owns shared error availability. The local `.errors()` call owns only the extra domain contract for this procedure. `.route(...)` owns the operation metadata for the generated spec. Keep operational logging in the boundary code, and do not add a separate `toORPCError` translation file.
 
 ## Example
 
@@ -115,12 +128,24 @@ export const installationNotFoundErrorSchema = z.object({
   installationId: installationIdSchema,
 });
 
+export const internalServerErrorSchema = z.object({
+  code: z.literal('internal_server_error'),
+  message: z.literal('An internal error occurred.'),
+  requestId: z.string(),
+});
+
+export const commonErrors = {
+  INTERNAL_SERVER_ERROR: {
+    data: internalServerErrorSchema,
+  },
+} as const;
+
 /**
  * Reusable error contract for installation read procedures.
+ * The payload schema owns the message text so it stays single-sourced.
  */
 export const readInstallationErrors = {
   NOT_FOUND: {
-    message: 'Installation not found.',
     data: installationNotFoundErrorSchema,
   },
 } as const;
@@ -130,16 +155,27 @@ Procedure
 
 ```typescript
 import { eq } from 'drizzle-orm';
+import { os } from '@orpc/server';
 import { db } from '@repo/db/client';
 import { installations } from '@repo/db/schema/installations';
 import {
+  commonErrors,
   getInstallationInputSchema,
   installationSchema,
   readInstallationErrors,
 } from '@repo/shared-types/installations/installation';
-import { publicProcedure } from '../orpc';
+
+const publicProcedure = os.errors(commonErrors);
 
 export const getInstallation = publicProcedure
+  .route({
+    method: 'GET',
+    path: '/installations/{id}',
+    summary: 'Get installation',
+    description: 'Return a single installation by ID.',
+    operationId: 'installations_get',
+    tags: ['Installations'],
+  })
   .input(getInstallationInputSchema)
   .output(installationSchema)
   .errors(readInstallationErrors)
@@ -163,3 +199,25 @@ export const getInstallation = publicProcedure
 ```
 
 Example implements: [Errors Are Schema, Not Strings](errors-are-schema.md), [SSOT or Die](../references/ssot-or-die.md), [Use Branded Scalar Types](use-branded-scalar-types.md).
+
+## The failure mode to avoid
+
+Do not do this:
+
+- define Effect or domain error classes as the "real" source of truth
+- convert them in a separate `toORPCError` layer
+- keep `.errors()` declarations as a thin mirror just for type satisfaction
+- document responses manually in prose because the generated spec is incomplete
+
+That architecture admits the real problem: the contract the client needs is not actually the contract the server owns.
+
+## The test
+
+Ask:
+
+- If I change an error field or message, will the generated OpenAPI spec update automatically?
+- If I add a new error case, will the client infer it from `.errors()` without sidecar work?
+- If I rename an operation or rewrite its description, does that change happen in `.route(...)` instead of in a separate OpenAPI file?
+- Is any response shape described manually that oRPC could infer from the contract?
+
+If the answer to those questions is no, the inference chain is broken.

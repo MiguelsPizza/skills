@@ -21,10 +21,12 @@ If the repo only needs portable maintainability rules, stay in [`../references/`
 ## Read next
 
 - [`stack-overview.md`](stack-overview.md) for the full architecture and layout
+- [`design-openapi-for-inference.md`](design-openapi-for-inference.md) for the contract-first API and spec doctrine
 - [`do-not-use-nextjs.md`](do-not-use-nextjs.md) for framework boundaries
 - [`do-not-synchronize-state-with-useeffect.md`](do-not-synchronize-state-with-useeffect.md) for React state ownership
 - [`catalog-dependencies.md`](catalog-dependencies.md) for catalog and `vp` workflow
 - [`errors-are-schema.md`](errors-are-schema.md) for API error doctrine
+- [`document-fields-in-derived-zod-schemas.md`](document-fields-in-derived-zod-schemas.md) for field-level API semantics and examples
 - [`jsdoc-with-first-party-sources.md`](jsdoc-with-first-party-sources.md) for comment policy, targeted JSDoc, and provenance
 - [`no-magic-values.md`](no-magic-values.md) for constant ownership
 - [`use-branded-scalar-types.md`](use-branded-scalar-types.md) for branded IDs and non-interchangeable scalars
