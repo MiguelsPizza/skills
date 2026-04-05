@@ -61,8 +61,8 @@ Procedure contract
 
 ```typescript
 import { z } from 'zod';
-import { installationIdSchema } from '@repo/shared-types/installations/installation';
-import { reviewRunIdSchema } from '@repo/shared-types/review-runs/review-run';
+import { installationIdSchema } from '@repo/contracts/installations/installation';
+import { reviewRunIdSchema } from '@repo/contracts/review-runs/review-run';
 
 export const completeReviewRunInputSchema = z.object({
   reviewRunId: reviewRunIdSchema,
@@ -74,7 +74,7 @@ export type CompleteReviewRunInput = z.infer<typeof completeReviewRunInputSchema
 Feature usage
 
 ```typescript
-import type { CompleteReviewRunInput } from '@repo/shared-types/review-runs/complete-review-run';
+import type { CompleteReviewRunInput } from '@repo/contracts/review-runs/complete-review-run';
 
 export async function completeReviewRun(input: CompleteReviewRunInput) {
   const reviewRun = await getReviewRun(input.reviewRunId);

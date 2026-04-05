@@ -59,7 +59,7 @@ export type CreateInstallationInput = z.infer<typeof createInstallationInputSche
 Feature module
 
 ```typescript
-import type { CreateInstallationInput } from '@repo/shared-types/installations/installation';
+import type { CreateInstallationInput } from '@repo/contracts/installations/installation';
 import { saveInstallation } from '@repo/db/installations/save-installation';
 
 export function createInstallation(input: CreateInstallationInput) {

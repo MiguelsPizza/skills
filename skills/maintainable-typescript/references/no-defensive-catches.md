@@ -36,7 +36,7 @@ Procedure
 import { eq } from 'drizzle-orm';
 import { db } from '@repo/db/client';
 import { users } from '@repo/db/schema/users';
-import { getUserInputSchema } from '@repo/shared-types/users/user';
+import { getUserInputSchema } from '@repo/contracts/users/user';
 import { publicProcedure } from '../orpc';
 
 export const getUser = publicProcedure
@@ -65,7 +65,7 @@ OpenAPI boundary
 ```typescript
 import { OpenAPIHandler } from '@orpc/openapi/fetch';
 import { onError } from '@orpc/server';
-import { LOG_EVENTS } from '@repo/shared-types/observability/log-events';
+import { LOG_EVENTS } from '@repo/contracts/observability/log-events';
 import { logger } from '@/observability/logger';
 import { appRouter } from '@/worker/orpc/router';
 

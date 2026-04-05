@@ -32,7 +32,7 @@ Before you ship, ask: "If an agent copies this pattern 50 times across the codeb
 ## Example
 
 ```typescript
-import { getUserInputSchema, userSchema } from '@repo/shared-types/users/user';
+import { getUserInputSchema, userSchema } from '@repo/contracts/users/user';
 import { fetchUserById } from '@repo/db/users/fetch-user-by-id';
 import { publicProcedure } from '../orpc';
 

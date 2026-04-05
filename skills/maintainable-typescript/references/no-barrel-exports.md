@@ -4,14 +4,14 @@ example:
   format: code
   implements:
     - no-barrel-exports
-    - one-concept-per-file
+    - split-by-stable-seam
     - monorepo-package-boundaries
 ---
 # No Barrel Exports
 
 **Rule:** Do not create aggregator modules. No `index.ts` barrels, no `export *`, no package-root files that gather siblings into one import path.
 
-See also: [One Concept Per File](one-concept-per-file.md), [Naming Is Navigation](naming-is-navigation.md), and [Monorepo Package Boundaries](monorepo-package-boundaries.md).
+See also: [Split By Stable Seam](split-by-stable-seam.md), [Naming Is Navigation](naming-is-navigation.md), and [Monorepo Package Boundaries](monorepo-package-boundaries.md).
 
 ## Why agents get this wrong
 
@@ -21,7 +21,7 @@ Barrels hide where code lives, so humans and agents have to open more files to f
 
 ## What to do instead
 
-Keep one concept per file and let the file own its export.
+Keep the owning subsystem file and let that file own its export.
 
 The point is direct ownership, not "one forever-file per domain noun." If `review-runs/review-run.ts` stops being one concept, split it into better owning modules. Do not solve that problem with an `index.ts`.
 
@@ -45,7 +45,7 @@ Package manifest
 
 ```json
 {
-  "name": "@repo/shared-types",
+  "name": "@repo/contracts",
   "exports": {
     "./users/user": "./src/users/user.ts",
     "./review-runs/review-run": "./src/review-runs/review-run.ts",
@@ -57,7 +57,7 @@ Package manifest
 Feature module
 
 ```typescript
-import { userSchema } from '@repo/shared-types/users/user';
+import { userSchema } from '@repo/contracts/users/user';
 ```
 
-Example implements: [No Barrel Exports](no-barrel-exports.md), [One Concept Per File](one-concept-per-file.md), [Monorepo Package Boundaries](monorepo-package-boundaries.md).
+Example implements: [No Barrel Exports](no-barrel-exports.md), [Split By Stable Seam](split-by-stable-seam.md), [Monorepo Package Boundaries](monorepo-package-boundaries.md).

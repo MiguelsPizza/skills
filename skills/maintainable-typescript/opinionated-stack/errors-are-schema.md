@@ -41,7 +41,7 @@ Zod schemas
 
 Design for that chain directly:
 
-1. Define error payload schemas once in the owning domain/shared-types module.
+1. Define error payload schemas once in the owning domain/contracts module.
 2. Put cross-cutting errors on the base procedure.
 3. Add local `.errors(...)` only when a procedure needs extra domain-specific failures.
 4. Put operation metadata on `.route(...)` so summaries, descriptions, tags, and operation IDs also flow into the generated spec.
@@ -59,7 +59,7 @@ import {
   installationSchema,
   commonErrors,
   readInstallationErrors,
-} from '@repo/shared-types/installations/installation';
+} from '@repo/contracts/installations/installation';
 
 export const publicProcedure = os.errors(commonErrors);
 
@@ -100,7 +100,7 @@ The payload schema is the source of truth for user-facing error fields. The base
 
 ## Example
 
-Shared types owner
+Contracts owner
 
 ```typescript
 import { z } from 'zod';
@@ -163,7 +163,7 @@ import {
   getInstallationInputSchema,
   installationSchema,
   readInstallationErrors,
-} from '@repo/shared-types/installations/installation';
+} from '@repo/contracts/installations/installation';
 
 const publicProcedure = os.errors(commonErrors);
 

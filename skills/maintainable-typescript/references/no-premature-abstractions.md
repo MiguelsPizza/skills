@@ -30,7 +30,7 @@ Signs you're abstracting too early:
 ## Example
 
 ```typescript
-import { createUserInputSchema } from '@repo/shared-types/users/user';
+import { createUserInputSchema } from '@repo/contracts/users/user';
 import { publicProcedure } from '../orpc';
 import { createUser } from '@/features/users/create-user';
 

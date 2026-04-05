@@ -70,8 +70,8 @@ Boundary log
 
 ```typescript
 import { GITHUB_ENDPOINTS } from '@repo/github-client/endpoints';
-import { LOG_EVENTS } from '@repo/shared-types/observability/log-events';
-import { OTEL_ATTRS } from '@repo/shared-types/observability/otel-attrs';
+import { LOG_EVENTS } from '@repo/contracts/observability/log-events';
+import { OTEL_ATTRS } from '@repo/contracts/observability/otel-attrs';
 
 const CREATE_PULL_REQUEST_STATUS_CODE = 201;
 

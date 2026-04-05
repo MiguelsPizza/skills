@@ -19,7 +19,7 @@ project/
 │   └── documentation-website/   # Mintlify docs
 ├── packages/
 │   ├── db/                      # Drizzle tables, relations, and DB-layer operations
-│   └── shared-types/            # Zod schemas, constants, and inferred runtime types
+│   └── contracts/              # Zod schemas, constants, and inferred runtime types
 ├── e2e/                         # Cross-app browser tests
 ├── .sources/                    # Checked-in source material and derivations
 ├── .dependency-references/      # Vendored dependency references for docs
@@ -78,7 +78,7 @@ For dependency ownership and install policy, see [Catalog Dependencies](catalog-
 ```text
 @repo/db schema
   -> drizzle-zod
-  -> @repo/shared-types domain file
+  -> @repo/contracts domain file
   -> TypeScript types
   -> oRPC contracts
   -> OpenAPI spec

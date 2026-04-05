@@ -4,14 +4,14 @@ example:
   format: text
   implements:
     - naming-is-navigation
-    - one-concept-per-file
+    - split-by-stable-seam
     - monorepo-package-boundaries
 ---
 # Naming Is Navigation
 
-**Rule:** Every file, directory, variable, and function name must be self-explanatory to someone (or an agent) seeing the codebase for the first time. Names are the primary way AI agents navigate — bad names mean bad navigation, bad context, and bad code generation.
+**Rule:** Every package, path segment, file, variable, and function name must be self-explanatory to someone seeing the repo for the first time. Agents learn a codebase by grepping the tree, so names must tell them where to go before they open a file.
 
-See also: [One Concept Per File](one-concept-per-file.md) and [Monorepo Package Boundaries](monorepo-package-boundaries.md).
+See also: [Split By Stable Seam](split-by-stable-seam.md) and [Monorepo Package Boundaries](monorepo-package-boundaries.md).
 
 ## Why agents get this wrong
 
@@ -19,9 +19,15 @@ Agents name things generically. They create `utils.ts`, `helpers.ts`, `types.ts`
 
 ## What to do instead
 
-Name by domain and behavior, not by implementation bucket:
-- directories should tell you which part of the system they own
-- files should tell you the single responsibility inside them
+Name paths so they answer three questions immediately:
+- what kind of owner is this package?
+- what domain or resource is this path about?
+- what stable boundary does this file own?
+
+Name by domain and ownership, not by implementation bucket:
+- packages should tell you what kind of truth they own
+- directories should tell you what domain or resource they own
+- files should tell you which stable subsystem or boundary they own inside that area
 - variables should describe the thing, not its type
 - functions should read like an action on a domain concept
 - booleans should read like true/false questions
@@ -39,11 +45,11 @@ This is why barrel files are bad navigation. `index.ts` tells you nothing about 
 ## Example
 
 ```text
-packages/webhook-auth/src/verify-webhook-signature.ts
-packages/github-client/src/get-installation-token.ts
-apps/api/src/routes/create-review-run.ts
-apps/api/src/features/review-runs/create-review-run.ts
-apps/api/src/features/review-runs/load-webhook-pull-request.ts
+packages/db/src/todos.ts
+packages/contracts/src/todos.ts
+apps/agent/src/orpc/routers/todos.ts
+apps/agent/src/auth/github-client.ts
+apps/agent/src/auth/browser-routes.ts
 ```
 
-Example implements: [Naming Is Navigation](naming-is-navigation.md), [One Concept Per File](one-concept-per-file.md), [Monorepo Package Boundaries](monorepo-package-boundaries.md).
+Example implements: [Naming Is Navigation](naming-is-navigation.md), [Split By Stable Seam](split-by-stable-seam.md), [Monorepo Package Boundaries](monorepo-package-boundaries.md).

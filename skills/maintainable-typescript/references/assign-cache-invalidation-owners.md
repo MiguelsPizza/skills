@@ -36,8 +36,8 @@ Do not treat caches as silent shared state. The write side must own the invalida
 Cache module
 
 ```typescript
-import type { InstallationId } from '@repo/shared-types/installations/installation';
-import type { RepositorySummary } from '@repo/shared-types/github/repository-summary';
+import type { InstallationId } from '@repo/contracts/installations/installation';
+import type { RepositorySummary } from '@repo/contracts/github/repository-summary';
 
 const installationRepositoriesCache = new Map<InstallationId, RepositorySummary[]>();
 
@@ -60,7 +60,7 @@ export function invalidateInstallationRepositoriesCache(installationId: Installa
 Write path
 
 ```typescript
-import type { InstallationId } from '@repo/shared-types/installations/installation';
+import type { InstallationId } from '@repo/contracts/installations/installation';
 import { invalidateInstallationRepositoriesCache } from '@/features/installations/installation-repositories-cache';
 import { replaceInstallationRepositories } from '@/features/installations/replace-installation-repositories';
 

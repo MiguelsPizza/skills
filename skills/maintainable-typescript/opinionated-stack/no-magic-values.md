@@ -83,8 +83,8 @@ import {
   GITHUB_EVENT_PULL_REQUEST,
 } from '@repo/github-client/github-webhook-event';
 import { MAX_GITHUB_API_ATTEMPTS } from '@repo/github-client/github-api-retry-policy';
-import { LOG_EVENTS } from '@repo/shared-types/observability/log-events';
-import { OTEL_ATTRS } from '@repo/shared-types/observability/otel-attrs';
+import { LOG_EVENTS } from '@repo/contracts/observability/log-events';
+import { OTEL_ATTRS } from '@repo/contracts/observability/otel-attrs';
 
 if (attempts > MAX_GITHUB_API_ATTEMPTS) throw error;
 headers.set(GITHUB_EVENT_HEADER, GITHUB_EVENT_PULL_REQUEST);

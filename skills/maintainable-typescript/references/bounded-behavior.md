@@ -41,7 +41,7 @@ export const INITIAL_RETRY_DELAY_MS = 250;
 Feature usage
 
 ```typescript
-import { getPullRequestDiffInputSchema } from '@repo/shared-types/github/get-pull-request-diff';
+import { getPullRequestDiffInputSchema } from '@repo/contracts/github/get-pull-request-diff';
 import {
   INITIAL_RETRY_DELAY_MS,
   MAX_GITHUB_FETCH_ATTEMPTS,

@@ -26,7 +26,7 @@ Trust the type system. That's why you have `strict: true`. If a value genuinely 
 Truthful type
 
 ```typescript
-import type { User } from '@repo/shared-types/users/user';
+import type { User } from '@repo/contracts/users/user';
 
 function formatUser(user: User): string {
   return `${user.displayName} <${user.email}>`;
@@ -36,7 +36,7 @@ function formatUser(user: User): string {
 Nullable type
 
 ```typescript
-import type { PendingInvite } from '@repo/shared-types/invites/pending-invite';
+import type { PendingInvite } from '@repo/contracts/invites/pending-invite';
 
 function formatInvite(invite: PendingInvite): string {
   return `${invite.displayName ?? invite.email} <${invite.email}>`;

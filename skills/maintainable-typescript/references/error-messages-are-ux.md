@@ -41,7 +41,7 @@ Mask internal failures in production responses. Expose the real failure only in 
 ## Example
 
 ```typescript
-import { connectRepositoryInputSchema } from '@repo/shared-types/github/connect-repository';
+import { connectRepositoryInputSchema } from '@repo/contracts/github/connect-repository';
 import { publicProcedure } from '../orpc';
 import { createInstallation } from '@/features/installations/create-installation';
 import { isRepositoryAlreadyConnected } from '@/features/installations/is-repository-already-connected';
@@ -67,7 +67,7 @@ export const connectRepository = publicProcedure
 ```typescript
 import { OpenAPIHandler } from '@orpc/openapi/fetch';
 import { onError } from '@orpc/server';
-import { LOG_EVENTS } from '@repo/shared-types/observability/log-events';
+import { LOG_EVENTS } from '@repo/contracts/observability/log-events';
 import { logger } from '@/observability/logger';
 import { appRouter } from '@/worker/orpc/router';
 

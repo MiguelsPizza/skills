@@ -34,7 +34,7 @@ This doesn't mean refactor entire files you're passing through. It means:
 import {
   REVIEW_RUN_STATUS,
   type ReviewRunId,
-} from '@repo/shared-types/review-runs/review-run';
+} from '@repo/contracts/review-runs/review-run';
 import { getReviewRun } from '@repo/db/review-runs/get-review-run';
 import { updateReviewRun } from '@repo/db/review-runs/update-review-run';
 

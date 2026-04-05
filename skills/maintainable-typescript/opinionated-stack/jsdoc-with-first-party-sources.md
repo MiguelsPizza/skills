@@ -65,8 +65,8 @@ Provenance belongs on the owner, not on every consumer. If `PRIMARY_COMPLETION_M
 Bad line-level narration
 
 ```typescript
-import type { ReviewRun } from '@repo/shared-types/review-runs/review-run';
-import { REVIEW_RUN_STATUS } from '@repo/shared-types/review-runs/review-run';
+import type { ReviewRun } from '@repo/contracts/review-runs/review-run';
+import { REVIEW_RUN_STATUS } from '@repo/contracts/review-runs/review-run';
 
 function isCompletedReviewRun(reviewRun: ReviewRun): boolean {
   // Check whether the review run is completed.
@@ -110,8 +110,8 @@ export const METERS_PER_INCH = 0.0254;
 No JSDoc for an obvious internal helper
 
 ```typescript
-import type { ReviewRun } from '@repo/shared-types/review-runs/review-run';
-import { REVIEW_RUN_STATUS } from '@repo/shared-types/review-runs/review-run';
+import type { ReviewRun } from '@repo/contracts/review-runs/review-run';
+import { REVIEW_RUN_STATUS } from '@repo/contracts/review-runs/review-run';
 
 function isCompletedReviewRun(reviewRun: ReviewRun): boolean {
   return reviewRun.status === REVIEW_RUN_STATUS.COMPLETED;

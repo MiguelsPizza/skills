@@ -115,8 +115,8 @@ Procedure
 
 ```typescript
 import { publicProcedure } from '../orpc';
-import { userSchema } from '@repo/shared-types/users/user';
-import { getUserInputSchema } from '@repo/shared-types/users/get-user';
+import { userSchema } from '@repo/contracts/users/user';
+import { getUserInputSchema } from '@repo/contracts/users/get-user';
 
 export const getUser = publicProcedure
   .route({

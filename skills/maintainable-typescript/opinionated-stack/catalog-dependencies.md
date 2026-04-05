@@ -39,7 +39,7 @@ catalog:
 ```
 
 ```json
-// packages/shared-types/package.json
+// packages/contracts/package.json
 {
   "dependencies": {
     "zod": "catalog:"
@@ -81,7 +81,7 @@ Package manifest
 
 ```json
 {
-  "name": "@repo/shared-types",
+  "name": "@repo/contracts",
   "dependencies": {
     "zod": "catalog:"
   }

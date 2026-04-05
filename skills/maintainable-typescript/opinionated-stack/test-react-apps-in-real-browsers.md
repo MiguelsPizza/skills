@@ -112,8 +112,8 @@ import { http, HttpResponse } from "msw";
 import { createRoot } from "react-dom/client";
 import { UsersPage } from "@/features/users/components/users-page";
 import { test, expect } from "@/test/browser-test";
-import type { User } from "@repo/shared-types/users/user";
-import { usersResponseSchema } from "@repo/shared-types/users/list-users";
+import type { User } from "@repo/contracts/users/user";
+import { usersResponseSchema } from "@repo/contracts/users/list-users";
 
 test("renders users returned by the API in a real browser", async ({
   worker,

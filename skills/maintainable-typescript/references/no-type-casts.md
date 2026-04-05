@@ -34,7 +34,7 @@ Do not cast globals to reach your own properties. Declare the global type proper
 import {
   webhookPayloadSchema,
   type WebhookPayload,
-} from '@repo/shared-types/github/webhook-payload';
+} from '@repo/contracts/github/webhook-payload';
 
 export async function loadWebhookPayload(response: Response): Promise<WebhookPayload> {
   return webhookPayloadSchema.parse(await response.json());

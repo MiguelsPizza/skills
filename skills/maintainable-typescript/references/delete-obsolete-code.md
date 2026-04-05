@@ -42,7 +42,7 @@ Owner module
 
 ```typescript
 import { eq } from 'drizzle-orm';
-import type { UserId } from '@repo/shared-types/users/user';
+import type { UserId } from '@repo/contracts/users/user';
 import { db } from '@repo/db/client';
 import { users } from '@repo/db/schema/users';
 

@@ -98,7 +98,7 @@ import {
   getInstallationInputSchema,
   installationSchema,
   readInstallationErrors,
-} from '@repo/shared-types/installations/installation';
+} from '@repo/contracts/installations/installation';
 
 const publicProcedure = os.errors(commonErrors);
 

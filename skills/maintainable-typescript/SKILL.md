@@ -41,10 +41,12 @@ Use the smallest relevant set.
 - [`references/clean-up-what-you-touch.md`](references/clean-up-what-you-touch.md)
 - [`references/delete-obsolete-code.md`](references/delete-obsolete-code.md)
 - [`references/no-backwards-compat-shims.md`](references/no-backwards-compat-shims.md)
+- [`references/split-by-stable-seam.md`](references/split-by-stable-seam.md)
 - [`references/your-pattern-will-be-copied.md`](references/your-pattern-will-be-copied.md)
 
 ### Package boundaries and shared runtime code
 
+- [`references/split-by-stable-seam.md`](references/split-by-stable-seam.md)
 - [`references/monorepo-package-boundaries.md`](references/monorepo-package-boundaries.md)
 - [`references/treat-critical-code-like-a-library.md`](references/treat-critical-code-like-a-library.md)
 - [`references/naming-is-navigation.md`](references/naming-is-navigation.md)
@@ -110,6 +112,7 @@ If the target repo is Vite+, use `vp` for the normal toolchain entrypoint: `vp l
 ## Defaults
 
 - Prefer deletion over shims.
+- Prefer stable subsystem files over one-helper-per-file trees.
 - Prefer derived types and schemas over handwritten duplicates.
 - Prefer slice integration tests over internally mocked unit tests.
 - Prefer mature tooling for dead code, duplication, and dependency boundaries over manual inspection.

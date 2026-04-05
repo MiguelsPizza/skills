@@ -42,7 +42,7 @@ Draw a clear line between trusted and untrusted zones:
 import {
   createOrderInputSchema,
   type CreateOrderInput,
-} from '@repo/shared-types/orders/order';
+} from '@repo/contracts/orders/order';
 import { publicProcedure } from '../orpc';
 
 export const createOrderPreview = publicProcedure

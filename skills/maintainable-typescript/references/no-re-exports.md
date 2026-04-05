@@ -50,7 +50,7 @@ Package manifest
 
 ```json
 {
-  "name": "@repo/shared-types",
+  "name": "@repo/contracts",
   "exports": {
     "./users/user": "./src/users/user.ts"
   }
@@ -60,7 +60,7 @@ Package manifest
 Feature module
 
 ```typescript
-import type { User } from '@repo/shared-types/users/user';
+import type { User } from '@repo/contracts/users/user';
 import { fetchUserById } from '@repo/db/users/fetch-user-by-id';
 ```
 

@@ -23,7 +23,7 @@ Follow the derivation chains:
 ```
 @repo/db schema
   → Zod schemas (drizzle-zod)
-    → @repo/shared-types domain file
+    → @repo/contracts domain file
       → TypeScript types (z.infer<>)
       → API contracts (oRPC input/output)
         → Client types (auto-generated)
@@ -68,7 +68,7 @@ export const installationNotFoundErrorSchema = z.object({
 ```typescript
 import { eq } from 'drizzle-orm';
 import { db } from '@repo/db/client';
-import { getInstallationInputSchema, installationSchema } from '@repo/shared-types/installations/installation';
+import { getInstallationInputSchema, installationSchema } from '@repo/contracts/installations/installation';
 import { installations } from '@repo/db/schema/installations';
 import { publicProcedure } from '../orpc';
 

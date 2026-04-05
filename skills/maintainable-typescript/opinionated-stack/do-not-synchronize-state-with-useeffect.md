@@ -60,7 +60,7 @@ import { useQuery } from "@tanstack/react-query";
 import { createFileRoute } from "@tanstack/react-router";
 import { UsersPageScreen } from "@/features/users/components/users-page-screen";
 import { useORPC } from "@/utils/orpc";
-import { usersSearchSchema } from "@repo/shared-types/users/users-search";
+import { usersSearchSchema } from "@repo/contracts/users/users-search";
 
 export const Route = createFileRoute("/users")({
   validateSearch: usersSearchSchema,
@@ -95,8 +95,8 @@ Feature component
 import { getRouteApi } from "@tanstack/react-router";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-import { userTabValues } from "@repo/shared-types/users/users-search";
-import type { User } from "@repo/shared-types/users/user";
+import { userTabValues } from "@repo/contracts/users/users-search";
+import type { User } from "@repo/contracts/users/user";
 
 const usersRouteApi = getRouteApi("/users");
 

@@ -96,6 +96,7 @@ If you are working from this repo instead of the standalone skill archive, the s
 - [Boundaries Validate, Internals Trust](references/boundaries-validate-internals-trust.md)
 
 **Abstractions & Architecture**
+- [Split By Stable Seam](references/split-by-stable-seam.md)
 - [No Premature Abstractions](references/no-premature-abstractions.md)
 - [No Speculative Configuration](references/no-speculative-configuration.md)
 - [Keep Schemas Minimal](references/keep-schemas-minimal.md)
@@ -107,7 +108,6 @@ If you are working from this repo instead of the standalone skill archive, the s
 
 **Code Quality**
 - [Naming Is Navigation](references/naming-is-navigation.md)
-- [One Concept Per File](references/one-concept-per-file.md)
 - [Comments Say Why Not What](references/comments-say-why-not-what.md)
 - [Commit Messages Describe Why](references/commit-messages-describe-why.md)
 - [Atomic Changes](references/atomic-changes.md)

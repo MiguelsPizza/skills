@@ -24,7 +24,7 @@ Change the interface. Update every caller. One PR. If that touches 20 files, so 
 ## Example
 
 ```typescript
-import type { CreateUserInput } from '@repo/shared-types/users/user';
+import type { CreateUserInput } from '@repo/contracts/users/user';
 import { insertUser } from '@repo/db/users/insert-user';
 
 export async function createUser(input: CreateUserInput) {

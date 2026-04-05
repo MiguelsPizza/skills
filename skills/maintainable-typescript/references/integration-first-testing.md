@@ -9,7 +9,7 @@ example:
 ---
 # Integration-First Testing
 
-**Rule:** Default to slice integration tests. Use contract tests for pure logic. Use browser tests for browser behavior. Mock external boundaries only. If a test needs multiple internal mocks, rewrite it as a slice integration test.
+**Rule:** Default to slice integration tests after the slice seam is stable. Use contract tests for pure logic. Use browser tests for browser behavior. Mock external boundaries only. If a test needs multiple internal mocks, rewrite it as a slice integration test.
 
 See also: [No Type Casts](no-type-casts.md).
 
@@ -18,6 +18,8 @@ See also: [No Type Casts](no-type-casts.md).
 Agents write isolated unit tests with heavy mocking. They mock the database, mock sibling modules, mock internal services — then assert that the code called the mocks in the right order. These tests pass when the implementation is correct but tell you nothing about whether the system actually works. They break on every refactor because they test choreography, not behavior.
 
 ## What to do instead
+
+Stabilize the ownership boundary before investing in a large test harness. If you already suspect the file split, package placement, or route decomposition is wrong, fix that first. Do not lock in a bad shape by building helpers, fixtures, and mocks around it.
 
 Use this test stack:
 
@@ -40,7 +42,7 @@ Use deterministic waits such as `vi.waitFor` or `expect.poll`. Clean up state in
 Slice integration test
 
 ```typescript
-import { createReviewRunResponseSchema } from '@repo/shared-types/review-runs/create-review-run';
+import { createReviewRunResponseSchema } from '@repo/contracts/review-runs/create-review-run';
 import { TEST_INSTALLATION_ID } from '@/test/test-installation-id';
 import { getReviewRun } from '@repo/db/review-runs/get-review-run';
 import { createApp } from '@/routes/app';
@@ -72,7 +74,7 @@ test('POST /review-runs validates the request and persists a review run', async 
 Boundary contract test
 
 ```typescript
-import { createReviewRunInputSchema } from '@repo/shared-types/review-runs/create-review-run';
+import { createReviewRunInputSchema } from '@repo/contracts/review-runs/create-review-run';
 
 test('createReviewRunInputSchema rejects a missing installationId', () => {
   const result = createReviewRunInputSchema.safeParse({ pullRequestNumber: 42 });
