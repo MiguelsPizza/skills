@@ -72,9 +72,23 @@ Use the smallest relevant set.
 ### Testing and high-risk logic
 
 - [`references/integration-first-testing.md`](references/integration-first-testing.md)
+- [`references/disposable-unit-tests.md`](references/disposable-unit-tests.md)
+- [`references/schema-validate-test-fixtures.md`](references/schema-validate-test-fixtures.md)
+- [`references/sign-webhooks-in-tests.md`](references/sign-webhooks-in-tests.md)
+- [`references/assert-milestones-not-model-prose.md`](references/assert-milestones-not-model-prose.md)
 - [`references/treat-critical-code-like-a-library.md`](references/treat-critical-code-like-a-library.md)
 - [`references/no-type-casts.md`](references/no-type-casts.md)
 - [`references/boundaries-validate-internals-trust.md`](references/boundaries-validate-internals-trust.md)
+
+### Agent apps, webhook services, and real-model lanes
+
+- [`references/integration-first-testing.md`](references/integration-first-testing.md)
+- [`references/sign-webhooks-in-tests.md`](references/sign-webhooks-in-tests.md)
+- [`references/schema-validate-test-fixtures.md`](references/schema-validate-test-fixtures.md)
+- [`references/assert-milestones-not-model-prose.md`](references/assert-milestones-not-model-prose.md)
+- [`opinionated-stack/test-workers-with-signed-webhook-requests.md`](opinionated-stack/test-workers-with-signed-webhook-requests.md)
+- [`opinionated-stack/agent-test-lanes-by-ci-gate.md`](opinionated-stack/agent-test-lanes-by-ci-gate.md)
+- [`opinionated-stack/test-react-apps-in-real-browsers.md`](opinionated-stack/test-react-apps-in-real-browsers.md)
 
 ### Frontend and React state
 

@@ -120,6 +120,10 @@ If you are working from this repo instead of the standalone skill archive, the s
 
 **Testing**
 - [Integration-First Testing](references/integration-first-testing.md)
+- [Disposable Unit Tests](references/disposable-unit-tests.md)
+- [Schema-Validate Test Fixtures](references/schema-validate-test-fixtures.md)
+- [Sign Webhooks in Tests](references/sign-webhooks-in-tests.md)
+- [Assert Milestones, Not Model Prose](references/assert-milestones-not-model-prose.md)
 - [No Type Casts](references/no-type-casts.md)
 
 **Monorepo & Package Structure**
@@ -155,6 +159,8 @@ If you are working from this repo instead of the standalone skill archive, the s
 
 **Testing**
 - [Test React Apps in Real Browsers](opinionated-stack/test-react-apps-in-real-browsers.md)
+- [Test Workers with Signed Webhook Requests](opinionated-stack/test-workers-with-signed-webhook-requests.md)
+- [Split Agent Test Lanes by CI Gate](opinionated-stack/agent-test-lanes-by-ci-gate.md)
 
 **Frontend & Design System**
 - [Do Not Use Next.js](opinionated-stack/do-not-use-nextjs.md)
