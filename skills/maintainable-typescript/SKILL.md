@@ -28,6 +28,8 @@ Default portable backbone:
 - [`references/maintainability-equals-correctness.md`](references/maintainability-equals-correctness.md)
 - [`references/ssot-or-die.md`](references/ssot-or-die.md)
 - [`references/integration-first-testing.md`](references/integration-first-testing.md)
+- [`references/external-boundary-mocks-only.md`](references/external-boundary-mocks-only.md)
+- [`references/assert-observable-outcomes.md`](references/assert-observable-outcomes.md)
 
 If the repo matches the house stack, read [`opinionated-stack/start-here.md`](opinionated-stack/start-here.md) before any stack-specific files.
 
@@ -72,13 +74,21 @@ Use the smallest relevant set.
 ### Testing and high-risk logic
 
 - [`references/integration-first-testing.md`](references/integration-first-testing.md)
+- [`references/external-boundary-mocks-only.md`](references/external-boundary-mocks-only.md)
+- [`references/contract-gate-synthetic-fixtures.md`](references/contract-gate-synthetic-fixtures.md)
+- [`references/assert-observable-outcomes.md`](references/assert-observable-outcomes.md)
 - [`references/treat-critical-code-like-a-library.md`](references/treat-critical-code-like-a-library.md)
 - [`references/no-type-casts.md`](references/no-type-casts.md)
 - [`references/boundaries-validate-internals-trust.md`](references/boundaries-validate-internals-trust.md)
+- [`opinionated-stack/test-cloudflare-workers-through-real-requests.md`](opinionated-stack/test-cloudflare-workers-through-real-requests.md)
+- [`opinionated-stack/test-github-webhooks-as-signed-contracts.md`](opinionated-stack/test-github-webhooks-as-signed-contracts.md)
+- [`opinionated-stack/test-ai-apps-by-artifacts-not-prose.md`](opinionated-stack/test-ai-apps-by-artifacts-not-prose.md)
 
 ### Frontend and React state
 
 - [`opinionated-stack/do-not-synchronize-state-with-useeffect.md`](opinionated-stack/do-not-synchronize-state-with-useeffect.md)
+- [`references/external-boundary-mocks-only.md`](references/external-boundary-mocks-only.md)
+- [`references/contract-gate-synthetic-fixtures.md`](references/contract-gate-synthetic-fixtures.md)
 - [`opinionated-stack/use-the-design-system-not-ad-hoc-tailwind.md`](opinionated-stack/use-the-design-system-not-ad-hoc-tailwind.md)
 - [`opinionated-stack/test-react-apps-in-real-browsers.md`](opinionated-stack/test-react-apps-in-real-browsers.md)
 
@@ -114,6 +124,10 @@ If the target repo is Vite+, use `vp` for the normal toolchain entrypoint: `vp l
 - Prefer deletion over shims.
 - Prefer stable subsystem files over one-helper-per-file trees.
 - Prefer derived types and schemas over handwritten duplicates.
+- Prefer durable tests that attach regressions to real product boundaries.
 - Prefer slice integration tests over internally mocked unit tests.
+- Prefer mocking only external systems you do not control.
+- Prefer contract-gated synthetic fixtures over handwritten unchecked JSON.
+- Prefer assertions on rendered output, HTTP behavior, persisted state, and published artifacts over helper call order.
 - Prefer mature tooling for dead code, duplication, and dependency boundaries over manual inspection.
 - Prefer making the codebase more coherent now over promising to clean it up later.

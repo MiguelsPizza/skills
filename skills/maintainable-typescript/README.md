@@ -120,6 +120,9 @@ If you are working from this repo instead of the standalone skill archive, the s
 
 **Testing**
 - [Integration-First Testing](references/integration-first-testing.md)
+- [Mock External Boundaries Only](references/external-boundary-mocks-only.md)
+- [Contract-Gate Synthetic Fixtures](references/contract-gate-synthetic-fixtures.md)
+- [Assert Observable Outcomes](references/assert-observable-outcomes.md)
 - [No Type Casts](references/no-type-casts.md)
 
 **Monorepo & Package Structure**
@@ -155,6 +158,9 @@ If you are working from this repo instead of the standalone skill archive, the s
 
 **Testing**
 - [Test React Apps in Real Browsers](opinionated-stack/test-react-apps-in-real-browsers.md)
+- [Test Cloudflare Workers Through Real Requests](opinionated-stack/test-cloudflare-workers-through-real-requests.md)
+- [Test GitHub Webhooks as Signed Contracts](opinionated-stack/test-github-webhooks-as-signed-contracts.md)
+- [Test AI Apps by Artifacts, Not Prose](opinionated-stack/test-ai-apps-by-artifacts-not-prose.md)
 
 **Frontend & Design System**
 - [Do Not Use Next.js](opinionated-stack/do-not-use-nextjs.md)

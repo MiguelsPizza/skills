@@ -72,6 +72,7 @@ For dependency ownership and install policy, see [Catalog Dependencies](catalog-
 - Runtime: Cloudflare Workers + Durable Objects
 - Toolchain: Vite+ via `vp`
 - Testing: Vite+ browser testing + Playwright + MSW
+  Browser and backend durable lanes should attach regressions to real route and request boundaries.
 
 ## SSOT Chain
 
@@ -101,5 +102,8 @@ One source, everything derived.
 - Observability naming: [OTEL Conventions from Day One](otel-conventions-from-day-one.md)
 - Database workflow: [Schema Migrations Are Generated](schema-migrations-are-generated.md)
 - Browser testing lanes: [Test React Apps in Real Browsers](test-react-apps-in-real-browsers.md)
+- Worker request-driven backend tests: [Test Cloudflare Workers Through Real Requests](test-cloudflare-workers-through-real-requests.md)
+- Signed webhook contract tests: [Test GitHub Webhooks as Signed Contracts](test-github-webhooks-as-signed-contracts.md)
+- AI-app assertion discipline: [Test AI Apps by Artifacts, Not Prose](test-ai-apps-by-artifacts-not-prose.md)
 - Domain type ownership: [Use Canonical Named Types, Not Inline Object Shapes](use-canonical-named-types.md)
 - Frontend styling discipline: [Use the Design System, Not Ad Hoc Tailwind](use-the-design-system-not-ad-hoc-tailwind.md)
