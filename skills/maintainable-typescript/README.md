@@ -120,6 +120,10 @@ If you are working from this repo instead of the standalone skill archive, the s
 
 **Testing**
 - [Integration-First Testing](references/integration-first-testing.md)
+- [Mock External Boundaries Only](references/external-boundary-mocks-only.md)
+- [Contract-Gate Synthetic Fixtures](references/contract-gate-synthetic-fixtures.md)
+- [Assert Observable Outcomes](references/assert-observable-outcomes.md)
+- [Test AI Apps by Artifacts, Not Prose](references/test-ai-apps-by-artifacts-not-prose.md)
 - [No Type Casts](references/no-type-casts.md)
 
 **Monorepo & Package Structure**

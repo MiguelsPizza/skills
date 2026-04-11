@@ -72,6 +72,7 @@ For dependency ownership and install policy, see [Catalog Dependencies](catalog-
 - Runtime: Cloudflare Workers + Durable Objects
 - Toolchain: Vite+ via `vp`
 - Testing: Vite+ browser testing + Playwright + MSW
+  Browser-facing regressions should attach to real route surfaces and use contract-gated fixtures at synthetic boundaries.
 
 ## SSOT Chain
 
