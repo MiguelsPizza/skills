@@ -5,7 +5,7 @@ example:
   implements:
     - agent-test-lanes-by-ci-gate
     - assert-milestones-not-model-prose
-    - test-workers-with-signed-webhook-requests
+    - test-workers-in-the-workers-runtime
     - test-react-apps-in-real-browsers
 references:
   authority:
@@ -21,7 +21,7 @@ references:
 
 **Rule:** For product apps that call a real LLM end-to-end, split CI into two gates. The PR gate runs fast, deterministic lanes: contract tests, browser-mode tests, and Workers integration tests. The nightly gate runs the real-model end-to-end lane against a low-cost pinned model, on one happy-path scenario plus a short adversarial set.
 
-See also: [Assert Milestones, Not Model Prose](../references/assert-milestones-not-model-prose.md), [Test Workers with Signed Webhook Requests](test-workers-with-signed-webhook-requests.md), [Test React Apps in Real Browsers](test-react-apps-in-real-browsers.md), and [Opinionated Stack Overview](stack-overview.md).
+See also: [Assert Milestones, Not Model Prose](../references/assert-milestones-not-model-prose.md), [Test Workers in the Workers Runtime](test-workers-in-the-workers-runtime.md), [Test React Apps in Real Browsers](test-react-apps-in-real-browsers.md), and [Opinionated Stack Overview](stack-overview.md).
 
 ## Why agents get this wrong
 
@@ -39,7 +39,7 @@ Lanes:
 
 - Contract tests (schemas, serialization, pure transforms).
 - Type 1 — Vitest Browser Mode + MSW, with contract-validated fixtures ([Test React Apps in Real Browsers](test-react-apps-in-real-browsers.md)).
-- Type 2 — `@cloudflare/vitest-pool-workers` integration with signed webhook requests ([Test Workers with Signed Webhook Requests](test-workers-with-signed-webhook-requests.md)).
+- Type 2 — `@cloudflare/vitest-pool-workers` integration driven through the real HTTP entrypoint ([Test Workers in the Workers Runtime](test-workers-in-the-workers-runtime.md)).
 
 Properties:
 
@@ -109,7 +109,7 @@ jobs:
       - run: vp test --project e2e-real-model
 ```
 
-Example implements: [Split Agent Test Lanes by CI Gate](agent-test-lanes-by-ci-gate.md), [Assert Milestones, Not Model Prose](../references/assert-milestones-not-model-prose.md), [Test Workers with Signed Webhook Requests](test-workers-with-signed-webhook-requests.md), [Test React Apps in Real Browsers](test-react-apps-in-real-browsers.md).
+Example implements: [Split Agent Test Lanes by CI Gate](agent-test-lanes-by-ci-gate.md), [Assert Milestones, Not Model Prose](../references/assert-milestones-not-model-prose.md), [Test Workers in the Workers Runtime](test-workers-in-the-workers-runtime.md), [Test React Apps in Real Browsers](test-react-apps-in-real-browsers.md).
 
 ## The test
 
