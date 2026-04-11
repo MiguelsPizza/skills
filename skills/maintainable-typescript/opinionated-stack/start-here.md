@@ -34,7 +34,4 @@ If the repo only needs portable maintainability rules, stay in [`../references/`
 - [`otel-conventions-from-day-one.md`](otel-conventions-from-day-one.md) for observability naming
 - [`schema-migrations-are-generated.md`](schema-migrations-are-generated.md) for database workflow
 - [`test-react-apps-in-real-browsers.md`](test-react-apps-in-real-browsers.md) for browser testing lanes
-- [`test-cloudflare-workers-through-real-requests.md`](test-cloudflare-workers-through-real-requests.md) for request-driven backend testing
-- [`test-github-webhooks-as-signed-contracts.md`](test-github-webhooks-as-signed-contracts.md) for webhook contract fidelity
-- [`test-ai-apps-by-artifacts-not-prose.md`](test-ai-apps-by-artifacts-not-prose.md) for durable AI-app assertion discipline
 - [`use-the-design-system-not-ad-hoc-tailwind.md`](use-the-design-system-not-ad-hoc-tailwind.md) for frontend system discipline

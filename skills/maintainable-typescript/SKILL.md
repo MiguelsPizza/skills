@@ -77,12 +77,10 @@ Use the smallest relevant set.
 - [`references/external-boundary-mocks-only.md`](references/external-boundary-mocks-only.md)
 - [`references/contract-gate-synthetic-fixtures.md`](references/contract-gate-synthetic-fixtures.md)
 - [`references/assert-observable-outcomes.md`](references/assert-observable-outcomes.md)
+- [`references/test-ai-apps-by-artifacts-not-prose.md`](references/test-ai-apps-by-artifacts-not-prose.md)
 - [`references/treat-critical-code-like-a-library.md`](references/treat-critical-code-like-a-library.md)
 - [`references/no-type-casts.md`](references/no-type-casts.md)
 - [`references/boundaries-validate-internals-trust.md`](references/boundaries-validate-internals-trust.md)
-- [`opinionated-stack/test-cloudflare-workers-through-real-requests.md`](opinionated-stack/test-cloudflare-workers-through-real-requests.md)
-- [`opinionated-stack/test-github-webhooks-as-signed-contracts.md`](opinionated-stack/test-github-webhooks-as-signed-contracts.md)
-- [`opinionated-stack/test-ai-apps-by-artifacts-not-prose.md`](opinionated-stack/test-ai-apps-by-artifacts-not-prose.md)
 
 ### Frontend and React state
 

@@ -11,7 +11,7 @@ example:
 
 **Rule:** In durable tests for AI applications, assert milestones, status transitions, and published artifacts. Do not pin the test to exact generated prose unless the wording is itself the contract.
 
-See also: [Assert Observable Outcomes](../references/assert-observable-outcomes.md).
+See also: [Assert Observable Outcomes](assert-observable-outcomes.md).
 
 ## Why agents get this wrong
 
@@ -26,7 +26,7 @@ Assert on stable outcomes such as:
 - run started
 - run completed
 - expected status visible in UI
-- support PR or artifact exists
+- artifact or support output exists
 - error state is surfaced correctly
 
 Only assert on exact text when the exact text is itself the feature.
@@ -44,7 +44,7 @@ Better:
 ```typescript
 expect(run.status).toBe("completed");
 expect(screen.getByText("Status: completed")).toBeVisible();
-expect(screen.getByRole("link", { name: /Support PR #/ })).toBeVisible();
+expect(screen.getByRole("link", { name: /Support output/ })).toBeVisible();
 ```
 
-Example implements: [Test AI Apps by Artifacts, Not Prose](test-ai-apps-by-artifacts-not-prose.md), [Assert Observable Outcomes](../references/assert-observable-outcomes.md), [Integration-First Testing](../references/integration-first-testing.md).
+Example implements: [Test AI Apps by Artifacts, Not Prose](test-ai-apps-by-artifacts-not-prose.md), [Assert Observable Outcomes](assert-observable-outcomes.md), [Integration-First Testing](integration-first-testing.md).
