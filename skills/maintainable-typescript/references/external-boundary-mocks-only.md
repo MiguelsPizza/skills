@@ -5,6 +5,7 @@ example:
   implements:
     - external-boundary-mocks-only
     - integration-first-testing
+    - boundaries-validate-internals-trust
 ---
 # Mock External Boundaries Only
 
@@ -66,4 +67,4 @@ worker.use(
 );
 ```
 
-Example implements: [Mock External Boundaries Only](external-boundary-mocks-only.md), [Integration-First Testing](integration-first-testing.md).
+Example implements: [Mock External Boundaries Only](external-boundary-mocks-only.md), [Integration-First Testing](integration-first-testing.md), [Boundaries Validate, Internals Trust](boundaries-validate-internals-trust.md).

@@ -5,6 +5,7 @@ example:
   implements:
     - assert-observable-outcomes
     - integration-first-testing
+    - bounded-behavior
 ---
 # Assert Observable Outcomes
 
@@ -56,4 +57,4 @@ expect(runProjection.status).toBe("completed");
 expect(screen.getByText("Status: completed")).toBeVisible();
 ```
 
-Example implements: [Assert Observable Outcomes](assert-observable-outcomes.md), [Integration-First Testing](integration-first-testing.md).
+Example implements: [Assert Observable Outcomes](assert-observable-outcomes.md), [Integration-First Testing](integration-first-testing.md), [Bounded Behavior](bounded-behavior.md).

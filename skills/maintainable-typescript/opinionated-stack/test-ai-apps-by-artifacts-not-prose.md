@@ -5,6 +5,7 @@ example:
   implements:
     - test-ai-apps-by-artifacts-not-prose
     - assert-observable-outcomes
+    - integration-first-testing
 ---
 # Test AI Apps by Artifacts, Not Prose
 
@@ -46,4 +47,4 @@ expect(screen.getByText("Status: completed")).toBeVisible();
 expect(screen.getByRole("link", { name: /Support PR #/ })).toBeVisible();
 ```
 
-Example implements: [Test AI Apps by Artifacts, Not Prose](test-ai-apps-by-artifacts-not-prose.md), [Assert Observable Outcomes](../references/assert-observable-outcomes.md).
+Example implements: [Test AI Apps by Artifacts, Not Prose](test-ai-apps-by-artifacts-not-prose.md), [Assert Observable Outcomes](../references/assert-observable-outcomes.md), [Integration-First Testing](../references/integration-first-testing.md).
