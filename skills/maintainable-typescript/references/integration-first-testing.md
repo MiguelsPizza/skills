@@ -9,13 +9,13 @@ example:
 ---
 # Integration-First Testing
 
-**Rule:** Default to slice integration tests after the slice seam is stable. Use contract tests for pure logic. Use browser tests for browser behavior. Mock external boundaries only. If a test needs multiple internal mocks, rewrite it as a slice integration test.
+**Rule:** Default to durable tests that attach regressions to real product boundaries after the slice seam is stable. Use contract tests for pure logic, browser tests for real browser behavior, backend integration tests for request-driven server behavior, and end-to-end tests for user journeys. Mock external boundaries only.
 
 See also: [No Type Casts](no-type-casts.md).
 
 ## Why agents get this wrong
 
-Agents write isolated unit tests with heavy mocking. They mock the database, mock sibling modules, mock internal services — then assert that the code called the mocks in the right order. These tests pass when the implementation is correct but tell you nothing about whether the system actually works. They break on every refactor because they test choreography, not behavior.
+Agents write isolated unit tests with heavy mocking. They mock the database, mock sibling modules, mock internal services, then assert that the code called the mocks in the right order. These tests pass when the implementation is correct but tell you nothing about whether the system actually works. They break on every refactor because they test choreography, not behavior.
 
 ## What to do instead
 
@@ -25,8 +25,9 @@ Use this test stack:
 
 1. Contract tests for schemas, serialization, and pure transforms.
 2. Slice integration tests as the default for feature behavior.
-3. Browser tests for real browser APIs and DOM/runtime semantics.
-4. End-to-end tests for critical cross-package journeys.
+3. Browser tests for real browser APIs, route wiring, and DOM/runtime semantics.
+4. Request-driven backend integration tests for server routes, webhooks, and persisted state transitions.
+5. End-to-end tests for critical cross-package journeys.
 
 Mock external boundaries only:
 - HTTP and network edges
@@ -34,6 +35,23 @@ Mock external boundaries only:
 - third-party SDK internals outside the subject under test
 
 Do not mock sibling modules just to assert call order. If a test needs multiple internal mocks, the test shape is wrong.
+
+Choose the lane before writing the test:
+
+- browser lane when the regression depends on browser/runtime behavior
+- backend integration lane when the regression belongs to a server route, webhook, auth flow, or persisted state transition
+- e2e lane when the regression is a real user story across the frontend and backend
+
+When a test invents data, contract-gate that synthetic fixture with a runtime schema before sending or returning it.
+
+Assert on observable outcomes:
+
+- rendered output
+- HTTP behavior
+- persisted state
+- projections and published artifacts
+
+Avoid helper call-order assertions unless the call itself is the public contract.
 
 Use deterministic waits such as `vi.waitFor` or `expect.poll`. Clean up state in `beforeEach` and `afterEach`.
 

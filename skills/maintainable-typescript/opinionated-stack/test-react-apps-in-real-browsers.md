@@ -20,7 +20,7 @@ references:
 ---
 # Test React Apps in Real Browsers
 
-**Rule:** For browser-facing React apps, run component and hook tests in Vitest Browser Mode with a Playwright provider, mock external HTTP boundaries with MSW, and use Playwright for user journeys. Do not default to jsdom.
+**Rule:** For browser-facing React apps, run durable frontend tests in Vitest Browser Mode with a Playwright provider, mount real route surfaces when product behavior matters, mock HTTP only at the browser boundary with MSW, and use Playwright for full user journeys. Do not default to jsdom.
 
 See also: [Integration-First Testing](../references/integration-first-testing.md), [Opinionated Stack](stack-overview.md), and [Do Not Synchronize State with useEffect](do-not-synchronize-state-with-useeffect.md).
 
@@ -44,6 +44,8 @@ Use the right lane for the job:
 For this stack, browser-mode tests are the default lane for frontend behavior. They should run in a real browser, not a simulated DOM.
 
 MSW is a boundary mock, not a replacement backend. Use it when the network edge is outside the subject under test. If the backend integration itself is the subject, do not hide it behind MSW in the top E2E lane. Even in mocks, return canonical repo shapes: import shared schemas or types instead of inventing response objects inline.
+
+When the regression belongs to the application rather than a tiny leaf component, mount the real route tree or a production-faithful route subtree. Do not fall back to a hand-rolled probe component just because it is easier to render.
 
 Playwright is not a substitute for browser-mode tests. Use it for the flows that need a full page, real navigation, multiple routes, or end-to-end wiring.
 
@@ -181,6 +183,7 @@ Before writing a frontend test, ask:
 
 - Does this behavior depend on real browser semantics such as events, focus, navigation, service workers, or fetch behavior?
 - If so, why is this not a browser-mode test?
+- Am I mounting a real app surface, or a local probe that bypasses the thing I actually need confidence in?
 - Am I mocking an external boundary, or am I mocking my own implementation?
 - Does this flow need a full-page journey, or would a browser-mode test cover it faster?
 - Am I using MSW only where the network boundary is outside the subject under test?
