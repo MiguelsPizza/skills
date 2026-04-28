@@ -1,32 +1,55 @@
 #!/usr/bin/env node
 
-import { readdir, readFile } from 'node:fs/promises';
+import { readFile } from 'node:fs/promises';
 import path from 'node:path';
 
-const ROOT = process.cwd();
-const OPINION_DIRS = [
-  'skills/maintainable-typescript/references',
-  'skills/maintainable-typescript/opinionated-stack',
-];
+import { formatRelative, getOpinionDirs, listMarkdownFiles } from './lib/opinion-files.mjs';
+
 const ALLOWED_FORMATS = new Set(['code', 'text', 'workflow']);
 const FRONT_MATTER_START = '---\n';
 const MARKDOWN_LINK = /\[([^\]]+)\]\(([^)]+)\)/g;
 
-async function listMarkdownFiles(dir) {
-  const directory = path.join(ROOT, dir);
-  const entries = await readdir(directory, { withFileTypes: true });
-  return entries
-    .filter((entry) => entry.isFile() && entry.name.endsWith('.md'))
-    .map((entry) => path.join(directory, entry.name))
-    .sort();
-}
-
-function formatRelative(filePath) {
-  return path.relative(ROOT, filePath);
-}
-
 function getSlug(filePath) {
   return path.basename(filePath, '.md');
+}
+
+function getSkillName(filePath) {
+  const relativePath = formatRelative(filePath);
+  const [root, skillName] = relativePath.split(path.sep);
+  return root === 'skills' ? skillName : null;
+}
+
+function buildSlugMapsBySkill(files) {
+  const slugMapsBySkill = new Map();
+  const failures = [];
+
+  for (const filePath of files) {
+    const skillName = getSkillName(filePath);
+    if (!skillName) {
+      continue;
+    }
+
+    const slug = getSlug(filePath);
+    const slugMap = slugMapsBySkill.get(skillName) ?? new Map();
+    const existingFile = slugMap.get(slug);
+    const relativePath = formatRelative(filePath);
+
+    if (existingFile) {
+      failures.push({
+        file: relativePath,
+        issues: [`duplicate opinion slug \`${slug}\` also used by ${existingFile}`],
+      });
+      continue;
+    }
+
+    slugMap.set(slug, relativePath);
+    slugMapsBySkill.set(skillName, slugMap);
+  }
+
+  return {
+    failures,
+    slugMapsBySkill,
+  };
 }
 
 function extractFrontMatter(text) {
@@ -121,13 +144,15 @@ function parseExampleImplementsFooter(body) {
 }
 
 async function main() {
-  const files = (await Promise.all(OPINION_DIRS.map((dir) => listMarkdownFiles(dir)))).flat();
-  const slugToFile = new Map(files.map((filePath) => [getSlug(filePath), formatRelative(filePath)]));
-  const failures = [];
+  const opinionDirs = await getOpinionDirs();
+  const files = (await Promise.all(opinionDirs.map((dir) => listMarkdownFiles(dir)))).flat();
+  const { failures, slugMapsBySkill } = buildSlugMapsBySkill(files);
   let verifiedCount = 0;
 
   for (const filePath of files) {
     const relativePath = formatRelative(filePath);
+    const skillName = getSkillName(filePath);
+    const slugToFile = slugMapsBySkill.get(skillName) ?? new Map();
     const slug = getSlug(filePath);
     const text = await readFile(filePath, 'utf8');
     const { frontMatter, body } = extractFrontMatter(text);

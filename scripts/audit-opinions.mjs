@@ -1,33 +1,19 @@
 #!/usr/bin/env node
 
-import { readdir, readFile } from 'node:fs/promises';
-import path from 'node:path';
+import { readFile } from 'node:fs/promises';
 
-const ROOT = process.cwd();
-const OPINION_ROOT = 'skills/maintainable-typescript';
-const OPINION_DIRS = [
-  `${OPINION_ROOT}/references`,
-  `${OPINION_ROOT}/opinionated-stack`,
-];
+import { formatRelative, getOpinionDirs, listMarkdownFiles } from './lib/opinion-files.mjs';
+
 const REQUIRED_H2 = [
   'Why agents get this wrong',
   'What to do instead',
   'Example',
 ];
 const IGNORED_FILES = new Set([
-  `${OPINION_ROOT}/references/maintainability-tooling.md`,
-  `${OPINION_ROOT}/opinionated-stack/start-here.md`,
-  `${OPINION_ROOT}/opinionated-stack/stack-overview.md`,
+  'skills/maintainable-typescript/doctrine/tooling/maintainability-tooling.md',
+  'skills/maintainable-typescript/stack/start-here.md',
+  'skills/maintainable-typescript/stack/stack-overview.md',
 ]);
-
-async function listMarkdownFiles(dir) {
-  const directory = path.join(ROOT, dir);
-  const entries = await readdir(directory, { withFileTypes: true });
-  return entries
-    .filter((entry) => entry.isFile() && entry.name.endsWith('.md'))
-    .map((entry) => path.join(directory, entry.name))
-    .sort();
-}
 
 function stripFrontMatter(text) {
   if (!text.startsWith('---\n')) {
@@ -81,19 +67,13 @@ function getHeadings(text) {
   return headings;
 }
 
-function formatRelative(filePath) {
-  return path.relative(ROOT, filePath);
-}
-
 function validateOpinion(filePath, text) {
   const issues = [];
   const content = stripFrontMatter(text);
   const nonEmptyLines = getNonEmptyLines(content);
   const headings = getHeadings(content);
   const relativePath = formatRelative(filePath);
-  const isPortableOpinion =
-    relativePath.startsWith(`${OPINION_ROOT}/references/`)
-    && !relativePath.endsWith(`${OPINION_ROOT}/references/maintainability-tooling.md`);
+  const isPortableOpinion = relativePath.includes('/references/') || relativePath.includes('/doctrine/');
 
   if (nonEmptyLines[0]?.startsWith('# ') !== true) {
     issues.push('missing top-level title as the first non-empty line');
@@ -140,14 +120,17 @@ function validateOpinion(filePath, text) {
 }
 
 async function main() {
-  const files = (await Promise.all(OPINION_DIRS.map((dir) => listMarkdownFiles(dir)))).flat();
+  const opinionDirs = await getOpinionDirs();
+  const files = (await Promise.all(opinionDirs.map((dir) => listMarkdownFiles(dir)))).flat();
   const failures = [];
+  let checkedCount = 0;
 
   for (const filePath of files) {
     if (IGNORED_FILES.has(formatRelative(filePath))) {
       continue;
     }
 
+    checkedCount += 1;
     const text = await readFile(filePath, 'utf8');
     const issues = validateOpinion(filePath, text);
 
@@ -160,11 +143,11 @@ async function main() {
   }
 
   if (failures.length === 0) {
-    console.log(`Opinion audit passed for ${files.length} files.`);
+    console.log(`Opinion audit passed for ${checkedCount} files.`);
     return;
   }
 
-  console.error(`Opinion audit found issues in ${failures.length} of ${files.length} files:\n`);
+  console.error(`Opinion audit found issues in ${failures.length} of ${checkedCount} files:\n`);
 
   for (const failure of failures) {
     console.error(failure.file);

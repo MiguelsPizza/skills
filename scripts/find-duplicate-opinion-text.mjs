@@ -1,23 +1,10 @@
 #!/usr/bin/env node
 
-import { readdir, readFile } from 'node:fs/promises';
-import path from 'node:path';
+import { readFile } from 'node:fs/promises';
 
-const ROOT = process.cwd();
-const OPINION_DIRS = [
-  'skills/maintainable-typescript/references',
-  'skills/maintainable-typescript/opinionated-stack',
-];
+import { formatRelative, getOpinionDirs, listMarkdownFiles } from './lib/opinion-files.mjs';
+
 const MIN_WORDS = 8;
-
-async function listMarkdownFiles(dir) {
-  const directory = path.join(ROOT, dir);
-  const entries = await readdir(directory, { withFileTypes: true });
-  return entries
-    .filter((entry) => entry.isFile() && entry.name.endsWith('.md'))
-    .map((entry) => path.join(directory, entry.name))
-    .sort();
-}
 
 function stripFrontMatter(text) {
   if (!text.startsWith('---\n')) {
@@ -102,12 +89,9 @@ function extractTextBlocks(markdown) {
   return blocks;
 }
 
-function formatRelative(filePath) {
-  return path.relative(ROOT, filePath);
-}
-
 async function main() {
-  const files = (await Promise.all(OPINION_DIRS.map((dir) => listMarkdownFiles(dir)))).flat();
+  const opinionDirs = await getOpinionDirs();
+  const files = (await Promise.all(opinionDirs.map((dir) => listMarkdownFiles(dir)))).flat();
   const seen = new Map();
 
   for (const filePath of files) {
@@ -138,6 +122,7 @@ async function main() {
   }
 
   console.log(`Found ${duplicates.length} duplicated prose block(s) across opinion files:\n`);
+  process.exitCode = 1;
 
   for (const duplicate of duplicates) {
     console.log('Files:');

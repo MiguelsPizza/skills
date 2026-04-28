@@ -19,7 +19,7 @@ Skills make your MCP integration more complete. As users compare connectors, tho
 
 ## An open standard
 
-We've published [Agent Skills](https://github.com/anthropics/agent-skills-spec) as an open standard. Like MCP, we believe skills should be portable across tools and platforms - the same skill should work whether you're using Claude or other AI platforms. That said, some skills are designed to take full advantage of a specific platform's capabilities; authors can note this in the skill's `compatibility` field. We've been collaborating with members of the ecosystem on the standard, and we're excited by early adoption.
+We've published [Agent Skills](https://agentskills.io/specification) as an open standard. Like MCP, we believe skills should be portable across tools and platforms - the same skill should work whether you're using Claude or other AI platforms. That said, some skills are designed to take full advantage of a specific platform's capabilities; authors can note this in the skill's `compatibility` field. We've been collaborating with members of the ecosystem on the standard, and we're excited by early adoption.
 
 ## Using skills via API
 
