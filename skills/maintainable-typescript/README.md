@@ -7,12 +7,14 @@ Maintainability-first doctrine for strict TypeScript repos and monorepos.
 Coding agents optimize for "works right now." This skill is meant to push them toward "leave the repo easier to change next month."
 
 The doctrine is opinionated on purpose. It treats maintainability as a correctness concern, not as polish to add later.
+In the agent era, code generation is cheap. Reviewer attention, conceptual stability, and truthful structure are not.
 
 ## What's In Here
 
 - [SKILL.md](SKILL.md) is the skill entrypoint.
 - [references/](references) contains portable rules for strict TypeScript repos.
 - [opinionated-stack/](opinionated-stack) contains stack-specific doctrine for the Vite+ / TanStack Router / Drizzle / oRPC / Cloudflare architecture.
+- [prompts/](prompts) contains reusable prompt text for cleanup, review, and refactor tasks that need to fight default agent behavior.
 - [scripts/](scripts) contains bundled audit helpers for dead code, duplicate code, and architecture checks.
 - [assets/tooling-templates/](assets/tooling-templates) contains copyable config templates for target repos.
 
@@ -84,6 +86,7 @@ If you are working from this repo instead of the standalone skill archive, the s
 
 **Cleanup & Deletion**
 - [Delete Obsolete Code](references/delete-obsolete-code.md)
+- [Delete Temporary Migration Layers](references/delete-temporary-migration-layers.md)
 - [No Backwards Compatibility Shims](references/no-backwards-compat-shims.md)
 - [No Unused Exports](references/no-unused-exports.md)
 - [Clean Up What You Touch](references/clean-up-what-you-touch.md)
@@ -98,7 +101,19 @@ If you are working from this repo instead of the standalone skill archive, the s
 **Abstractions & Architecture**
 - [Split By Stable Seam](references/split-by-stable-seam.md)
 - [No Premature Abstractions](references/no-premature-abstractions.md)
+- [Delete Shape Churn](references/delete-shape-churn.md)
+- [Delete Pass-Through Wrappers](references/delete-pass-through-wrappers.md)
 - [No Speculative Configuration](references/no-speculative-configuration.md)
+- [Design Around Composable Primitives](references/design-around-composable-primitives.md)
+- [Keep a Functional Core and Imperative Shell](references/keep-a-functional-core-and-imperative-shell.md)
+- [Pass Values Across Boundaries](references/pass-values-across-boundaries.md)
+- [Build Deep Modules, Not Shallow Abstractions](references/build-deep-modules-not-shallow-abstractions.md)
+- [Edit Real Owners](references/edit-real-owners.md)
+- [Compose Behavior, Do Not Specialize Classes](references/compose-behavior-do-not-specialize-classes.md)
+- [Use Classes for Object APIs, Not Service Buckets](references/use-classes-for-object-apis-not-service-buckets.md)
+- [Accumulate Types With Builders](references/accumulate-types-with-builders.md)
+- [Compose Builders From Steps](references/compose-builders-from-steps.md)
+- [Do Not Use Builders for Plain Data](references/do-not-use-builders-for-plain-data.md)
 - [Keep Schemas Minimal](references/keep-schemas-minimal.md)
 - [Assign Cache Invalidation Owners](references/assign-cache-invalidation-owners.md)
 - [SSOT or Die](references/ssot-or-die.md)
@@ -115,6 +130,7 @@ If you are working from this repo instead of the standalone skill archive, the s
 - [Treat Critical Code Like a Library](references/treat-critical-code-like-a-library.md)
 
 **Agent-Specific**
+- [Write for the Agent Era](references/write-for-the-agent-era.md)
 - [Your Pattern Will Be Copied](references/your-pattern-will-be-copied.md)
 - [Bounded Behavior](references/bounded-behavior.md)
 
@@ -164,6 +180,11 @@ If you are working from this repo instead of the standalone skill archive, the s
 - [Do Not Use Next.js](opinionated-stack/do-not-use-nextjs.md)
 - [Do Not Synchronize State with useEffect](opinionated-stack/do-not-synchronize-state-with-useeffect.md)
 - [Use the Design System, Not Ad Hoc Tailwind](opinionated-stack/use-the-design-system-not-ad-hoc-tailwind.md)
+
+## Prompt Assets
+
+- [Cleanup Module Rewrite](prompts/cleanup-module-rewrite.md)
+- [Review Structural Slop](prompts/review-structural-slop.md)
 
 ## Contributing
 

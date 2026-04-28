@@ -220,4 +220,4 @@ Ask:
 - If I rename an operation or rewrite its description, does that change happen in `.route(...)` instead of in a separate OpenAPI file?
 - Is any response shape described manually that oRPC could infer from the contract?
 
-If the answer to those questions is no, the inference chain is broken.
+If any answer is no, the error-contract side of the inference chain is broken.

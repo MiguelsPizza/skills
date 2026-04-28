@@ -11,6 +11,7 @@ Use this skill when the project needs maintainability doctrine, not just local c
 
 - [`references/`](references/) contains the portable rules and supporting guidance that should hold across strict TypeScript repos.
 - [`opinionated-stack/`](opinionated-stack/) contains stack-specific doctrine for the opinionated Vite+ / Drizzle / oRPC / Cloudflare setup.
+- [`prompts/`](prompts/) contains reusable prompt text for cleanup and review tasks when you need to steer another model away from wrapper-heavy refactors.
 - [`scripts/`](scripts/) contains runnable TypeScript-repo audit helpers for dead code, duplicate code, and import-boundary problems in the current project.
 - [`assets/tooling-templates/`](assets/tooling-templates/) contains copyable config templates for target repos.
 
@@ -40,15 +41,23 @@ Use the smallest relevant set.
 ### Cleanup, deletion, and refactor
 
 - [`references/maintainability-equals-correctness.md`](references/maintainability-equals-correctness.md)
+- [`references/write-for-the-agent-era.md`](references/write-for-the-agent-era.md)
 - [`references/clean-up-what-you-touch.md`](references/clean-up-what-you-touch.md)
 - [`references/delete-obsolete-code.md`](references/delete-obsolete-code.md)
+- [`references/delete-temporary-migration-layers.md`](references/delete-temporary-migration-layers.md)
 - [`references/no-backwards-compat-shims.md`](references/no-backwards-compat-shims.md)
+- [`references/delete-shape-churn.md`](references/delete-shape-churn.md)
+- [`references/delete-pass-through-wrappers.md`](references/delete-pass-through-wrappers.md)
+- [`references/edit-real-owners.md`](references/edit-real-owners.md)
 - [`references/split-by-stable-seam.md`](references/split-by-stable-seam.md)
 - [`references/your-pattern-will-be-copied.md`](references/your-pattern-will-be-copied.md)
+- Prompt text for another model: [`prompts/cleanup-module-rewrite.md`](prompts/cleanup-module-rewrite.md) or [`prompts/review-structural-slop.md`](prompts/review-structural-slop.md)
 
 ### Package boundaries and shared runtime code
 
 - [`references/split-by-stable-seam.md`](references/split-by-stable-seam.md)
+- [`references/delete-shape-churn.md`](references/delete-shape-churn.md)
+- [`references/delete-pass-through-wrappers.md`](references/delete-pass-through-wrappers.md)
 - [`references/monorepo-package-boundaries.md`](references/monorepo-package-boundaries.md)
 - [`references/treat-critical-code-like-a-library.md`](references/treat-critical-code-like-a-library.md)
 - [`references/naming-is-navigation.md`](references/naming-is-navigation.md)
@@ -119,6 +128,8 @@ If the target repo is Vite+, use `vp` for the normal toolchain entrypoint: `vp l
 
 ## Defaults
 
+- Code is cheap. Structure is expensive.
+- Preserve contracts, tests, and invariants, not stale decomposition.
 - Prefer deletion over shims.
 - Prefer stable subsystem files over one-helper-per-file trees.
 - Prefer derived types and schemas over handwritten duplicates.
