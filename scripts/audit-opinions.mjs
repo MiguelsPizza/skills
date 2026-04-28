@@ -10,9 +10,9 @@ const REQUIRED_H2 = [
   'Example',
 ];
 const IGNORED_FILES = new Set([
-  'skills/maintainable-typescript/references/maintainability-tooling.md',
-  'skills/maintainable-typescript/opinionated-stack/start-here.md',
-  'skills/maintainable-typescript/opinionated-stack/stack-overview.md',
+  'skills/maintainable-typescript/doctrine/tooling/maintainability-tooling.md',
+  'skills/maintainable-typescript/stack/start-here.md',
+  'skills/maintainable-typescript/stack/stack-overview.md',
 ]);
 
 function stripFrontMatter(text) {
@@ -73,7 +73,7 @@ function validateOpinion(filePath, text) {
   const nonEmptyLines = getNonEmptyLines(content);
   const headings = getHeadings(content);
   const relativePath = formatRelative(filePath);
-  const isPortableOpinion = relativePath.includes('/references/');
+  const isPortableOpinion = relativePath.includes('/references/') || relativePath.includes('/doctrine/');
 
   if (nonEmptyLines[0]?.startsWith('# ') !== true) {
     issues.push('missing top-level title as the first non-empty line');

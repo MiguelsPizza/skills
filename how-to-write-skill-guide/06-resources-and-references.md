@@ -13,12 +13,9 @@ If you're building your first skill, start with the Best Practices Guide, then r
 
 **Blog Posts:**
 
-- [Introducing Agent Skills](https://www.anthropic.com/news/agent-skills)
-- [Engineering Blog: Equipping Agents for the Real World](https://www.anthropic.com/engineering/skills)
-- [Skills Explained](https://www.anthropic.com/news/skills-explained)
-- [How to Create Skills for Claude](https://www.anthropic.com/news/how-to-create-skills)
-- [Building Skills for Claude Code](https://www.anthropic.com/news/building-skills-for-claude-code)
-- [Improving Frontend Design through Skills](https://www.anthropic.com/news/frontend-design-skills)
+- [Introducing Agent Skills](https://www.anthropic.com/news/skills)
+- [Engineering Blog: Equipping Agents for the Real World](https://www.anthropic.com/engineering/equipping-agents-for-the-real-world-with-agent-skills)
+- [Agent Skills Specification](https://agentskills.io/specification)
 
 ## Example skills
 
@@ -149,6 +146,6 @@ For full, production-ready skills demonstrating the patterns in this guide:
 
 - [Document Skills](https://github.com/anthropics/skills) - PDF, DOCX, PPTX, XLSX creation
 - [Example Skills](https://github.com/anthropics/skills) - Various workflow patterns
-- [Partner Skills Directory](https://www.anthropic.com/skills) - View skills from various partners such as Asana, Atlassian, Canva, Figma, Sentry, Zapier, and more
+- [Anthropic Skills Repository](https://github.com/anthropics/skills) - Browse Anthropic-created skills and examples
 
 These repositories stay up-to-date and include additional examples beyond what's covered here. Clone them, modify them for your use case, and use them as templates.

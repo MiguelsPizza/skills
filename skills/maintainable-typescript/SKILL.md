@@ -9,8 +9,8 @@ Use this skill when the project needs maintainability doctrine, not just local c
 
 ## Layout
 
-- [`references/`](references/) contains the portable rules and supporting guidance that should hold across strict TypeScript repos.
-- [`opinionated-stack/`](opinionated-stack/) contains stack-specific doctrine for the opinionated Vite+ / Drizzle / oRPC / Cloudflare setup.
+- [`doctrine/`](doctrine/) contains the portable rules and supporting guidance that should hold across strict TypeScript repos.
+- [`stack/`](stack/) contains stack-specific doctrine for the opinionated Vite+ / Drizzle / oRPC / Cloudflare setup.
 - [`prompts/`](prompts/) contains reusable prompt text for cleanup and review tasks when you need to steer another model away from wrapper-heavy refactors.
 - [`scripts/`](scripts/) contains runnable TypeScript-repo audit helpers for dead code, duplicate code, and import-boundary problems in the current project.
 - [`assets/tooling-templates/`](assets/tooling-templates/) contains copyable config templates for target repos.
@@ -26,13 +26,13 @@ Do not read the whole skill directory by default.
 
 Default portable backbone:
 
-- [`references/maintainability-equals-correctness.md`](references/maintainability-equals-correctness.md)
-- [`references/ssot-or-die.md`](references/ssot-or-die.md)
-- [`references/integration-first-testing.md`](references/integration-first-testing.md)
-- [`references/external-boundary-mocks-only.md`](references/external-boundary-mocks-only.md)
-- [`references/assert-observable-outcomes.md`](references/assert-observable-outcomes.md)
+- [`doctrine/foundations/maintainability-equals-correctness.md`](./doctrine/foundations/maintainability-equals-correctness.md)
+- [`doctrine/abstractions/ssot-or-die.md`](./doctrine/abstractions/ssot-or-die.md)
+- [`doctrine/testing/integration-first-testing.md`](./doctrine/testing/integration-first-testing.md)
+- [`doctrine/testing/external-boundary-mocks-only.md`](./doctrine/testing/external-boundary-mocks-only.md)
+- [`doctrine/testing/assert-observable-outcomes.md`](./doctrine/testing/assert-observable-outcomes.md)
 
-If the repo matches the house stack, read [`opinionated-stack/start-here.md`](opinionated-stack/start-here.md) before any stack-specific files.
+If the repo matches the house stack, read [`stack/start-here.md`](./stack/start-here.md) before any stack-specific files.
 
 ## Task Router
 
@@ -40,77 +40,74 @@ Use the smallest relevant set.
 
 ### Cleanup, deletion, and refactor
 
-- [`references/maintainability-equals-correctness.md`](references/maintainability-equals-correctness.md)
-- [`references/write-for-the-agent-era.md`](references/write-for-the-agent-era.md)
-- [`references/clean-up-what-you-touch.md`](references/clean-up-what-you-touch.md)
-- [`references/delete-obsolete-code.md`](references/delete-obsolete-code.md)
-- [`references/delete-temporary-migration-layers.md`](references/delete-temporary-migration-layers.md)
-- [`references/no-backwards-compat-shims.md`](references/no-backwards-compat-shims.md)
-- [`references/delete-shape-churn.md`](references/delete-shape-churn.md)
-- [`references/delete-pass-through-wrappers.md`](references/delete-pass-through-wrappers.md)
-- [`references/edit-real-owners.md`](references/edit-real-owners.md)
-- [`references/split-by-stable-seam.md`](references/split-by-stable-seam.md)
-- [`references/your-pattern-will-be-copied.md`](references/your-pattern-will-be-copied.md)
+- [`doctrine/foundations/maintainability-equals-correctness.md`](./doctrine/foundations/maintainability-equals-correctness.md)
+- [`doctrine/foundations/write-for-the-agent-era.md`](./doctrine/foundations/write-for-the-agent-era.md)
+- [`doctrine/deletion/clean-up-what-you-touch.md`](./doctrine/deletion/clean-up-what-you-touch.md)
+- [`doctrine/deletion/delete-obsolete-code.md`](./doctrine/deletion/delete-obsolete-code.md)
+- [`doctrine/deletion/no-backwards-compat-shims.md`](./doctrine/deletion/no-backwards-compat-shims.md)
+- [`doctrine/deletion/delete-fake-layers.md`](./doctrine/deletion/delete-fake-layers.md)
+- [`doctrine/deletion/edit-real-owners.md`](./doctrine/deletion/edit-real-owners.md)
+- [`doctrine/abstractions/split-by-stable-seam.md`](./doctrine/abstractions/split-by-stable-seam.md)
+- [`doctrine/foundations/your-pattern-will-be-copied.md`](./doctrine/foundations/your-pattern-will-be-copied.md)
 - Prompt text for another model: [`prompts/cleanup-module-rewrite.md`](prompts/cleanup-module-rewrite.md) or [`prompts/review-structural-slop.md`](prompts/review-structural-slop.md)
 
 ### Package boundaries and shared runtime code
 
-- [`references/split-by-stable-seam.md`](references/split-by-stable-seam.md)
-- [`references/delete-shape-churn.md`](references/delete-shape-churn.md)
-- [`references/delete-pass-through-wrappers.md`](references/delete-pass-through-wrappers.md)
-- [`references/monorepo-package-boundaries.md`](references/monorepo-package-boundaries.md)
-- [`references/treat-critical-code-like-a-library.md`](references/treat-critical-code-like-a-library.md)
-- [`references/naming-is-navigation.md`](references/naming-is-navigation.md)
-- [`references/no-re-exports.md`](references/no-re-exports.md)
-- [`references/no-barrel-exports.md`](references/no-barrel-exports.md)
+- [`doctrine/abstractions/split-by-stable-seam.md`](./doctrine/abstractions/split-by-stable-seam.md)
+- [`doctrine/deletion/delete-fake-layers.md`](./doctrine/deletion/delete-fake-layers.md)
+- [`doctrine/packages/monorepo-package-boundaries.md`](./doctrine/packages/monorepo-package-boundaries.md)
+- [`doctrine/foundations/treat-critical-code-like-a-library.md`](./doctrine/foundations/treat-critical-code-like-a-library.md)
+- [`doctrine/foundations/naming-is-navigation.md`](./doctrine/foundations/naming-is-navigation.md)
+- [`doctrine/packages/no-re-exports.md`](./doctrine/packages/no-re-exports.md)
+- [`doctrine/packages/no-barrel-exports.md`](./doctrine/packages/no-barrel-exports.md)
 
 ### API, schemas, and OpenAPI
 
-- [`references/ssot-or-die.md`](references/ssot-or-die.md)
-- [`opinionated-stack/design-openapi-for-inference.md`](opinionated-stack/design-openapi-for-inference.md)
-- [`opinionated-stack/errors-are-schema.md`](opinionated-stack/errors-are-schema.md)
-- [`opinionated-stack/document-fields-in-derived-zod-schemas.md`](opinionated-stack/document-fields-in-derived-zod-schemas.md)
-- [`opinionated-stack/use-canonical-named-types.md`](opinionated-stack/use-canonical-named-types.md)
+- [`doctrine/abstractions/ssot-or-die.md`](./doctrine/abstractions/ssot-or-die.md)
+- [`stack/design-openapi-for-inference.md`](./stack/design-openapi-for-inference.md)
+- [`stack/errors-are-schema.md`](./stack/errors-are-schema.md)
+- [`stack/document-fields-in-derived-zod-schemas.md`](./stack/document-fields-in-derived-zod-schemas.md)
+- [`stack/use-canonical-named-types.md`](./stack/use-canonical-named-types.md)
 
 ### Types, constants, and documentation
 
-- [`references/ssot-or-die.md`](references/ssot-or-die.md)
-- [`opinionated-stack/jsdoc-with-first-party-sources.md`](opinionated-stack/jsdoc-with-first-party-sources.md)
-- [`opinionated-stack/no-magic-values.md`](opinionated-stack/no-magic-values.md)
-- [`opinionated-stack/use-branded-scalar-types.md`](opinionated-stack/use-branded-scalar-types.md)
-- [`opinionated-stack/use-canonical-named-types.md`](opinionated-stack/use-canonical-named-types.md)
+- [`doctrine/abstractions/ssot-or-die.md`](./doctrine/abstractions/ssot-or-die.md)
+- [`stack/jsdoc-with-first-party-sources.md`](./stack/jsdoc-with-first-party-sources.md)
+- [`stack/no-magic-values.md`](./stack/no-magic-values.md)
+- [`stack/use-branded-scalar-types.md`](./stack/use-branded-scalar-types.md)
+- [`stack/use-canonical-named-types.md`](./stack/use-canonical-named-types.md)
 
 ### Testing and high-risk logic
 
-- [`references/integration-first-testing.md`](references/integration-first-testing.md)
-- [`references/external-boundary-mocks-only.md`](references/external-boundary-mocks-only.md)
-- [`references/contract-gate-synthetic-fixtures.md`](references/contract-gate-synthetic-fixtures.md)
-- [`references/assert-observable-outcomes.md`](references/assert-observable-outcomes.md)
-- [`references/test-ai-apps-by-artifacts-not-prose.md`](references/test-ai-apps-by-artifacts-not-prose.md)
-- [`references/treat-critical-code-like-a-library.md`](references/treat-critical-code-like-a-library.md)
-- [`references/no-type-casts.md`](references/no-type-casts.md)
-- [`references/boundaries-validate-internals-trust.md`](references/boundaries-validate-internals-trust.md)
+- [`doctrine/testing/integration-first-testing.md`](./doctrine/testing/integration-first-testing.md)
+- [`doctrine/testing/external-boundary-mocks-only.md`](./doctrine/testing/external-boundary-mocks-only.md)
+- [`doctrine/testing/contract-gate-synthetic-fixtures.md`](./doctrine/testing/contract-gate-synthetic-fixtures.md)
+- [`doctrine/testing/assert-observable-outcomes.md`](./doctrine/testing/assert-observable-outcomes.md)
+- [`doctrine/testing/test-ai-apps-by-artifacts-not-prose.md`](./doctrine/testing/test-ai-apps-by-artifacts-not-prose.md)
+- [`doctrine/foundations/treat-critical-code-like-a-library.md`](./doctrine/foundations/treat-critical-code-like-a-library.md)
+- [`doctrine/boundaries/no-type-casts.md`](./doctrine/boundaries/no-type-casts.md)
+- [`doctrine/boundaries/boundaries-validate-internals-trust.md`](./doctrine/boundaries/boundaries-validate-internals-trust.md)
 
 ### Frontend and React state
 
-- [`opinionated-stack/do-not-synchronize-state-with-useeffect.md`](opinionated-stack/do-not-synchronize-state-with-useeffect.md)
-- [`references/external-boundary-mocks-only.md`](references/external-boundary-mocks-only.md)
-- [`references/contract-gate-synthetic-fixtures.md`](references/contract-gate-synthetic-fixtures.md)
-- [`opinionated-stack/use-the-design-system-not-ad-hoc-tailwind.md`](opinionated-stack/use-the-design-system-not-ad-hoc-tailwind.md)
-- [`opinionated-stack/test-react-apps-in-real-browsers.md`](opinionated-stack/test-react-apps-in-real-browsers.md)
+- [`stack/do-not-synchronize-state-with-useeffect.md`](./stack/do-not-synchronize-state-with-useeffect.md)
+- [`doctrine/testing/external-boundary-mocks-only.md`](./doctrine/testing/external-boundary-mocks-only.md)
+- [`doctrine/testing/contract-gate-synthetic-fixtures.md`](./doctrine/testing/contract-gate-synthetic-fixtures.md)
+- [`stack/use-the-design-system-not-ad-hoc-tailwind.md`](./stack/use-the-design-system-not-ad-hoc-tailwind.md)
+- [`stack/test-react-apps-in-real-browsers.md`](./stack/test-react-apps-in-real-browsers.md)
 
 ### Toolchain, dependencies, and database workflow
 
-- [`opinionated-stack/stack-overview.md`](opinionated-stack/stack-overview.md)
-- [`opinionated-stack/catalog-dependencies.md`](opinionated-stack/catalog-dependencies.md)
-- [`opinionated-stack/schema-migrations-are-generated.md`](opinionated-stack/schema-migrations-are-generated.md)
-- [`references/use-mature-dependencies-dont-roll-your-own.md`](references/use-mature-dependencies-dont-roll-your-own.md)
-- [`references/maintainability-tooling.md`](references/maintainability-tooling.md)
+- [`stack/stack-overview.md`](./stack/stack-overview.md)
+- [`stack/catalog-dependencies.md`](./stack/catalog-dependencies.md)
+- [`stack/schema-migrations-are-generated.md`](./stack/schema-migrations-are-generated.md)
+- [`doctrine/packages/use-mature-dependencies-dont-roll-your-own.md`](./doctrine/packages/use-mature-dependencies-dont-roll-your-own.md)
+- [`doctrine/tooling/maintainability-tooling.md`](./doctrine/tooling/maintainability-tooling.md)
 
 ### Full doctrine review or editing this skill itself
 
-- read all of [`references/`](references/)
-- read all of [`opinionated-stack/`](opinionated-stack/)
+- read all of [`doctrine/`](doctrine/)
+- read all of [`stack/`](stack/)
 - use the bundled verification scripts before finishing
 
 ## Audit workflow

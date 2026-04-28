@@ -144,9 +144,9 @@ This part is about the code itself.
 
 Main sources:
 
-- `references/write-for-the-agent-era.md`
-- `references/maintainability-equals-correctness.md`
-- `references/your-pattern-will-be-copied.md`
+- `skills/maintainable-typescript/doctrine/foundations/write-for-the-agent-era.md`
+- `skills/maintainable-typescript/doctrine/foundations/maintainability-equals-correctness.md`
+- `skills/maintainable-typescript/doctrine/foundations/your-pattern-will-be-copied.md`
 
 What to say:
 
@@ -158,11 +158,11 @@ What to say:
 
 Main sources:
 
-- `references/write-for-the-agent-era.md`
-- `references/delete-obsolete-code.md`
-- `references/delete-temporary-migration-layers.md`
-- `references/no-backwards-compat-shims.md`
-- `references/atomic-changes.md`
+- `skills/maintainable-typescript/doctrine/foundations/write-for-the-agent-era.md`
+- `skills/maintainable-typescript/doctrine/deletion/delete-obsolete-code.md`
+- `skills/maintainable-typescript/doctrine/deletion/no-backwards-compat-shims.md`
+- `skills/maintainable-typescript/doctrine/deletion/no-backwards-compat-shims.md`
+- `skills/maintainable-typescript/doctrine/foundations/atomic-changes.md`
 
 What to say:
 
@@ -175,11 +175,11 @@ What to say:
 
 Main sources:
 
-- `references/delete-shape-churn.md`
-- `references/delete-pass-through-wrappers.md`
-- `references/no-premature-abstractions.md`
-- `references/build-deep-modules-not-shallow-abstractions.md`
-- `references/design-around-composable-primitives.md`
+- `skills/maintainable-typescript/doctrine/deletion/delete-fake-layers.md`
+- `skills/maintainable-typescript/doctrine/deletion/delete-fake-layers.md`
+- `skills/maintainable-typescript/doctrine/abstractions/no-premature-abstractions.md`
+- `skills/maintainable-typescript/doctrine/abstractions/build-deep-modules-not-shallow-abstractions.md`
+- `skills/maintainable-typescript/doctrine/abstractions/design-around-composable-primitives.md`
 
 What to say:
 
@@ -191,11 +191,11 @@ What to say:
 
 Main sources:
 
-- `references/split-by-stable-seam.md`
-- `references/naming-is-navigation.md`
-- `references/monorepo-package-boundaries.md`
-- `references/no-barrel-exports.md`
-- `references/no-re-exports.md`
+- `skills/maintainable-typescript/doctrine/abstractions/split-by-stable-seam.md`
+- `skills/maintainable-typescript/doctrine/foundations/naming-is-navigation.md`
+- `skills/maintainable-typescript/doctrine/packages/monorepo-package-boundaries.md`
+- `skills/maintainable-typescript/doctrine/packages/no-barrel-exports.md`
+- `skills/maintainable-typescript/doctrine/packages/no-re-exports.md`
 
 What to say:
 
@@ -207,10 +207,10 @@ What to say:
 
 Main sources:
 
-- `references/ssot-or-die.md`
-- `references/pass-values-across-boundaries.md`
-- `references/no-type-casts.md`
-- `references/boundaries-validate-internals-trust.md`
+- `skills/maintainable-typescript/doctrine/abstractions/ssot-or-die.md`
+- `skills/maintainable-typescript/doctrine/boundaries/pass-values-across-boundaries.md`
+- `skills/maintainable-typescript/doctrine/boundaries/no-type-casts.md`
+- `skills/maintainable-typescript/doctrine/boundaries/boundaries-validate-internals-trust.md`
 
 What to say:
 
@@ -223,11 +223,11 @@ What to say:
 
 Main sources:
 
-- `references/integration-first-testing.md`
-- `references/external-boundary-mocks-only.md`
-- `references/assert-observable-outcomes.md`
-- `references/contract-gate-synthetic-fixtures.md`
-- `references/test-ai-apps-by-artifacts-not-prose.md`
+- `skills/maintainable-typescript/doctrine/testing/integration-first-testing.md`
+- `skills/maintainable-typescript/doctrine/testing/external-boundary-mocks-only.md`
+- `skills/maintainable-typescript/doctrine/testing/assert-observable-outcomes.md`
+- `skills/maintainable-typescript/doctrine/testing/contract-gate-synthetic-fixtures.md`
+- `skills/maintainable-typescript/doctrine/testing/test-ai-apps-by-artifacts-not-prose.md`
 
 What to say:
 
@@ -244,10 +244,10 @@ This part is about agent doctrine and promptable rules.
 
 Main sources:
 
-- `references/write-for-the-agent-era.md`
-- `references/your-pattern-will-be-copied.md`
-- `references/no-premature-abstractions.md`
-- `references/clean-up-what-you-touch.md`
+- `skills/maintainable-typescript/doctrine/foundations/write-for-the-agent-era.md`
+- `skills/maintainable-typescript/doctrine/foundations/your-pattern-will-be-copied.md`
+- `skills/maintainable-typescript/doctrine/abstractions/no-premature-abstractions.md`
+- `skills/maintainable-typescript/doctrine/deletion/clean-up-what-you-touch.md`
 
 What to say:
 
@@ -274,12 +274,12 @@ Good rules to include:
 
 Primary source files:
 
-- `references/write-for-the-agent-era.md`
-- `references/delete-shape-churn.md`
-- `references/delete-pass-through-wrappers.md`
-- `references/delete-obsolete-code.md`
-- `references/no-backwards-compat-shims.md`
-- `references/your-pattern-will-be-copied.md`
+- `skills/maintainable-typescript/doctrine/foundations/write-for-the-agent-era.md`
+- `skills/maintainable-typescript/doctrine/deletion/delete-fake-layers.md`
+- `skills/maintainable-typescript/doctrine/deletion/delete-fake-layers.md`
+- `skills/maintainable-typescript/doctrine/deletion/delete-obsolete-code.md`
+- `skills/maintainable-typescript/doctrine/deletion/no-backwards-compat-shims.md`
+- `skills/maintainable-typescript/doctrine/foundations/your-pattern-will-be-copied.md`
 
 #### C. How I decide when to rewrite instead of patch
 
@@ -296,11 +296,11 @@ Suggested rewrite triggers:
 
 Supporting sources:
 
-- `references/write-for-the-agent-era.md`
-- `references/delete-shape-churn.md`
-- `references/delete-pass-through-wrappers.md`
-- `references/delete-temporary-migration-layers.md`
-- `references/build-deep-modules-not-shallow-abstractions.md`
+- `skills/maintainable-typescript/doctrine/foundations/write-for-the-agent-era.md`
+- `skills/maintainable-typescript/doctrine/deletion/delete-fake-layers.md`
+- `skills/maintainable-typescript/doctrine/deletion/delete-fake-layers.md`
+- `skills/maintainable-typescript/doctrine/deletion/no-backwards-compat-shims.md`
+- `skills/maintainable-typescript/doctrine/abstractions/build-deep-modules-not-shallow-abstractions.md`
 
 Potential line:
 
@@ -310,16 +310,16 @@ Potential line:
 
 Main sources:
 
-- `references/maintainability-tooling.md`
-- `scripts/audit-typescript-repo.sh`
-- `scripts/audit-typescript-dead-code.sh`
-- `scripts/audit-typescript-duplicate-code.sh`
-- `scripts/audit-typescript-architecture.sh`
-- `assets/tooling-templates/.knip.json`
-- `assets/tooling-templates/.dependency-cruiser.mjs`
-- `assets/tooling-templates/.jscpd.json`
-- `assets/tooling-templates/ast-grep/no-as-any.yml`
-- `assets/tooling-templates/ast-grep/no-ts-ignore.yml`
+- `skills/maintainable-typescript/doctrine/tooling/maintainability-tooling.md`
+- `skills/maintainable-typescript/scripts/audit-typescript-repo.sh`
+- `skills/maintainable-typescript/scripts/audit-typescript-dead-code.sh`
+- `skills/maintainable-typescript/scripts/audit-typescript-duplicate-code.sh`
+- `skills/maintainable-typescript/scripts/audit-typescript-architecture.sh`
+- `skills/maintainable-typescript/assets/tooling-templates/.knip.json`
+- `skills/maintainable-typescript/assets/tooling-templates/.dependency-cruiser.mjs`
+- `skills/maintainable-typescript/assets/tooling-templates/.jscpd.json`
+- `skills/maintainable-typescript/assets/tooling-templates/ast-grep/no-as-any.yml`
+- `skills/maintainable-typescript/assets/tooling-templates/ast-grep/no-ts-ignore.yml`
 
 What to say:
 
@@ -331,40 +331,40 @@ What to say:
 
 ### Best files for the main thesis
 
-- `skills/maintainable-typescript/references/write-for-the-agent-era.md`
-- `skills/maintainable-typescript/references/maintainability-equals-correctness.md`
-- `skills/maintainable-typescript/references/your-pattern-will-be-copied.md`
+- `skills/maintainable-typescript/doctrine/foundations/write-for-the-agent-era.md`
+- `skills/maintainable-typescript/doctrine/foundations/maintainability-equals-correctness.md`
+- `skills/maintainable-typescript/doctrine/foundations/your-pattern-will-be-copied.md`
 
 ### Best files for deletion / rewrite doctrine
 
-- `skills/maintainable-typescript/references/delete-obsolete-code.md`
-- `skills/maintainable-typescript/references/delete-temporary-migration-layers.md`
-- `skills/maintainable-typescript/references/no-backwards-compat-shims.md`
-- `skills/maintainable-typescript/references/atomic-changes.md`
+- `skills/maintainable-typescript/doctrine/deletion/delete-obsolete-code.md`
+- `skills/maintainable-typescript/doctrine/deletion/no-backwards-compat-shims.md`
+- `skills/maintainable-typescript/doctrine/deletion/no-backwards-compat-shims.md`
+- `skills/maintainable-typescript/doctrine/foundations/atomic-changes.md`
 
 ### Best files for anti-fake-abstraction doctrine
 
-- `skills/maintainable-typescript/references/delete-shape-churn.md`
-- `skills/maintainable-typescript/references/delete-pass-through-wrappers.md`
-- `skills/maintainable-typescript/references/no-premature-abstractions.md`
-- `skills/maintainable-typescript/references/build-deep-modules-not-shallow-abstractions.md`
-- `skills/maintainable-typescript/references/design-around-composable-primitives.md`
+- `skills/maintainable-typescript/doctrine/deletion/delete-fake-layers.md`
+- `skills/maintainable-typescript/doctrine/deletion/delete-fake-layers.md`
+- `skills/maintainable-typescript/doctrine/abstractions/no-premature-abstractions.md`
+- `skills/maintainable-typescript/doctrine/abstractions/build-deep-modules-not-shallow-abstractions.md`
+- `skills/maintainable-typescript/doctrine/abstractions/design-around-composable-primitives.md`
 
 ### Best files for structure and ownership
 
-- `skills/maintainable-typescript/references/split-by-stable-seam.md`
-- `skills/maintainable-typescript/references/naming-is-navigation.md`
-- `skills/maintainable-typescript/references/monorepo-package-boundaries.md`
-- `skills/maintainable-typescript/references/no-barrel-exports.md`
-- `skills/maintainable-typescript/references/no-re-exports.md`
+- `skills/maintainable-typescript/doctrine/abstractions/split-by-stable-seam.md`
+- `skills/maintainable-typescript/doctrine/foundations/naming-is-navigation.md`
+- `skills/maintainable-typescript/doctrine/packages/monorepo-package-boundaries.md`
+- `skills/maintainable-typescript/doctrine/packages/no-barrel-exports.md`
+- `skills/maintainable-typescript/doctrine/packages/no-re-exports.md`
 
 ### Best files for tests and safety rails
 
-- `skills/maintainable-typescript/references/integration-first-testing.md`
-- `skills/maintainable-typescript/references/external-boundary-mocks-only.md`
-- `skills/maintainable-typescript/references/assert-observable-outcomes.md`
-- `skills/maintainable-typescript/references/bounded-behavior.md`
-- `skills/maintainable-typescript/references/maintainability-tooling.md`
+- `skills/maintainable-typescript/doctrine/testing/integration-first-testing.md`
+- `skills/maintainable-typescript/doctrine/testing/external-boundary-mocks-only.md`
+- `skills/maintainable-typescript/doctrine/testing/assert-observable-outcomes.md`
+- `skills/maintainable-typescript/doctrine/foundations/bounded-behavior.md`
+- `skills/maintainable-typescript/doctrine/tooling/maintainability-tooling.md`
 
 ## What not to overload the post with
 
@@ -443,4 +443,4 @@ Possible ending:
 1. Turn this into a real draft with a strong opening and two major sections.
 2. Add one section with concrete agent instructions or prompt snippets.
 3. Consider adding one explicit rewrite checklist as a sidebar.
-4. Optionally create a new doctrine file: `references/rewrite-churned-modules.md`.
+4. Optionally create a new Cleanup & Deletion doctrine file on rewriting churned modules.

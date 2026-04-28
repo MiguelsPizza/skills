@@ -1,6 +1,6 @@
 # Agent Opinions — Contributor Guide
 
-This repo publishes opinionated skills under `skills/`. Each opinion is a standalone markdown file in a skill's `references/` or `opinionated-stack/` directory.
+This repo publishes opinionated skills under `skills/`. Each opinion is a standalone markdown file in a skill's `doctrine/` or `stack/` directory.
 
 ## Goal
 
@@ -33,7 +33,7 @@ Code showing the bad pattern and the good pattern.
 
 Keep portable opinions under 100 lines. If it needs more, it's two opinions.
 
-Exception: `opinionated-stack/` files may exceed 100 lines when the doctrine is intentionally stack-specific and decision-complete. Do not use that exception for `references/`.
+Exception: `stack/` files may exceed 100 lines when the doctrine is intentionally stack-specific and decision-complete. Do not use that exception for `doctrine/`.
 
 ## Example metadata
 
@@ -54,13 +54,13 @@ example:
 Rules:
 - `primary` must match the file slug
 - `format` must be one of `code`, `text`, or `workflow`
-- `implements` must include the file slug itself plus at least two other doctrine files
+- `implements` must include the file slug itself plus at least two other opinion files
 - The `Example implements:` footer in the body must link to the exact same doctrine list
 
 ## Placement rules
 
-- Put a file in a skill's `references/` directory if the rule survives a stack change
-- Put a file in a skill's `opinionated-stack/` directory if the rule depends on the chosen architecture, docs policy, toolchain, or design system
+- Put a file in a skill's `doctrine/` directory if the rule survives a stack change
+- Put a file in a skill's `stack/` directory if the rule depends on the chosen architecture, docs policy, toolchain, or design system
 - Keep titles and filenames imperative
 - Avoid soft verbs like `prefer`
 
@@ -78,6 +78,7 @@ When creating new opinions, place them in the appropriate category in that skill
 - **Error Handling** — try/catch policy, null checks, validation boundaries
 - **Abstractions & Architecture** — when to abstract, SSOT, configuration
 - **Dependencies & Libraries** — dependency selection, avoiding homegrown commodity infrastructure
+- **Tooling** — audit helpers, repo checks, and maintainability-focused tool usage
 - **Code Quality** — naming, file ownership, comments, commits, maintainability standards
 - **Agent-Specific** — behaviors unique to AI coding agents (pattern copying, bounded behavior)
 - **Testing** — test structure, mocking policy, type-test discipline
@@ -85,8 +86,11 @@ When creating new opinions, place them in the appropriate category in that skill
 
 ### Stack categories
 
+- **Start Here** — overview files and stack reading order
 - **Error Handling & API Design** — typed error contracts and API error doctrine
 - **Types & Schemas** — documentation policy, canonical type ownership, constant/source doctrine
+- **Observability** — telemetry naming and operational signal conventions
 - **Dependencies & Toolchain** — workspace catalogs, toolchain-provided dependencies, package-manager conventions
 - **Monorepo & Database** — generated migration workflow and schema change guardrails
+- **Testing** — browser and stack-specific validation policy
 - **Frontend & Design System** — component reuse, semantic tokens, approval gates for new primitives

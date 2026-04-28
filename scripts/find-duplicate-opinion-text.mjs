@@ -122,6 +122,7 @@ async function main() {
   }
 
   console.log(`Found ${duplicates.length} duplicated prose block(s) across opinion files:\n`);
+  process.exitCode = 1;
 
   for (const duplicate of duplicates) {
     console.log('Files:');

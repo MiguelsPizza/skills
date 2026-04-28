@@ -12,8 +12,8 @@ In the agent era, code generation is cheap. Reviewer attention, conceptual stabi
 ## What's In Here
 
 - [SKILL.md](SKILL.md) is the skill entrypoint.
-- [references/](references) contains portable rules for strict TypeScript repos.
-- [opinionated-stack/](opinionated-stack) contains stack-specific doctrine for the Vite+ / TanStack Router / Drizzle / oRPC / Cloudflare architecture.
+- [doctrine/](doctrine) contains portable rules for strict TypeScript repos, grouped by concept.
+- [stack/](stack) contains stack-specific doctrine for the Vite+ / TanStack Router / Drizzle / oRPC / Cloudflare architecture.
 - [prompts/](prompts) contains reusable prompt text for cleanup, review, and refactor tasks that need to fight default agent behavior.
 - [scripts/](scripts) contains bundled audit helpers for dead code, duplicate code, and architecture checks.
 - [assets/tooling-templates/](assets/tooling-templates) contains copyable config templates for target repos.
@@ -85,101 +85,98 @@ If you are working from this repo instead of the standalone skill archive, the s
 ### Portable Rules
 
 **Cleanup & Deletion**
-- [Delete Obsolete Code](references/delete-obsolete-code.md)
-- [Delete Temporary Migration Layers](references/delete-temporary-migration-layers.md)
-- [No Backwards Compatibility Shims](references/no-backwards-compat-shims.md)
-- [No Unused Exports](references/no-unused-exports.md)
-- [Clean Up What You Touch](references/clean-up-what-you-touch.md)
+- [Delete Obsolete Code](./doctrine/deletion/delete-obsolete-code.md)
+- [No Backwards Compatibility Shims](./doctrine/deletion/no-backwards-compat-shims.md)
+- [Clean Up What You Touch](./doctrine/deletion/clean-up-what-you-touch.md)
 
 **Error Handling**
-- [Error Messages Are UX](references/error-messages-are-ux.md)
-- [Log at Boundaries, Not Everywhere](references/log-at-boundaries-not-everywhere.md)
-- [No Defensive Catches](references/no-defensive-catches.md)
-- [No Defensive Null Checks](references/no-defensive-null-checks.md)
-- [Boundaries Validate, Internals Trust](references/boundaries-validate-internals-trust.md)
+- [Error Messages Are UX](./doctrine/boundaries/error-messages-are-ux.md)
+- [Log at Boundaries, Not Everywhere](./doctrine/boundaries/log-at-boundaries-not-everywhere.md)
+- [No Defensive Catches](./doctrine/boundaries/no-defensive-catches.md)
+- [No Defensive Null Checks](./doctrine/boundaries/no-defensive-null-checks.md)
+- [Boundaries Validate, Internals Trust](./doctrine/boundaries/boundaries-validate-internals-trust.md)
 
 **Abstractions & Architecture**
-- [Split By Stable Seam](references/split-by-stable-seam.md)
-- [No Premature Abstractions](references/no-premature-abstractions.md)
-- [Delete Shape Churn](references/delete-shape-churn.md)
-- [Delete Pass-Through Wrappers](references/delete-pass-through-wrappers.md)
-- [No Speculative Configuration](references/no-speculative-configuration.md)
-- [Design Around Composable Primitives](references/design-around-composable-primitives.md)
-- [Keep a Functional Core and Imperative Shell](references/keep-a-functional-core-and-imperative-shell.md)
-- [Pass Values Across Boundaries](references/pass-values-across-boundaries.md)
-- [Build Deep Modules, Not Shallow Abstractions](references/build-deep-modules-not-shallow-abstractions.md)
-- [Edit Real Owners](references/edit-real-owners.md)
-- [Compose Behavior, Do Not Specialize Classes](references/compose-behavior-do-not-specialize-classes.md)
-- [Use Classes for Object APIs, Not Service Buckets](references/use-classes-for-object-apis-not-service-buckets.md)
-- [Accumulate Types With Builders](references/accumulate-types-with-builders.md)
-- [Compose Builders From Steps](references/compose-builders-from-steps.md)
-- [Do Not Use Builders for Plain Data](references/do-not-use-builders-for-plain-data.md)
-- [Keep Schemas Minimal](references/keep-schemas-minimal.md)
-- [Assign Cache Invalidation Owners](references/assign-cache-invalidation-owners.md)
-- [SSOT or Die](references/ssot-or-die.md)
+- [Split By Stable Seam](./doctrine/abstractions/split-by-stable-seam.md)
+- [No Premature Abstractions](./doctrine/abstractions/no-premature-abstractions.md)
+- [Delete Fake Layers](./doctrine/deletion/delete-fake-layers.md)
+- [Design Around Composable Primitives](./doctrine/abstractions/design-around-composable-primitives.md)
+- [Keep a Functional Core and Imperative Shell](./doctrine/abstractions/keep-a-functional-core-and-imperative-shell.md)
+- [Pass Values Across Boundaries](./doctrine/boundaries/pass-values-across-boundaries.md)
+- [Build Deep Modules, Not Shallow Abstractions](./doctrine/abstractions/build-deep-modules-not-shallow-abstractions.md)
+- [Edit Real Owners](./doctrine/deletion/edit-real-owners.md)
+- [Compose Behavior, Do Not Specialize Classes](./doctrine/abstractions/compose-behavior-do-not-specialize-classes.md)
+- [Use Classes for Object APIs, Not Service Buckets](./doctrine/abstractions/use-classes-for-object-apis-not-service-buckets.md)
+- [Make Builders Earn Their Keep](./doctrine/abstractions/make-builders-earn-their-keep.md)
+- [Keep Schemas Minimal](./doctrine/abstractions/keep-schemas-minimal.md)
+- [Assign Cache Invalidation Owners](./doctrine/boundaries/assign-cache-invalidation-owners.md)
+- [SSOT or Die](./doctrine/abstractions/ssot-or-die.md)
 
 **Dependencies & Libraries**
-- [Use Mature Dependencies, Don't Roll Your Own](references/use-mature-dependencies-dont-roll-your-own.md)
+- [Use Mature Dependencies, Don't Roll Your Own](./doctrine/packages/use-mature-dependencies-dont-roll-your-own.md)
+
+**Tooling**
+- [Maintainability Tooling](./doctrine/tooling/maintainability-tooling.md)
 
 **Code Quality**
-- [Naming Is Navigation](references/naming-is-navigation.md)
-- [Comments Say Why Not What](references/comments-say-why-not-what.md)
-- [Commit Messages Describe Why](references/commit-messages-describe-why.md)
-- [Atomic Changes](references/atomic-changes.md)
-- [Maintainability Equals Correctness](references/maintainability-equals-correctness.md)
-- [Treat Critical Code Like a Library](references/treat-critical-code-like-a-library.md)
+- [Naming Is Navigation](./doctrine/foundations/naming-is-navigation.md)
+- [Comments Say Why Not What](./doctrine/foundations/comments-say-why-not-what.md)
+- [Commit Messages Describe Why](./doctrine/foundations/commit-messages-describe-why.md)
+- [Atomic Changes](./doctrine/foundations/atomic-changes.md)
+- [Maintainability Equals Correctness](./doctrine/foundations/maintainability-equals-correctness.md)
+- [Treat Critical Code Like a Library](./doctrine/foundations/treat-critical-code-like-a-library.md)
 
 **Agent-Specific**
-- [Write for the Agent Era](references/write-for-the-agent-era.md)
-- [Your Pattern Will Be Copied](references/your-pattern-will-be-copied.md)
-- [Bounded Behavior](references/bounded-behavior.md)
+- [Write for the Agent Era](./doctrine/foundations/write-for-the-agent-era.md)
+- [Your Pattern Will Be Copied](./doctrine/foundations/your-pattern-will-be-copied.md)
+- [Bounded Behavior](./doctrine/foundations/bounded-behavior.md)
 
 **Testing**
-- [Integration-First Testing](references/integration-first-testing.md)
-- [Mock External Boundaries Only](references/external-boundary-mocks-only.md)
-- [Contract-Gate Synthetic Fixtures](references/contract-gate-synthetic-fixtures.md)
-- [Assert Observable Outcomes](references/assert-observable-outcomes.md)
-- [Test AI Apps by Artifacts, Not Prose](references/test-ai-apps-by-artifacts-not-prose.md)
-- [No Type Casts](references/no-type-casts.md)
+- [Integration-First Testing](./doctrine/testing/integration-first-testing.md)
+- [Mock External Boundaries Only](./doctrine/testing/external-boundary-mocks-only.md)
+- [Contract-Gate Synthetic Fixtures](./doctrine/testing/contract-gate-synthetic-fixtures.md)
+- [Assert Observable Outcomes](./doctrine/testing/assert-observable-outcomes.md)
+- [Test AI Apps by Artifacts, Not Prose](./doctrine/testing/test-ai-apps-by-artifacts-not-prose.md)
+- [No Type Casts](./doctrine/boundaries/no-type-casts.md)
 
 **Monorepo & Package Structure**
-- [No Re-exports](references/no-re-exports.md)
-- [No Barrel Exports](references/no-barrel-exports.md)
-- [Monorepo Package Boundaries](references/monorepo-package-boundaries.md)
+- [No Re-exports](./doctrine/packages/no-re-exports.md)
+- [No Barrel Exports](./doctrine/packages/no-barrel-exports.md)
+- [Monorepo Package Boundaries](./doctrine/packages/monorepo-package-boundaries.md)
 
 ### Opinionated Stack
 
 **Start Here**
-- [Start Here](opinionated-stack/start-here.md)
-- [Opinionated Stack Overview](opinionated-stack/stack-overview.md)
+- [Start Here](./stack/start-here.md)
+- [Opinionated Stack Overview](./stack/stack-overview.md)
 
 **Error Handling & API Design**
-- [Design OpenAPI for Inference](opinionated-stack/design-openapi-for-inference.md)
-- [Errors Are Schema, Not Strings](opinionated-stack/errors-are-schema.md)
+- [Design OpenAPI for Inference](./stack/design-openapi-for-inference.md)
+- [Errors Are Schema, Not Strings](./stack/errors-are-schema.md)
 
 **Types & Schemas**
-- [Comments and JSDoc Must Carry Information](opinionated-stack/jsdoc-with-first-party-sources.md)
-- [Document Fields in Derived Zod Schemas](opinionated-stack/document-fields-in-derived-zod-schemas.md)
-- [No Magic Values](opinionated-stack/no-magic-values.md)
-- [Use Branded Scalar Types](opinionated-stack/use-branded-scalar-types.md)
-- [Use Canonical Named Types, Not Inline Object Shapes](opinionated-stack/use-canonical-named-types.md)
+- [Comments and JSDoc Must Carry Information](./stack/jsdoc-with-first-party-sources.md)
+- [Document Fields in Derived Zod Schemas](./stack/document-fields-in-derived-zod-schemas.md)
+- [No Magic Values](./stack/no-magic-values.md)
+- [Use Branded Scalar Types](./stack/use-branded-scalar-types.md)
+- [Use Canonical Named Types, Not Inline Object Shapes](./stack/use-canonical-named-types.md)
 
 **Observability**
-- [OTEL Conventions from Day One](opinionated-stack/otel-conventions-from-day-one.md)
+- [OTEL Conventions from Day One](./stack/otel-conventions-from-day-one.md)
 
 **Dependencies & Toolchain**
-- [Catalog Dependencies](opinionated-stack/catalog-dependencies.md)
+- [Catalog Dependencies](./stack/catalog-dependencies.md)
 
 **Monorepo & Database**
-- [Schema Migrations Are Generated](opinionated-stack/schema-migrations-are-generated.md)
+- [Schema Migrations Are Generated](./stack/schema-migrations-are-generated.md)
 
 **Testing**
-- [Test React Apps in Real Browsers](opinionated-stack/test-react-apps-in-real-browsers.md)
+- [Test React Apps in Real Browsers](./stack/test-react-apps-in-real-browsers.md)
 
 **Frontend & Design System**
-- [Do Not Use Next.js](opinionated-stack/do-not-use-nextjs.md)
-- [Do Not Synchronize State with useEffect](opinionated-stack/do-not-synchronize-state-with-useeffect.md)
-- [Use the Design System, Not Ad Hoc Tailwind](opinionated-stack/use-the-design-system-not-ad-hoc-tailwind.md)
+- [Do Not Use Next.js](./stack/do-not-use-nextjs.md)
+- [Do Not Synchronize State with useEffect](./stack/do-not-synchronize-state-with-useeffect.md)
+- [Use the Design System, Not Ad Hoc Tailwind](./stack/use-the-design-system-not-ad-hoc-tailwind.md)
 
 ## Prompt Assets
 

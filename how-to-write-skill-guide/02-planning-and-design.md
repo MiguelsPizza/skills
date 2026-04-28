@@ -202,7 +202,7 @@ That's all you need to start.
 
 ### The description field
 
-According to Anthropic's [engineering blog](https://www.anthropic.com/engineering/skills): "This metadata...provides just enough information for Claude to know when each skill should be used without loading all of it into context." This is the first level of progressive disclosure.
+According to Anthropic's [engineering blog](https://www.anthropic.com/engineering/equipping-agents-for-the-real-world-with-agent-skills): "This metadata...provides just enough information for Claude to know when each skill should be used without loading all of it into context." This is the first level of progressive disclosure.
 
 **Structure:**
 
