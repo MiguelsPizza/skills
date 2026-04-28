@@ -1,6 +1,6 @@
 # Agent Opinions — Contributor Guide
 
-This repo currently centers on one published skill: `Maintainable TypeScript`. Each opinion is a standalone markdown file in `skills/maintainable-typescript/references/` or `skills/maintainable-typescript/opinionated-stack/`.
+This repo publishes opinionated skills under `skills/`. Each opinion is a standalone markdown file in a skill's `references/` or `opinionated-stack/` directory.
 
 ## Goal
 
@@ -8,7 +8,7 @@ Push back on default agent behaviors that degrade codebases over time. Agents op
 
 ## Scope
 
-- **TypeScript monorepos only.** These opinions assume strict TypeScript, workspace packages, and modern tooling.
+- **Respect each skill's domain.** `Maintainable TypeScript` assumes strict TypeScript, workspace packages, and modern tooling. `WebMCP Designer` assumes existing human-facing web apps that need agent-accessible instrumentation.
 - **Extremely opinionated.** These are not guidelines — they're rules. If you disagree, fork.
 - **Narrow and focused.** Each opinion covers exactly one behavior. No sprawling style guides.
 
@@ -33,7 +33,7 @@ Code showing the bad pattern and the good pattern.
 
 Keep portable opinions under 100 lines. If it needs more, it's two opinions.
 
-Exception: `skills/maintainable-typescript/opinionated-stack/` files may exceed 100 lines when the doctrine is intentionally stack-specific and decision-complete. Do not use that exception for `skills/maintainable-typescript/references/`.
+Exception: `opinionated-stack/` files may exceed 100 lines when the doctrine is intentionally stack-specific and decision-complete. Do not use that exception for `references/`.
 
 ## Example metadata
 
@@ -59,8 +59,8 @@ Rules:
 
 ## Placement rules
 
-- Put a file in `skills/maintainable-typescript/references/` if the rule survives a stack change
-- Put a file in `skills/maintainable-typescript/opinionated-stack/` if the rule depends on the chosen architecture, docs policy, toolchain, or design system
+- Put a file in a skill's `references/` directory if the rule survives a stack change
+- Put a file in a skill's `opinionated-stack/` directory if the rule depends on the chosen architecture, docs policy, toolchain, or design system
 - Keep titles and filenames imperative
 - Avoid soft verbs like `prefer`
 
@@ -70,7 +70,7 @@ Local reference repos with real-world examples live in `AGENTS.local.md` (gitign
 
 ## Opinion Categories
 
-When creating new opinions, place them in the appropriate category in the README:
+When creating new opinions, place them in the appropriate category in that skill's README. `Maintainable TypeScript` uses these categories; other skills may define their own focused index:
 
 ### Core categories
 
