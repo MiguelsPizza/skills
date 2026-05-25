@@ -11,7 +11,7 @@ example:
 
 **Rule:** Packages are single-purpose, well-tested units with explicit public entrypoints. Dependencies flow one direction: packages never import from apps, shared packages never import from domain packages. Keep runtime behavior in the app by default, but respect established package ownership for canonical contracts and schemas.
 
-See also: [No Premature Abstractions](../abstractions/no-premature-abstractions.md), [Split By Stable Seam](../abstractions/split-by-stable-seam.md), and [No Barrel Exports](./no-barrel-exports.md).
+See also: [No Premature Abstractions](../abstractions/no-premature-abstractions.md), [Build Deep Modules, Not Shallow Abstractions](../abstractions/build-deep-modules-not-shallow-abstractions.md), and [No Barrel Exports](./no-barrel-exports.md).
 
 ## Why agents get this wrong
 
@@ -30,7 +30,7 @@ Import style should reinforce those boundaries:
 
 Those leaf modules are ownership signals, not excuses for giant domain files. Export `./review-runs/review-run` while that file still owns one review-run concept; if the module grows multiple responsibilities, split the module and expose the new owning leaves instead.
 
-In practice, directories usually carry the higher-level feature or domain boundary. Files inside them should represent the stable seams within that feature: routes, contracts, persistence, client wrappers, or session/cookie subsystems.
+In practice, directories usually carry the higher-level feature or domain boundary. Files inside them should be deep modules around coherent behavior: routes, contracts, persistence, client wrappers, or session/cookie subsystems. Do not split the feature into one-helper files just because each helper can be named.
 
 Use this boundary model:
 
