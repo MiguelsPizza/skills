@@ -11,7 +11,7 @@ example:
 
 **Rule:** Delete data-shape hops and call wrappers that do not add an invariant, policy, lifecycle guarantee, or real ownership boundary.
 
-See also: [Edit Real Owners](./edit-real-owners.md) and [Build Deep Modules, Not Shallow Abstractions](../abstractions/build-deep-modules-not-shallow-abstractions.md).
+See also: [Resolve Uncertainty Into Contracts](../foundations/resolve-uncertainty-into-contracts.md), [Edit Real Owners](./edit-real-owners.md), and [Build Deep Modules, Not Shallow Abstractions](../abstractions/build-deep-modules-not-shallow-abstractions.md).
 
 ## Why agents get this wrong
 
