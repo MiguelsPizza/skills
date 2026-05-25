@@ -4,14 +4,14 @@ example:
   format: code
   implements:
     - no-barrel-exports
-    - split-by-stable-seam
+    - naming-is-navigation
     - monorepo-package-boundaries
 ---
 # No Barrel Exports
 
 **Rule:** Do not create aggregator modules. No `index.ts` barrels, no `export *`, no package-root files that gather siblings into one import path.
 
-See also: [Split By Stable Seam](../abstractions/split-by-stable-seam.md), [Naming Is Navigation](../foundations/naming-is-navigation.md), and [Monorepo Package Boundaries](./monorepo-package-boundaries.md).
+See also: [Naming Is Navigation](../foundations/naming-is-navigation.md), [Build Deep Modules, Not Shallow Abstractions](../abstractions/build-deep-modules-not-shallow-abstractions.md), and [Monorepo Package Boundaries](./monorepo-package-boundaries.md).
 
 ## Why agents get this wrong
 
@@ -60,4 +60,4 @@ Feature module
 import { userSchema } from '@repo/contracts/users/user';
 ```
 
-Example implements: [No Barrel Exports](./no-barrel-exports.md), [Split By Stable Seam](../abstractions/split-by-stable-seam.md), [Monorepo Package Boundaries](./monorepo-package-boundaries.md).
+Example implements: [No Barrel Exports](./no-barrel-exports.md), [Naming Is Navigation](../foundations/naming-is-navigation.md), [Monorepo Package Boundaries](./monorepo-package-boundaries.md).

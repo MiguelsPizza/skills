@@ -97,13 +97,12 @@ If you are working from this repo instead of the standalone skill archive, the s
 - [Boundaries Validate, Internals Trust](./doctrine/boundaries/boundaries-validate-internals-trust.md)
 
 **Abstractions & Architecture**
-- [Split By Stable Seam](./doctrine/abstractions/split-by-stable-seam.md)
+- [Build Deep Modules, Not Shallow Abstractions](./doctrine/abstractions/build-deep-modules-not-shallow-abstractions.md)
 - [No Premature Abstractions](./doctrine/abstractions/no-premature-abstractions.md)
 - [Delete Fake Layers](./doctrine/deletion/delete-fake-layers.md)
 - [Design Around Composable Primitives](./doctrine/abstractions/design-around-composable-primitives.md)
 - [Keep a Functional Core and Imperative Shell](./doctrine/abstractions/keep-a-functional-core-and-imperative-shell.md)
 - [Pass Values Across Boundaries](./doctrine/boundaries/pass-values-across-boundaries.md)
-- [Build Deep Modules, Not Shallow Abstractions](./doctrine/abstractions/build-deep-modules-not-shallow-abstractions.md)
 - [Edit Real Owners](./doctrine/deletion/edit-real-owners.md)
 - [Compose Behavior, Do Not Specialize Classes](./doctrine/abstractions/compose-behavior-do-not-specialize-classes.md)
 - [Use Classes for Object APIs, Not Service Buckets](./doctrine/abstractions/use-classes-for-object-apis-not-service-buckets.md)

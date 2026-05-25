@@ -49,13 +49,13 @@ Use the smallest relevant set.
 - [`doctrine/deletion/no-backwards-compat-shims.md`](./doctrine/deletion/no-backwards-compat-shims.md)
 - [`doctrine/deletion/delete-fake-layers.md`](./doctrine/deletion/delete-fake-layers.md)
 - [`doctrine/deletion/edit-real-owners.md`](./doctrine/deletion/edit-real-owners.md)
-- [`doctrine/abstractions/split-by-stable-seam.md`](./doctrine/abstractions/split-by-stable-seam.md)
+- [`doctrine/abstractions/build-deep-modules-not-shallow-abstractions.md`](./doctrine/abstractions/build-deep-modules-not-shallow-abstractions.md)
 - [`doctrine/foundations/your-pattern-will-be-copied.md`](./doctrine/foundations/your-pattern-will-be-copied.md)
 - Prompt text for another model: [`prompts/cleanup-module-rewrite.md`](prompts/cleanup-module-rewrite.md) or [`prompts/review-structural-slop.md`](prompts/review-structural-slop.md)
 
 ### Package boundaries and shared runtime code
 
-- [`doctrine/abstractions/split-by-stable-seam.md`](./doctrine/abstractions/split-by-stable-seam.md)
+- [`doctrine/abstractions/build-deep-modules-not-shallow-abstractions.md`](./doctrine/abstractions/build-deep-modules-not-shallow-abstractions.md)
 - [`doctrine/deletion/delete-fake-layers.md`](./doctrine/deletion/delete-fake-layers.md)
 - [`doctrine/packages/monorepo-package-boundaries.md`](./doctrine/packages/monorepo-package-boundaries.md)
 - [`doctrine/foundations/treat-critical-code-like-a-library.md`](./doctrine/foundations/treat-critical-code-like-a-library.md)

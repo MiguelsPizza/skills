@@ -9,7 +9,7 @@ example:
 ---
 # Keep a Functional Core and Imperative Shell
 
-**Rule:** Keep business logic pure in the middle. Push I/O, logging, retries, and persistence to thin shells at the edges.
+**Rule:** Keep important decisions testable as value-in/value-out code. Do not bury business rules inside I/O, logging, retries, or persistence.
 
 See also: [Pass Values Across Boundaries](../boundaries/pass-values-across-boundaries.md) and [Design Around Composable Primitives](./design-around-composable-primitives.md).
 
@@ -19,13 +19,11 @@ Agents solve tasks locally. They load data, branch on business rules, write to t
 
 ## What to do instead
 
-Separate the code into two layers:
-- functional core: decisions, transformations, validation, policy
-- imperative shell: fetch input, call the core, persist results, emit side effects
+Keep decisions, transformations, validation, and policy separable from side effects. This does not require a `core/` folder, a `shell/` folder, or one file per step. In a deep module, the public workflow can stay top-to-bottom while the important decision remains a plain function over values.
 
-The shell should read top-to-bottom and stay thin. The core should accept values and return values. If a rule can be tested without a database, queue, clock, or SDK client, it belongs in the core.
+If a rule can be tested without a database, queue, clock, or SDK client, keep it independent of those things. If splitting it out creates more navigation than clarity, keep it in the same module and test through the module's public behavior.
 
-This rule is about purity and side-effect placement. It complements [Design Around Composable Primitives](./design-around-composable-primitives.md), which is about overall workflow shape rather than pure-core boundaries.
+This rule is about side-effect placement, not architectural layering. It complements [Design Around Composable Primitives](./design-around-composable-primitives.md), which is about overall workflow shape.
 
 ## Example
 
@@ -44,4 +42,4 @@ await publishReviewRunUpdated(decision.nextState);
 Example implements: [Keep a Functional Core and Imperative Shell](./keep-a-functional-core-and-imperative-shell.md), [Pass Values Across Boundaries](../boundaries/pass-values-across-boundaries.md), [Design Around Composable Primitives](./design-around-composable-primitives.md).
 ## The test
 
-If the important rule needs a database fixture just to assert a yes or no answer, the shell is swallowing the core.
+If the important rule needs a database fixture just to assert a yes or no answer, I/O is swallowing the decision.
