@@ -119,6 +119,7 @@ If you are working from this repo instead of the standalone skill archive, the s
 - [Maintainability Tooling](./doctrine/tooling/maintainability-tooling.md)
 
 **Code Quality**
+- [Resolve Uncertainty Into Contracts](./doctrine/foundations/resolve-uncertainty-into-contracts.md)
 - [Naming Is Navigation](./doctrine/foundations/naming-is-navigation.md)
 - [Comments Say Why Not What](./doctrine/foundations/comments-say-why-not-what.md)
 - [Commit Messages Describe Why](./doctrine/foundations/commit-messages-describe-why.md)

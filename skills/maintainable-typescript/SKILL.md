@@ -27,6 +27,7 @@ Do not read the whole skill directory by default.
 Default portable backbone:
 
 - [`doctrine/foundations/maintainability-equals-correctness.md`](./doctrine/foundations/maintainability-equals-correctness.md)
+- [`doctrine/foundations/resolve-uncertainty-into-contracts.md`](./doctrine/foundations/resolve-uncertainty-into-contracts.md)
 - [`doctrine/abstractions/ssot-or-die.md`](./doctrine/abstractions/ssot-or-die.md)
 - [`doctrine/testing/integration-first-testing.md`](./doctrine/testing/integration-first-testing.md)
 - [`doctrine/testing/external-boundary-mocks-only.md`](./doctrine/testing/external-boundary-mocks-only.md)
@@ -41,6 +42,7 @@ Use the smallest relevant set.
 ### Cleanup, deletion, and refactor
 
 - [`doctrine/foundations/maintainability-equals-correctness.md`](./doctrine/foundations/maintainability-equals-correctness.md)
+- [`doctrine/foundations/resolve-uncertainty-into-contracts.md`](./doctrine/foundations/resolve-uncertainty-into-contracts.md)
 - [`doctrine/foundations/write-for-the-agent-era.md`](./doctrine/foundations/write-for-the-agent-era.md)
 - [`doctrine/deletion/clean-up-what-you-touch.md`](./doctrine/deletion/clean-up-what-you-touch.md)
 - [`doctrine/deletion/delete-obsolete-code.md`](./doctrine/deletion/delete-obsolete-code.md)
@@ -127,6 +129,7 @@ If the target repo is Vite+, use `vp` for the normal toolchain entrypoint: `vp l
 
 - Code is cheap. Structure is expensive.
 - Preserve contracts, tests, and invariants, not stale decomposition.
+- Resolve uncertainty into contracts, not adapters, defaults, optionals, spreads, or catches.
 - Prefer deletion over shims.
 - Prefer stable subsystem files over one-helper-per-file trees.
 - Prefer derived types and schemas over handwritten duplicates.
