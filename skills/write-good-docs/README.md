@@ -9,6 +9,7 @@ Agents often produce documentation that is fluent but poorly shaped: tutorials m
 ## What's In Here
 
 - [SKILL.md](SKILL.md) is the skill entrypoint.
+- [doctrine/](doctrine) contains portable rules for useful documentation and non-generic prose.
 - [references/diataxis/](references/diataxis) contains the Diataxis framework reference for tutorials, how-to guides, reference, and explanation.
 - [references/crafting-effective-readmes/](references/crafting-effective-readmes) contains README templates, checklists, and style guidance.
 - [references/ai-writing-tropes/](references/ai-writing-tropes) contains prose cleanup guidance for avoiding predictable AI-writing patterns.
@@ -46,6 +47,13 @@ Download the published `write-good-docs.zip` archive, then upload it in **Custom
 ```
 
 That regenerates [skills/write-good-docs.zip](../../skills/write-good-docs.zip) from [skills/write-good-docs/](../../skills/write-good-docs).
+
+## Opinions Index
+
+**Prose Quality**
+- [Lead With the Point](./doctrine/lead-with-the-point.md)
+- [Make Prose Specific](./doctrine/make-prose-specific.md)
+- [Reject Stock AI Writing](./doctrine/reject-stock-ai-writing.md)
 
 ## Source Notes
 

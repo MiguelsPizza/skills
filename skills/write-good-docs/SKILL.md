@@ -9,6 +9,7 @@ Use this skill when documentation needs to become more useful, not merely longer
 
 ## Layout
 
+- [`doctrine/`](doctrine/) contains portable rules for useful documentation and non-generic prose.
 - [`references/diataxis/`](references/diataxis/) contains the Diataxis framework reference for classifying documentation into tutorials, how-to guides, reference, and explanation.
 - [`references/crafting-effective-readmes/`](references/crafting-effective-readmes/) contains README templates, checklists, and style guidance.
 - [`references/ai-writing-tropes/`](references/ai-writing-tropes/) contains prose cleanup guidance for removing common AI-generated writing tells.
@@ -20,7 +21,8 @@ Do not read the whole skill directory by default.
 1. Classify the documentation task.
 2. Load only the relevant reference area below.
 3. Write or edit the docs.
-4. Run the AI-writing trope check before finalizing prose.
+4. Apply the doctrine rules for direct, specific prose.
+5. Run the AI-writing trope check before finalizing prose.
 
 ## Task Router
 
@@ -63,6 +65,9 @@ Choose the template that matches the audience:
 
 Read:
 
+- [`doctrine/reject-stock-ai-writing.md`](doctrine/reject-stock-ai-writing.md)
+- [`doctrine/lead-with-the-point.md`](doctrine/lead-with-the-point.md)
+- [`doctrine/make-prose-specific.md`](doctrine/make-prose-specific.md)
 - [`references/ai-writing-tropes/SKILL.md`](references/ai-writing-tropes/SKILL.md)
 - The specific trope file that matches the draft's problem: word choice, sentence structure, paragraph structure, tone, formatting, or composition.
 
