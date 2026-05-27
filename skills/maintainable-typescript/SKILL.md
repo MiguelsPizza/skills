@@ -7,114 +7,35 @@ description: Guides maintainability-first cleanup, refactoring, and review in st
 
 Use this skill when the project needs maintainability doctrine, not just local code changes.
 
-## Layout
-
-- [`doctrine/`](doctrine/) contains the portable rules and supporting guidance that should hold across strict TypeScript repos.
-- [`stack/`](stack/) contains stack-specific doctrine for the opinionated Vite+ / Drizzle / oRPC / Cloudflare setup.
-- [`prompts/`](prompts/) contains reusable prompt text for cleanup and review tasks when you need to steer another model away from wrapper-heavy refactors.
-- [`scripts/`](scripts/) contains runnable TypeScript-repo audit helpers for dead code, duplicate code, and import-boundary problems in the current project.
-- [`assets/tooling-templates/`](assets/tooling-templates/) contains copyable config templates for target repos.
-
-## Reading order
+## Load Order
 
 Do not read the whole skill directory by default.
 
 1. Read this file first.
-2. Decide whether the task needs only portable rules or the full house stack.
-3. Load only the doctrine files relevant to the task.
-4. Treat the rest of the skill as reference material, not required context.
+2. Load only files that match the task.
+3. If the repo matches the house stack, read [`stack/start-here.md`](./stack/start-here.md).
+4. Treat [`doctrine/`](doctrine/), [`stack/`](stack/), [`prompts/`](prompts/), [`scripts/`](scripts/), and [`assets/tooling-templates/`](assets/tooling-templates/) as references, not required context.
 
-Default portable backbone:
+## Companion Skills
 
-- [`doctrine/foundations/maintainability-equals-correctness.md`](./doctrine/foundations/maintainability-equals-correctness.md)
-- [`doctrine/foundations/resolve-uncertainty-into-contracts.md`](./doctrine/foundations/resolve-uncertainty-into-contracts.md)
-- [`doctrine/abstractions/ssot-or-die.md`](./doctrine/abstractions/ssot-or-die.md)
-- [`doctrine/testing/integration-first-testing.md`](./doctrine/testing/integration-first-testing.md)
-- [`doctrine/testing/external-boundary-mocks-only.md`](./doctrine/testing/external-boundary-mocks-only.md)
-- [`doctrine/testing/assert-observable-outcomes.md`](./doctrine/testing/assert-observable-outcomes.md)
+Use the `fallow` skill for Fallow config, commands, JSON output, fixes, CI gates, and result interpretation. If missing:
 
-If the repo matches the house stack, read [`stack/start-here.md`](./stack/start-here.md) before any stack-specific files.
+```bash
+npx skills add https://github.com/fallow-rs/fallow/tree/main/npm/fallow/skills/fallow --skill fallow
+```
 
 ## Task Router
 
-Use the smallest relevant set.
-
-### Cleanup, deletion, and refactor
-
-- [`doctrine/foundations/maintainability-equals-correctness.md`](./doctrine/foundations/maintainability-equals-correctness.md)
-- [`doctrine/foundations/resolve-uncertainty-into-contracts.md`](./doctrine/foundations/resolve-uncertainty-into-contracts.md)
-- [`doctrine/foundations/write-for-the-agent-era.md`](./doctrine/foundations/write-for-the-agent-era.md)
-- [`doctrine/deletion/clean-up-what-you-touch.md`](./doctrine/deletion/clean-up-what-you-touch.md)
-- [`doctrine/deletion/delete-obsolete-code.md`](./doctrine/deletion/delete-obsolete-code.md)
-- [`doctrine/deletion/no-backwards-compat-shims.md`](./doctrine/deletion/no-backwards-compat-shims.md)
-- [`doctrine/deletion/delete-fake-layers.md`](./doctrine/deletion/delete-fake-layers.md)
-- [`doctrine/deletion/edit-real-owners.md`](./doctrine/deletion/edit-real-owners.md)
-- [`doctrine/abstractions/build-deep-modules-not-shallow-abstractions.md`](./doctrine/abstractions/build-deep-modules-not-shallow-abstractions.md)
-- [`doctrine/foundations/your-pattern-will-be-copied.md`](./doctrine/foundations/your-pattern-will-be-copied.md)
-- Prompt text for another model: [`prompts/cleanup-module-rewrite.md`](prompts/cleanup-module-rewrite.md) or [`prompts/review-structural-slop.md`](prompts/review-structural-slop.md)
-
-### Package boundaries and shared runtime code
-
-- [`doctrine/abstractions/build-deep-modules-not-shallow-abstractions.md`](./doctrine/abstractions/build-deep-modules-not-shallow-abstractions.md)
-- [`doctrine/deletion/delete-fake-layers.md`](./doctrine/deletion/delete-fake-layers.md)
-- [`doctrine/packages/monorepo-package-boundaries.md`](./doctrine/packages/monorepo-package-boundaries.md)
-- [`doctrine/foundations/treat-critical-code-like-a-library.md`](./doctrine/foundations/treat-critical-code-like-a-library.md)
-- [`doctrine/foundations/naming-is-navigation.md`](./doctrine/foundations/naming-is-navigation.md)
-- [`doctrine/packages/no-re-exports.md`](./doctrine/packages/no-re-exports.md)
-- [`doctrine/packages/no-barrel-exports.md`](./doctrine/packages/no-barrel-exports.md)
-
-### API, schemas, and OpenAPI
-
-- [`doctrine/abstractions/ssot-or-die.md`](./doctrine/abstractions/ssot-or-die.md)
-- [`stack/design-openapi-for-inference.md`](./stack/design-openapi-for-inference.md)
-- [`stack/errors-are-schema.md`](./stack/errors-are-schema.md)
-- [`stack/document-fields-in-derived-zod-schemas.md`](./stack/document-fields-in-derived-zod-schemas.md)
-- [`stack/use-canonical-named-types.md`](./stack/use-canonical-named-types.md)
-
-### Types, constants, and documentation
-
-- [`doctrine/abstractions/ssot-or-die.md`](./doctrine/abstractions/ssot-or-die.md)
-- [`stack/jsdoc-with-first-party-sources.md`](./stack/jsdoc-with-first-party-sources.md)
-- [`stack/no-magic-values.md`](./stack/no-magic-values.md)
-- [`stack/use-branded-scalar-types.md`](./stack/use-branded-scalar-types.md)
-- [`stack/use-canonical-named-types.md`](./stack/use-canonical-named-types.md)
-
-### Testing and high-risk logic
-
-- [`doctrine/testing/integration-first-testing.md`](./doctrine/testing/integration-first-testing.md)
-- [`doctrine/testing/external-boundary-mocks-only.md`](./doctrine/testing/external-boundary-mocks-only.md)
-- [`doctrine/testing/contract-gate-synthetic-fixtures.md`](./doctrine/testing/contract-gate-synthetic-fixtures.md)
-- [`doctrine/testing/assert-observable-outcomes.md`](./doctrine/testing/assert-observable-outcomes.md)
-- [`doctrine/testing/test-ai-apps-by-artifacts-not-prose.md`](./doctrine/testing/test-ai-apps-by-artifacts-not-prose.md)
-- [`doctrine/foundations/treat-critical-code-like-a-library.md`](./doctrine/foundations/treat-critical-code-like-a-library.md)
-- [`doctrine/boundaries/no-type-casts.md`](./doctrine/boundaries/no-type-casts.md)
-- [`doctrine/boundaries/boundaries-validate-internals-trust.md`](./doctrine/boundaries/boundaries-validate-internals-trust.md)
-
-### Frontend and React state
-
-- [`stack/do-not-synchronize-state-with-useeffect.md`](./stack/do-not-synchronize-state-with-useeffect.md)
-- [`doctrine/testing/external-boundary-mocks-only.md`](./doctrine/testing/external-boundary-mocks-only.md)
-- [`doctrine/testing/contract-gate-synthetic-fixtures.md`](./doctrine/testing/contract-gate-synthetic-fixtures.md)
-- [`stack/use-the-design-system-not-ad-hoc-tailwind.md`](./stack/use-the-design-system-not-ad-hoc-tailwind.md)
-- [`stack/test-react-apps-in-real-browsers.md`](./stack/test-react-apps-in-real-browsers.md)
-
-### Toolchain, dependencies, and database workflow
-
-- [`stack/stack-overview.md`](./stack/stack-overview.md)
-- [`stack/catalog-dependencies.md`](./stack/catalog-dependencies.md)
-- [`stack/schema-migrations-are-generated.md`](./stack/schema-migrations-are-generated.md)
-- [`doctrine/packages/use-mature-dependencies-dont-roll-your-own.md`](./doctrine/packages/use-mature-dependencies-dont-roll-your-own.md)
-- [`doctrine/tooling/maintainability-tooling.md`](./doctrine/tooling/maintainability-tooling.md)
-
-### Full doctrine review or editing this skill itself
-
-- read all of [`doctrine/`](doctrine/)
-- read all of [`stack/`](stack/)
-- use the bundled verification scripts before finishing
+- Backbone: [`maintainability-equals-correctness`](./doctrine/foundations/maintainability-equals-correctness.md), [`resolve-uncertainty-into-contracts`](./doctrine/foundations/resolve-uncertainty-into-contracts.md), [`ssot-or-die`](./doctrine/abstractions/ssot-or-die.md), [`integration-first-testing`](./doctrine/testing/integration-first-testing.md), [`external-boundary-mocks-only`](./doctrine/testing/external-boundary-mocks-only.md), [`assert-observable-outcomes`](./doctrine/testing/assert-observable-outcomes.md)
+- Cleanup/refactor: [`clean-up-what-you-touch`](./doctrine/deletion/clean-up-what-you-touch.md), [`delete-obsolete-code`](./doctrine/deletion/delete-obsolete-code.md), [`no-backwards-compat-shims`](./doctrine/deletion/no-backwards-compat-shims.md), [`delete-fake-layers`](./doctrine/deletion/delete-fake-layers.md), [`edit-real-owners`](./doctrine/deletion/edit-real-owners.md), [`build-deep-modules-not-shallow-abstractions`](./doctrine/abstractions/build-deep-modules-not-shallow-abstractions.md), [`cleanup-module-rewrite`](prompts/cleanup-module-rewrite.md), [`review-structural-slop`](prompts/review-structural-slop.md)
+- Packages/boundaries: [`structure-typescript-apps-around-feature-owners`](./doctrine/abstractions/structure-typescript-apps-around-feature-owners.md), [`monorepo-package-boundaries`](./doctrine/packages/monorepo-package-boundaries.md), [`treat-critical-code-like-a-library`](./doctrine/foundations/treat-critical-code-like-a-library.md), [`naming-is-navigation`](./doctrine/foundations/naming-is-navigation.md), [`no-re-exports`](./doctrine/packages/no-re-exports.md), [`no-barrel-exports`](./doctrine/packages/no-barrel-exports.md)
+- Stack/API/types: [`stack-overview`](./stack/stack-overview.md), [`design-openapi-for-inference`](./stack/design-openapi-for-inference.md), [`errors-are-schema`](./stack/errors-are-schema.md), [`document-fields-in-derived-zod-schemas`](./stack/document-fields-in-derived-zod-schemas.md), [`use-canonical-named-types`](./stack/use-canonical-named-types.md), [`jsdoc-with-first-party-sources`](./stack/jsdoc-with-first-party-sources.md), [`no-magic-values`](./stack/no-magic-values.md), [`use-branded-scalar-types`](./stack/use-branded-scalar-types.md)
+- Testing/frontend/tooling: [`contract-gate-synthetic-fixtures`](./doctrine/testing/contract-gate-synthetic-fixtures.md), [`test-ai-apps-by-artifacts-not-prose`](./doctrine/testing/test-ai-apps-by-artifacts-not-prose.md), [`no-type-casts`](./doctrine/boundaries/no-type-casts.md), [`boundaries-validate-internals-trust`](./doctrine/boundaries/boundaries-validate-internals-trust.md), [`do-not-synchronize-state-with-useeffect`](./stack/do-not-synchronize-state-with-useeffect.md), [`use-the-design-system-not-ad-hoc-tailwind`](./stack/use-the-design-system-not-ad-hoc-tailwind.md), [`test-react-apps-in-real-browsers`](./stack/test-react-apps-in-real-browsers.md), [`maintainability-tooling`](./doctrine/tooling/maintainability-tooling.md)
+- Editing this skill: read the files you touch, then run the bundled verification scripts.
 
 ## Audit workflow
 
-When the task is cleanup or review, resolve the skill directory first and then run:
+For cleanup or review:
 
 ```bash
 skill_dir="<path-to-this-skill>"
@@ -127,16 +48,9 @@ If the target repo is Vite+, use `vp` for the normal toolchain entrypoint: `vp l
 
 ## Defaults
 
-- Code is cheap. Structure is expensive.
-- Preserve contracts, tests, and invariants, not stale decomposition.
+- Structure is expensive; preserve contracts, tests, and invariants.
+- Prefer deletion over shims, real owners over fake layers, and stable subsystem files over helper forests.
 - Resolve uncertainty into contracts, not adapters, defaults, optionals, spreads, or catches.
-- Prefer deletion over shims.
-- Prefer stable subsystem files over one-helper-per-file trees.
-- Prefer derived types and schemas over handwritten duplicates.
-- Prefer durable tests that attach regressions to real product boundaries.
-- Prefer slice integration tests over internally mocked unit tests.
-- Prefer mocking only external systems you do not control.
-- Prefer contract-gated synthetic fixtures over handwritten unchecked JSON.
-- Prefer assertions on rendered output, HTTP behavior, persisted state, and published artifacts over helper call order.
-- Prefer mature tooling for dead code, duplication, and dependency boundaries over manual inspection.
-- Prefer making the codebase more coherent now over promising to clean it up later.
+- Prefer derived types/schemas, durable integration tests, external-boundary mocks only, and assertions on observable outcomes.
+- Prefer Fallow for dead code, duplication, dependency hygiene, health, cycles, and dependency boundaries.
+- Leave the codebase more coherent now.

@@ -28,7 +28,7 @@ Import style should reinforce those boundaries:
 - use app-local aliases such as `@/` for nonlocal imports inside an app
 - keep relative imports for genuinely local neighbors inside the same area
 
-Those leaf modules are ownership signals, not excuses for giant domain files. Export `./review-runs/review-run` while that file still owns one review-run concept; if the module grows multiple responsibilities, split the module and expose the new owning leaves instead.
+Those leaf modules are ownership signals, not one-helper file mandates. Export `./review-runs/review-run` while that file still gives callers the context they need; if unrelated responsibilities grow inside it, split the module and expose the new owning leaves instead.
 
 In practice, directories usually carry the higher-level feature or domain boundary. Files inside them should be deep modules around coherent behavior: routes, contracts, persistence, client wrappers, or session/cookie subsystems. Do not split the feature into one-helper files just because each helper can be named.
 

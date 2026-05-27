@@ -25,7 +25,8 @@ When a file has churned enough that its names, control flow, or data model no lo
 
 In agent-heavy repos, optimize for:
 - scanability under heavy change
-- fewer concepts, not fewer lines
+- fewer concepts and fewer files, not fewer lines
+- colocated code that must be understood together
 - deleting dead structure early
 - rewriting churned modules behind stable contracts
 - patterns you would want copied 100 times

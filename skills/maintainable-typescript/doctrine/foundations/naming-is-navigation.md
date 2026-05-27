@@ -9,7 +9,7 @@ example:
 ---
 # Naming Is Navigation
 
-**Rule:** Every package, path segment, file, variable, and function name must be self-explanatory to someone seeing the repo for the first time. Agents learn a codebase by grepping the tree, so names must tell them where to go before they open a file.
+**Rule:** Every package, path segment, file, variable, and function name must be self-explanatory to someone seeing the repo for the first time. Agents learn a codebase by searching the tree, so names must tell them where to go before they open a file.
 
 See also: [Build Deep Modules, Not Shallow Abstractions](../abstractions/build-deep-modules-not-shallow-abstractions.md) and [Monorepo Package Boundaries](../packages/monorepo-package-boundaries.md).
 

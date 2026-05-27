@@ -65,18 +65,16 @@ You can reference this doctrine from your own `AGENTS.md` or `CLAUDE.md`, or cop
 The tooling templates are independent of the skill. In the standalone skill archive, they live under `assets/tooling-templates/`:
 
 ```bash
-cp assets/tooling-templates/.knip.json .
-cp assets/tooling-templates/.dependency-cruiser.mjs .
-cp assets/tooling-templates/.jscpd.json .
-cp assets/tooling-templates/sgconfig.yml .
-cp -r assets/tooling-templates/ast-grep/ .
-
-pnpm add -D knip dependency-cruiser jscpd @ast-grep/cli oxlint typescript
+pnpm add -D fallow typescript
 
 bash scripts/audit-typescript-repo.sh .
 ```
 
-If the target repo already uses Vite+, prefer its `vp` commands for linting, formatting, and testing instead of installing wrapped tool binaries just to reach them.
+Run Fallow without config first. Copy `assets/tooling-templates/.fallowrc.json` only when the target repo needs explicit severities, ignore patterns, boundaries, thresholds, or baselines.
+
+If the target repo already uses Vite+, prefer its `vp` commands for linting, formatting, testing, and package operations instead of installing wrapped tool binaries just to reach them.
+
+Put repo-specific bans and style rules in the target repo's existing linter and formatter configs.
 
 If you are working from this repo instead of the standalone skill archive, the same files also exist in [tooling/templates/](../../tooling/templates) and are documented in [tooling/README.md](../../tooling/README.md).
 
@@ -98,6 +96,7 @@ If you are working from this repo instead of the standalone skill archive, the s
 
 **Abstractions & Architecture**
 - [Build Deep Modules, Not Shallow Abstractions](./doctrine/abstractions/build-deep-modules-not-shallow-abstractions.md)
+- [Structure TypeScript Apps Around Feature Owners](./doctrine/abstractions/structure-typescript-apps-around-feature-owners.md)
 - [No Premature Abstractions](./doctrine/abstractions/no-premature-abstractions.md)
 - [Delete Fake Layers](./doctrine/deletion/delete-fake-layers.md)
 - [Design Around Composable Primitives](./doctrine/abstractions/design-around-composable-primitives.md)

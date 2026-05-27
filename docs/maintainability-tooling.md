@@ -4,136 +4,107 @@ Opinionated tooling stack for cleaning up strict TypeScript repos without turnin
 
 ## Recommended baseline
 
-### 1. Knip for dead code and dependency drift
+### 1. Fallow for codebase intelligence
 
-Use `knip` as the default dead-code audit for TypeScript apps and monorepos.
+Use `fallow` as the default maintainability audit for TypeScript apps and monorepos.
 
 Why:
 
-- Finds unused exports, files, dependencies, and catalog entries
-- Understands workspaces/monorepos out of the box
-- Has a production mode for "what actually ships"
-- Can auto-fix after review
+- Finds unused files, exports, types, dependencies, unresolved imports, unlisted dependencies, cycles, and stale suppressions
+- Covers dev/optional dependency hygiene, pnpm catalog drift, dependency override drift, enum/class members, and re-export cycles
+- Runs duplication and health checks from the same binary
+- Supports architecture boundaries through presets or custom zones
+- Supports `fallow audit` for changed-code gates and `--format json` for agents
+- Can migrate existing Knip and jscpd config with `fallow migrate`
 
 Suggested workflow:
 
 ```bash
-knip
-knip --exports
-knip --fix
-knip --fix --allow-remove-files
+fallow
+fallow dead-code
+fallow dupes
+fallow health --score --hotspots --targets
+fallow audit
+fallow fix --dry-run
 ```
 
-Use `@public` and `@internal` tags intentionally when an export is real API surface but looks unused to static analysis.
+Start without config. Add `.fallowrc.json` only when the repo needs custom entries, ignores, boundaries, rules, thresholds, or staged baselines. For agent-readable output, use `--format json --quiet`; exit code 1 means Fallow found error-severity issues, while exit code 2 means the command or config failed.
 
-### 2. Oxlint for the default lint pass
+### 2. TypeScript, linting, and formatting stay separate
 
-If the repo is already on Vite+ / Oxc tooling, use the Vite+ path first: `vp lint` as the default lint command, with Oxlint as the underlying engine instead of growing an ESLint plugin farm.
+Fallow is not a type checker, linter, or formatter. Keep the existing repo-native commands for those jobs.
 
-High-value rules to turn on early:
+Use:
 
-- `no-unused-vars`
-- `import/no-cycle`
-- `import/no-unassigned-import`
-- `no-restricted-imports`
-- `typescript/no-unnecessary-type-assertion`
-
-Use type-aware linting where available. Use the import plugin when you want cross-file import checks.
+- `tsc --noEmit` or the repo's normal type-check command for type correctness
+- `vp lint` in Vite+ repos; otherwise the repo's chosen linter
+- `vp fmt` in Vite+ repos; otherwise the repo's chosen formatter
 
 If the repo uses Vite+, do not install wrapped tools like Vitest, Oxfmt, Oxlint, or tsdown separately just to access their CLIs. Use `vp`.
 
-### 3. dependency-cruiser for architecture rules
+### 3. Existing linter and formatter config for local policy
 
-Use `dependency-cruiser` when you want enforceable package-boundary rules instead of "please don’t import that" documentation.
-
-Best uses:
-
-- Detect circular dependencies
-- Detect orphan modules
-- Detect dependencies missing from `package.json`
-- Enforce forbidden edges between apps, packages, feature folders, or test code
-
-This is the right tool for monorepo boundary doctrine.
-
-### 4. jscpd for duplicate code reports
-
-Use `jscpd` when you want a duplicate-code report that is easy to review visually.
-
-Best uses:
-
-- Set a duplication threshold in CI
-- Generate an HTML report for cleanup passes
-- Catch copy-paste growth before it normalizes
-
-This is more useful as a periodic audit than as a per-commit blocker.
-
-### 5. ast-grep for custom maintainability rules
-
-Use `ast-grep` when you have repo-specific doctrine that generic linters will never encode well.
+Put repo-specific local rules in the config the repo already runs.
 
 Best uses:
 
 - Ban a deprecated API shape
 - Enforce migration rules
-- Find or rewrite narrow patterns across the repo
-- Codify "never do X in this codebase" checks without writing a full ESLint plugin
+- Ban `as any`, `@ts-ignore`, and restricted imports
+- Keep formatting decisions in the formatter config
 
-This is the tool for opinionated custom rules and codemods.
-
-### 6. `tsr` as an optional cleanup pass
-
-If you want a more aggressive source-level remover after auditing with Knip, `tsr` is worth testing in a throwaway branch.
-
-Use it carefully:
-
-- Review every diff
-- Do not trust it blindly on public API packages
-- Treat it as a cleanup assistant, not a default CI gate
+Use ESLint, Oxlint, Prettier, or the repo's current lint and format layer. Do not add a separate scanner just to express rules those tools can already enforce.
 
 ## What I would not standardize on
 
+### Knip, jscpd, and dependency-cruiser as the default stack
+
+Do not build new TypeScript maintainability workflows around separate Knip, jscpd, and dependency-cruiser passes unless a repo already has a strong reason to keep them.
+
+Fallow now covers the core reasons we used those tools:
+
+- Knip replacement: dead files, exports, dependencies, workspaces, production mode, and auto-fix preview
+- jscpd replacement: duplicate-code analysis through `fallow dupes`
+- dependency-cruiser replacement: circular dependencies and boundary violations through `fallow dead-code`
+
+Keep an old tool only when it has a repo-specific rule or report format that Fallow does not yet model.
+
 ### `ts-prune`
 
-Do not build new workflow around `ts-prune`. Its GitHub repo was archived on September 19, 2025. Prefer Knip first, then use `tsr` only if you specifically want source-editing cleanup.
+Do not build new workflow around `ts-prune`. Use Fallow dead-code analysis instead.
+
+### `tsr`
+
+Do not make `tsr` the default cleanup path. Use `fallow fix --dry-run` first, then apply only reviewed, narrow cleanup.
 
 ## Suggested cadence
 
 ### Every PR
 
-- `vp check`
-- `oxlint` with import rules enabled
-- Repo-specific AST rules if present
+- repo type check
+- repo lint and format commands
+- `fallow audit`
 
 ### Weekly or before releases
 
-- `knip`
-- `knip --production`
-- `dependency-cruiser`
-- `jscpd`
+- `fallow`
+- `fallow dead-code --production`
+- `fallow health --score --hotspots --targets`
+- `fallow dupes`
 
 ### During focused cleanup work
 
-- `knip --fix`
-- `tsr` in a review branch
-- `ast-grep scan -r rules/`
+- `fallow dead-code`
+- `fallow dupes --mode semantic`
+- `fallow fix --dry-run`
 
 ## Sources
 
-- Knip monorepo/workspaces: https://knip.dev/features/monorepos-and-workspaces
-- Knip unused exports: https://knip.dev/typescript/unused-exports
-- Knip unused dependencies: https://knip.dev/typescript/unused-dependencies
-- Knip production mode: https://knip.dev/features/production-mode
-- Knip auto-fix: https://knip.dev/features/auto-fix
-- Knip JSDoc/TSDoc tags: https://knip.dev/reference/jsdoc-tsdoc-tags
-- Oxlint linter overview: https://oxc.rs/docs/guide/usage/linter.html
-- Oxlint type-aware linting: https://oxc.rs/docs/guide/usage/linter/type-aware.html
-- Oxlint multi-file analysis: https://oxc.rs/docs/guide/usage/linter/multi-file-analysis
-- Oxlint `no-unused-vars`: https://oxc.rs/docs/guide/usage/linter/rules/eslint/no-unused-vars
-- Oxlint `import/no-unassigned-import`: https://oxc.rs/docs/guide/usage/linter/rules/import/no-unassigned-import
-- dependency-cruiser: https://github.com/sverweij/dependency-cruiser
-- jscpd HTML reporter: https://jscpd.dev/reporters/html
-- ast-grep rule catalog: https://ast-grep.github.io/catalog/
-- ast-grep project config: https://ast-grep.github.io/guide/project/project-config.html
-- ast-grep rewrite code: https://ast-grep.github.io/guide/rewrite-code.html
-- `tsr`: https://github.com/line/tsr
-- `ts-prune` archive notice: https://github.com/nadeesha/ts-prune/discussions
+- Fallow documentation: https://docs.fallow.tools/
+- Fallow quick start: https://docs.fallow.tools/quickstart
+- Fallow installation: https://docs.fallow.tools/installation
+- Fallow vs Knip and migration: https://docs.fallow.tools/migration/from-knip
+- Fallow jscpd migration: https://docs.fallow.tools/migration/from-jscpd
+- Fallow architecture boundaries: https://docs.fallow.tools/analysis/boundaries
+- Fallow audit: https://docs.fallow.tools/cli/audit
+- Fallow source README: https://github.com/fallow-rs/fallow
