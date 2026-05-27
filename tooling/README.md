@@ -6,19 +6,17 @@ These are not for maintaining this repo's markdown opinions. They are for auditi
 
 ## What to copy into a target repo root
 
-- `tooling/templates/.knip.json` -> `.knip.json`
-- `tooling/templates/.dependency-cruiser.mjs` -> `.dependency-cruiser.mjs`
-- `tooling/templates/.jscpd.json` -> `.jscpd.json`
-- `tooling/templates/sgconfig.yml` -> `sgconfig.yml`
-- `tooling/templates/ast-grep/` -> `ast-grep/`
+- `tooling/templates/.fallowrc.json` -> `.fallowrc.json`
+
+Run Fallow without config first. Copy the template only when the target repo needs explicit severities, ignores, boundaries, thresholds, or baselines.
 
 ## Recommended install
 
 ```bash
-pnpm add -D knip dependency-cruiser jscpd @ast-grep/cli oxlint typescript
+pnpm add -D fallow typescript
 ```
 
-If the repo already uses Vite+ / `vp`, do not treat that install command as the default. Keep `typescript` and `oxlint` aligned with Vite+, prefer `vp lint` over invoking `oxlint` directly, and do not install wrapped tools like Vitest, Oxfmt, Oxlint, or tsdown separately just to reach their CLIs.
+If the repo already uses Vite+ / `vp`, do not treat that install command as the default. Keep TypeScript, linting, formatting, testing, and package operations aligned with Vite+. Prefer `vp lint` and `vp fmt`, and do not install wrapped tools like Vitest, Oxfmt, Oxlint, or tsdown separately just to reach their CLIs.
 
 ## Generic audit runner
 
@@ -33,12 +31,11 @@ What it does:
 - runs `tsc --noEmit` when a root `tsconfig.json` exists
 - runs `vp lint` when the target repo uses Vite+
 - otherwise runs `oxlint` when installed
-- runs `knip` when installed
-- runs `dependency-cruiser` when both the binary and config exist
-- runs `jscpd` when both the binary and config exist
-- runs `ast-grep scan` when both the binary and config exist
+- runs `fallow` when installed
 
 This script is intentionally thin. The real policy lives in the target repo config files.
+
+Put repo-specific bans and style rules in the target repo's existing linter and formatter configs.
 
 ## Suggested package.json scripts for the target repo
 
@@ -47,11 +44,13 @@ This script is intentionally thin. The real policy lives in the target repo conf
   "scripts": {
     "check:types": "tsc --noEmit",
     "check:lint": "vp lint",
-    "check:dead": "knip",
-    "check:deps": "depcruise . --config .dependency-cruiser.mjs",
-    "check:dupes": "jscpd --config .jscpd.json src packages apps",
-    "check:ast": "ast-grep scan --project .",
-    "check:maintainability": "vp run check:types && vp run check:lint && vp run check:dead && vp run check:deps && vp run check:dupes && vp run check:ast"
+    "fmt": "vp fmt",
+    "check:fallow": "fallow",
+    "check:dead": "fallow dead-code",
+    "check:dupes": "fallow dupes",
+    "check:health": "fallow health --score --hotspots --targets",
+    "check:audit": "fallow audit",
+    "check:maintainability": "vp run check:types && vp run check:lint && vp run check:fallow"
   }
 }
 ```
@@ -60,10 +59,7 @@ For non-Vite+ repos, replace `vp lint` and `vp run ...` with the repo's actual p
 
 ## What each tool is for
 
-- `knip`: dead exports, dead files, dead dependencies
-- `dependency-cruiser`: circular deps, orphan modules, forbidden import edges
-- `jscpd`: duplicated code
-- `ast-grep`: repo-specific maintainability rules and codemods
+- `fallow`: dead code, dependency hygiene, pnpm catalog and override hygiene, cycles, boundaries, duplication, complexity, health, and changed-code audit gates
 - `oxlint`: fast default lint engine, usually reached through `vp lint` in Vite+ repos
 
 ## Opinionated defaults
@@ -71,4 +67,5 @@ For non-Vite+ repos, replace `vp lint` and `vp run ...` with the repo's actual p
 - Dead code should be detected by static tooling, not by memory
 - Dependency direction should be enforced, not merely documented
 - Duplicate code should be reported before it normalizes
-- Repo-specific doctrine should live in AST rules, not in tribal knowledge
+- Complexity should become visible before it becomes architecture
+- Repo-specific lint and formatting doctrine should live in executable linter or formatter config, not in tribal knowledge

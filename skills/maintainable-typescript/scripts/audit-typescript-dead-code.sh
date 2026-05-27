@@ -29,16 +29,12 @@ else
   echo "Skipped: install oxlint or use Vite+ in the target repo"
 fi
 
-if has_local_bin "$TARGET_DIR" knip; then
-  if [[ -f "$TARGET_DIR/.knip.json" ]]; then
-    run_or_skip "Knip" run_local_bin "$TARGET_DIR" knip --directory "$TARGET_DIR" --config "$TARGET_DIR/.knip.json"
-  else
-    run_or_skip "Knip" run_local_bin "$TARGET_DIR" knip --directory "$TARGET_DIR"
-    echo "Tip: copy $TEMPLATE_DIR/.knip.json to $TARGET_DIR/.knip.json for stronger repo-specific checks."
-  fi
+if has_local_bin "$TARGET_DIR" fallow; then
+  run_or_skip "Fallow dead code" run_local_bin "$TARGET_DIR" fallow --root "$TARGET_DIR" dead-code --quiet
 else
-  print_section "Knip"
-  echo "Skipped: install knip in the target repo"
+  print_section "Fallow dead code"
+  echo "Skipped: install fallow in the target repo"
+  echo "Tip: copy $TEMPLATE_DIR/.fallowrc.json to $TARGET_DIR/.fallowrc.json for repo-owned maintainability policy."
 fi
 
 echo

@@ -10,6 +10,7 @@ const REQUIRED_H2 = [
   'Example',
 ];
 const IGNORED_FILES = new Set([
+  'skills/maintainable-typescript/doctrine/abstractions/structure-typescript-apps-around-feature-owners.md',
   'skills/maintainable-typescript/doctrine/tooling/maintainability-tooling.md',
   'skills/maintainable-typescript/stack/start-here.md',
   'skills/maintainable-typescript/stack/stack-overview.md',

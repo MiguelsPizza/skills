@@ -75,47 +75,11 @@ else
 fi
 
 echo
-echo "==> Knip"
-if has_local_bin knip; then
-  run_local_bin knip --directory "$TARGET_DIR" || true
+echo "==> Fallow"
+if has_local_bin fallow; then
+  run_local_bin fallow --root "$TARGET_DIR" --quiet || true
 else
-  echo "Skipped: install knip in the target repo"
-fi
-
-echo
-echo "==> dependency-cruiser"
-if has_local_bin depcruise; then
-  if [[ -f "$TARGET_DIR/.dependency-cruiser.mjs" ]]; then
-    run_local_bin depcruise "$TARGET_DIR" --config "$TARGET_DIR/.dependency-cruiser.mjs" || true
-  else
-    echo "Skipped: add .dependency-cruiser.mjs to the target repo"
-  fi
-else
-  echo "Skipped: install dependency-cruiser in the target repo"
-fi
-
-echo
-echo "==> jscpd"
-if has_local_bin jscpd; then
-  if [[ -f "$TARGET_DIR/.jscpd.json" ]]; then
-    run_local_bin jscpd --config "$TARGET_DIR/.jscpd.json" "$TARGET_DIR" || true
-  else
-    echo "Skipped: add .jscpd.json to the target repo"
-  fi
-else
-  echo "Skipped: install jscpd in the target repo"
-fi
-
-echo
-echo "==> ast-grep"
-if has_local_bin ast-grep; then
-  if [[ -f "$TARGET_DIR/sgconfig.yml" ]]; then
-    run_local_bin ast-grep scan --project "$TARGET_DIR" || true
-  else
-    echo "Skipped: add sgconfig.yml to the target repo"
-  fi
-else
-  echo "Skipped: install @ast-grep/cli in the target repo"
+  echo "Skipped: install fallow in the target repo"
 fi
 
 echo

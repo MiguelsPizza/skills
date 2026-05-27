@@ -200,7 +200,7 @@ Main sources:
 What to say:
 
 - agents misread “single responsibility” as “one helper per file”
-- navigation matters because agents learn by grepping
+- navigation matters because agents learn by searching the tree
 - names and paths are part of the architecture
 
 #### E. One source of truth, one canonical shape
@@ -315,11 +315,7 @@ Main sources:
 - `skills/maintainable-typescript/scripts/audit-typescript-dead-code.sh`
 - `skills/maintainable-typescript/scripts/audit-typescript-duplicate-code.sh`
 - `skills/maintainable-typescript/scripts/audit-typescript-architecture.sh`
-- `skills/maintainable-typescript/assets/tooling-templates/.knip.json`
-- `skills/maintainable-typescript/assets/tooling-templates/.dependency-cruiser.mjs`
-- `skills/maintainable-typescript/assets/tooling-templates/.jscpd.json`
-- `skills/maintainable-typescript/assets/tooling-templates/ast-grep/no-as-any.yml`
-- `skills/maintainable-typescript/assets/tooling-templates/ast-grep/no-ts-ignore.yml`
+- `skills/maintainable-typescript/assets/tooling-templates/.fallowrc.json`
 
 What to say:
 
