@@ -29,13 +29,13 @@ Prefer somewhat general-purpose interfaces. The implementation should satisfy to
 
 If two extracted helpers must be read together to understand either one, inline them or move them behind one owning module.
 
-Private helper signatures are not a reason to create new data contracts. Keep the workflow's canonical object moving through the module unless a split creates a real boundary or hides meaningful complexity.
+Private helper signatures are not a reason to create new data or method contracts. Keep the workflow's canonical object and real client/class types moving through the module unless a split creates a real boundary or hides meaningful complexity.
 
 MVC, Rails-style resources, and other strong conventions can support smaller files because the next file is predictable. In non-standard apps, colocate more until the repo has a real navigation system.
 
 ## The smell
 
-If understanding one action requires opening five sibling files with nearly identical names, the abstraction is shallow. If a method exists for exactly one UI action or caller, check whether the caller's special case leaked into the lower-level interface. If every helper has its own `Params`, TypeScript `Pick`, or spread-built input shape, the module is shallow even when each function is small.
+If understanding one action requires opening five sibling files with nearly identical names, the abstraction is shallow. If a method exists for exactly one UI action or caller, check whether the caller's special case leaked into the lower-level interface. If every helper has its own `Params`, TypeScript `Pick`, spread-built input shape, or subset `Client` interface, the module is shallow even when each function is small.
 
 ## Example
 

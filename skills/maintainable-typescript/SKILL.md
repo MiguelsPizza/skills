@@ -51,7 +51,7 @@ If the target repo is Vite+, use `vp` for the normal toolchain entrypoint: `vp l
 - Structure is expensive; preserve contracts, tests, and invariants.
 - Prefer deletion over shims, real owners over fake layers, and stable subsystem files over helper forests.
 - Resolve uncertainty into contracts, not adapters, defaults, optionals, spreads, or catches.
-- Inside an owned subsystem, prefer one canonical domain object over helper-specific TypeScript `Pick`, TypeScript `Omit`, spread projections, and param shapes. Zod/drizzle-zod projections are fine for real API, insert, update, and select contracts.
+- Inside an owned subsystem, prefer one canonical domain object and the real client/class type over helper-specific TypeScript `Pick`, TypeScript `Omit`, subset client interfaces, spread projections, and param shapes. Zod/drizzle-zod projections are fine for real API, insert, update, and select contracts.
 - Prefer derived types/schemas, durable integration tests, external-boundary mocks only, and assertions on observable outcomes.
 - Prefer Fallow for dead code, duplication, dependency hygiene, health, cycles, and dependency boundaries.
 - Leave the codebase more coherent now.

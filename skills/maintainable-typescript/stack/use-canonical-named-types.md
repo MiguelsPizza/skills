@@ -19,7 +19,7 @@ Agents work locally. They see a function signature that needs a shape and write 
 
 This erases vocabulary from the codebase. The next reader sees fields, not a concept. If the canonical type had JSDoc, source links, or usage constraints, all of that is lost. Now the same shape exists twice and will drift.
 
-The same mistake shows up as TypeScript `Pick`, TypeScript `Omit`, and one-off `Params` types. Those feel safer than passing the full domain object, but inside an owned subsystem they usually hide the real concept and create more shapes to remember.
+The same mistake shows up as TypeScript `Pick`, TypeScript `Omit`, one-off `Params` types, and subset client interfaces. Those feel safer than passing the full domain object or real client type, but inside an owned subsystem they usually hide the real concept and create more shapes to remember.
 
 ## What to do instead
 
@@ -30,9 +30,11 @@ Before writing an inline object type:
 3. If it's a real domain concept used in more than one place, give it a name and colocate it with that domain
 4. Use an inline object shape only when it is tiny, truly local, and has no meaning outside that one function
 
-Use schema projection for real contract schemas, not as a reflex for private helper parameters. `createSelectSchema`, `createInsertSchema`, `createUpdateSchema`, and Zod `.pick()`/`.omit()` are fine when they define a real API, insert, update, or select contract. If a helper belongs to the same owner as the canonical object, pass the canonical object or the existing named input type unless a narrower contract has its own invariant or boundary.
+Use schema projection for real contract schemas, not as a reflex for private helper parameters. `createSelectSchema`, `createInsertSchema`, `createUpdateSchema`, and Zod `.pick()`/`.omit()` are fine when they define a real API, insert, update, or select contract. If a helper belongs to the same owner as the canonical object, pass the canonical object, existing named input type, or real client/class type unless a narrower contract has its own invariant or boundary.
 
 It is fine when a function does not read every field on a canonical object. The maintenance cost is not the unused fields; it is the reader having to compare several nearly identical shapes to learn whether they mean different things.
+
+It is also fine when a function accepts a client or class and calls only one method. Do not invent `RepositoryReader`, `MinimalGitHubClient`, or `Pick<GitHubClient, 'getRepository'>` just to document local usage. That creates a second method surface and pushes callers toward trimming or adapting the real object.
 
 This is adjacent to the branded-scalar problem, not the same problem. Branded scalars protect non-interchangeable primitives. This file is about naming and source ownership for object shapes.
 
@@ -104,5 +106,6 @@ If a function parameter is an inline object type, ask:
 - Would a type name make the code easier to understand?
 - Am I throwing away JSDoc or source references by writing it inline?
 - Am I using TypeScript `Pick` or TypeScript `Omit` only because this helper happens to read fewer fields?
+- Am I inventing a subset client or class interface only because this helper calls fewer methods?
 
 If the answer to any of those is yes, stop and use the canonical named type.
