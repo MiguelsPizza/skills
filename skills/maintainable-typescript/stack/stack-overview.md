@@ -9,6 +9,10 @@ project/
 ├── apps/
 │   ├── main-app/                # TanStack Router SPA (React 19)
 │   │   ├── src/                 # Frontend source
+│   │   │   ├── routes/          # TanStack route tree and frontend feature owners
+│   │   │   ├── hooks/           # App-wide hooks only
+│   │   │   ├── ui/              # App-wide reusable UI primitives
+│   │   │   └── lib/             # App-wide clients, adapters, and pure helpers
 │   │   ├── worker/              # Cloudflare Worker backend
 │   │   ├── migrations/          # Drizzle-generated SQL
 │   │   ├── wrangler.jsonc       # CF environments + bindings
@@ -73,6 +77,10 @@ For dependency ownership and install policy, see [Catalog Dependencies](./catalo
 - Toolchain: Vite+ via `vp`
 - Testing: Vite+ browser testing + Playwright + MSW
   Browser-facing regressions should attach to real route surfaces and use contract-gated fixtures at synthetic boundaries.
+
+## Frontend Ownership
+
+TanStack Router file-based routes are the frontend feature owners. Use route directories for product surfaces and colocate route-local non-route code with the route branch using `-`-prefixed files or folders. Keep `src/hooks/`, `src/ui/`, and `src/lib/` for app-wide shared code only. Use `packages/ui` only when UI primitives are shared across apps.
 
 ## SSOT Chain
 

@@ -109,10 +109,11 @@ Browser integration test
 
 ```typescript
 import { page } from "@vitest/browser";
-import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
+import { QueryClient } from "@tanstack/react-query";
+import { createMemoryHistory, createRouter, RouterProvider } from "@tanstack/react-router";
 import { http, HttpResponse } from "msw";
 import { createRoot } from "react-dom/client";
-import { UsersPage } from "@/features/users/components/users-page";
+import { routeTree } from "@/routeTree.gen";
 import { test, expect } from "@/test/browser-test";
 import type { User } from "@repo/contracts/users/user";
 import { usersResponseSchema } from "@repo/contracts/users/list-users";
@@ -142,11 +143,14 @@ test("renders users returned by the API in a real browser", async ({
 
   const container = document.createElement("div");
   document.body.append(container);
+  const router = createRouter({
+    routeTree,
+    history: createMemoryHistory({ initialEntries: ["/users?tab=all"] }),
+    context: { queryClient },
+  });
 
   createRoot(container).render(
-    <QueryClientProvider client={queryClient}>
-      <UsersPage />
-    </QueryClientProvider>,
+    <RouterProvider router={router} />,
   );
 
   await expect.element(

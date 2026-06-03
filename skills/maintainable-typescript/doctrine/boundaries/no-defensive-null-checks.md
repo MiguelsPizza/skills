@@ -28,8 +28,13 @@ Truthful type
 ```typescript
 import type { User } from '@repo/contracts/users/user';
 
-function formatUser(user: User): string {
-  return `${user.displayName} <${user.email}>`;
+export function serializeUserProfile(user: User): UserProfileJson {
+  return {
+    id: user.id,
+    displayName: user.displayName,
+    email: user.email,
+    avatarUrl: user.avatarUrl,
+  };
 }
 ```
 
@@ -38,8 +43,13 @@ Nullable type
 ```typescript
 import type { PendingInvite } from '@repo/contracts/invites/pending-invite';
 
-function formatInvite(invite: PendingInvite): string {
-  return `${invite.displayName ?? invite.email} <${invite.email}>`;
+export function serializePendingInvite(invite: PendingInvite): PendingInviteJson {
+  return {
+    id: invite.id,
+    email: invite.email,
+    displayName: invite.displayName ?? invite.email,
+    expiresAt: invite.expiresAt.toISOString(),
+  };
 }
 ```
 

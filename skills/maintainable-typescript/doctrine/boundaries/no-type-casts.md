@@ -35,9 +35,18 @@ import {
   webhookPayloadSchema,
   type WebhookPayload,
 } from '@repo/contracts/github/webhook-payload';
+import { handlePullRequestOpened } from '@/features/review-runs/handle-pull-request-opened';
 
-export async function loadWebhookPayload(response: Response): Promise<WebhookPayload> {
-  return webhookPayloadSchema.parse(await response.json());
+export async function handleGitHubWebhook(request: Request): Promise<Response> {
+  const payload: WebhookPayload = webhookPayloadSchema.parse(await request.json());
+
+  if (payload.action !== 'opened') {
+    return new Response(null, { status: 204 });
+  }
+
+  await handlePullRequestOpened(payload);
+
+  return Response.json({ accepted: true }, { status: 202 });
 }
 ```
 

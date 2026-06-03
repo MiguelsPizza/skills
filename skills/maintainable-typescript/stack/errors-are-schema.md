@@ -119,12 +119,15 @@ export const getInstallationInputSchema = installationSchema.pick({
   id: true,
 });
 
+export const INSTALLATION_NOT_FOUND_CODE = 'installation_not_found';
+export const INSTALLATION_NOT_FOUND_MESSAGE = 'Installation not found.';
+
 /**
  * Error payload returned when an installation does not exist.
  */
 export const installationNotFoundErrorSchema = z.object({
-  code: z.literal('installation_not_found'),
-  message: z.literal('Installation not found.'),
+  code: z.literal(INSTALLATION_NOT_FOUND_CODE),
+  message: z.literal(INSTALLATION_NOT_FOUND_MESSAGE),
   installationId: installationIdSchema,
 });
 
@@ -160,6 +163,8 @@ import { db } from '@repo/db/client';
 import { installations } from '@repo/db/schema/installations';
 import {
   commonErrors,
+  INSTALLATION_NOT_FOUND_CODE,
+  INSTALLATION_NOT_FOUND_MESSAGE,
   getInstallationInputSchema,
   installationSchema,
   readInstallationErrors,
@@ -187,8 +192,8 @@ export const getInstallation = publicProcedure
     if (!installation) {
       throw errors.NOT_FOUND({
         data: {
-          code: 'installation_not_found',
-          message: 'Installation not found.',
+          code: INSTALLATION_NOT_FOUND_CODE,
+          message: INSTALLATION_NOT_FOUND_MESSAGE,
           installationId: input.id,
         },
       });

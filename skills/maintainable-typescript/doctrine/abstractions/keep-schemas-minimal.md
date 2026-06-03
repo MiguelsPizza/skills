@@ -32,36 +32,40 @@ This matters most for database tables, where removal is expensive. Apply the sam
 
 ## Example
 
-Canonical owner
-
-```typescript
-import { text } from 'drizzle-orm/sqlite-core';
-
-export const installationIdColumn = text('installation_id').notNull();
-```
-
 Minimal first pass
 
 ```typescript
 import { integer, sqliteTable, text } from 'drizzle-orm/sqlite-core';
-import { installationIdColumn } from '@repo/db/schema/installation-id-column';
 
 export const reviewRuns = sqliteTable('review_runs', {
   id: text('id').primaryKey(),
-  installationId: installationIdColumn,
+  installationId: text('installation_id').notNull(),
   pullRequestNumber: integer('pull_request_number').notNull(),
 });
+```
+
+If current behavior needs an index, add that concrete policy beside the table. Do not introduce a helper just to save one column line.
+
+```typescript
+import { index, integer, sqliteTable, text } from 'drizzle-orm/sqlite-core';
+
+export const reviewRuns = sqliteTable('review_runs', {
+  id: text('id').primaryKey(),
+  installationId: text('installation_id').notNull(),
+  pullRequestNumber: integer('pull_request_number').notNull(),
+}, (table) => ({
+  installationLookup: index('review_runs_installation_id_idx').on(table.installationId),
+}));
 ```
 
 Not this
 
 ```typescript
 import { integer, sqliteTable, text } from 'drizzle-orm/sqlite-core';
-import { installationIdColumn } from '@repo/db/schema/installation-id-column';
 
 export const reviewRuns = sqliteTable('review_runs', {
   id: text('id').primaryKey(),
-  installationId: installationIdColumn,
+  installationId: text('installation_id').notNull(),
   pullRequestNumber: integer('pull_request_number').notNull(),
   status: text('status').notNull(),
   archivedAt: integer('archived_at'),

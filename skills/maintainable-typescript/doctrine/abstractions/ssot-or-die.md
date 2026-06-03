@@ -38,6 +38,8 @@ Zod error schemas (defined once)
 ```
 Both chains follow the same principle: define once at the source, derive everything else. Never hand-write a type that can be inferred. Never duplicate a constant that can be imported. Never define a validation schema that can be derived from the database schema. That rule is broader than schemas: derive unions, option lists, route search contracts, and UI variants from canonical values or schemas instead of declaring parallel arrays, string unions, and lookup objects by hand.
 
+Derivation is for owned contracts and generated surfaces, not for carving private helper inputs into endless slices. Zod and drizzle-zod projections are appropriate for public select, insert, update, and API schemas. TypeScript `Pick`, `Omit`, object spreads, and subset client interfaces are not SSOT when they create extra internal helper shapes that readers must reconcile with the canonical object or client.
+
 ## Example
 
 ```typescript
@@ -55,13 +57,14 @@ import { z } from 'zod';
 import { installations } from '@repo/db/schema/installations';
 
 export const installationSchema = createSelectSchema(installations);
+export const installationIdSchema = z.string().min(1).brand<'InstallationId'>();
 export const getInstallationInputSchema = installationSchema.pick({ id: true });
 export type Installation = z.infer<typeof installationSchema>;
 
 export const installationNotFoundErrorSchema = z.object({
   code: z.literal('installation_not_found'),
   message: z.literal('Installation not found.'),
-  installationId: installationSchema.shape.id,
+  installationId: installationIdSchema,
 });
 ```
 
@@ -98,3 +101,5 @@ Example implements: [SSOT or Die](./ssot-or-die.md), [Use Canonical Named Types,
 ## The test
 
 If changing a business rule requires editing more than one file (excluding tests), you have a SSOT violation.
+
+If reading one workflow requires comparing several TypeScript `Pick`, TypeScript `Omit`, spread, `Params`, or subset variants of the same object or client, the code is probably multiplying sources of truth instead of deriving from one.

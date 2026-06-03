@@ -36,6 +36,8 @@ Owner constants
 ```typescript
 export const MAX_GITHUB_FETCH_ATTEMPTS = 3;
 export const INITIAL_RETRY_DELAY_MS = 250;
+export const GITHUB_FETCH_TIMEOUT_MS = 5_000;
+export const MAX_GITHUB_DIFF_BYTES = 500_000;
 ```
 
 Feature usage
@@ -44,34 +46,67 @@ Feature usage
 import { getPullRequestDiffInputSchema } from '@repo/contracts/github/get-pull-request-diff';
 import {
   INITIAL_RETRY_DELAY_MS,
+  GITHUB_FETCH_TIMEOUT_MS,
+  MAX_GITHUB_DIFF_BYTES,
   MAX_GITHUB_FETCH_ATTEMPTS,
 } from '@repo/github-client/github-retry-policy';
 import { buildPullRequestDiffUrl } from '@/lib/github/build-pull-request-diff-url';
 import { publicProcedure } from '../orpc';
 import { sleep } from '@/lib/sleep';
 
-async function fetchPullRequestDiff(url: string): Promise<Response | null> {
+type PullRequestDiffFetchResult =
+  | { status: 'loaded'; diff: string }
+  | { status: 'too-large'; maxBytes: number }
+  | { status: 'unavailable' };
+
+async function fetchPullRequestDiff(url: string): Promise<PullRequestDiffFetchResult> {
   for (let attempt = 0; attempt < MAX_GITHUB_FETCH_ATTEMPTS; attempt += 1) {
+    const abortController = new AbortController();
+    const timeout = setTimeout(() => abortController.abort(), GITHUB_FETCH_TIMEOUT_MS);
+
     try {
-      return await fetch(url);
-    } catch {
-      if (attempt < MAX_GITHUB_FETCH_ATTEMPTS - 1) {
-        await sleep(INITIAL_RETRY_DELAY_MS * 2 ** attempt);
+      const response = await fetch(url, { signal: abortController.signal });
+
+      if (response.ok) {
+        const diff = await response.text();
+        if (diff.length > MAX_GITHUB_DIFF_BYTES) {
+          return { status: 'too-large', maxBytes: MAX_GITHUB_DIFF_BYTES };
+        }
+
+        return { status: 'loaded', diff };
       }
+    } catch {
+      // Network errors and aborts are retried below with the same bounded policy.
+    } finally {
+      clearTimeout(timeout);
+    }
+
+    if (attempt < MAX_GITHUB_FETCH_ATTEMPTS - 1) {
+      await sleep(INITIAL_RETRY_DELAY_MS * 2 ** attempt);
     }
   }
 
-  return null;
+  return { status: 'unavailable' };
 }
 
 export const getPullRequestDiff = publicProcedure
   .input(getPullRequestDiffInputSchema)
   .handler(async ({ input, errors }) => {
-    const response = await fetchPullRequestDiff(
+    const result = await fetchPullRequestDiff(
       buildPullRequestDiffUrl(input.pullRequestNumber),
     );
 
-    if (!response) {
+    if (result.status === 'too-large') {
+      throw errors.PAYLOAD_TOO_LARGE({
+        data: {
+          code: 'pull_request_diff_too_large',
+          message: 'Pull request diff is too large to load.',
+          maxBytes: result.maxBytes,
+        },
+      });
+    }
+
+    if (result.status === 'unavailable') {
       throw errors.BAD_GATEWAY({
         data: {
           code: 'pull_request_diff_unavailable',
@@ -82,7 +117,7 @@ export const getPullRequestDiff = publicProcedure
       });
     }
 
-    return { diff: await response.text() };
+    return { diff: result.diff };
   });
 ```
 

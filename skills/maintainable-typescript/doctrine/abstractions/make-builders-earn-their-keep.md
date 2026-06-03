@@ -43,8 +43,31 @@ export const updateRepository = protectedProcedure
   .use(rateLimitWrites)
   .use(emitAuditEvent)
   .input(updateRepositoryInputSchema)
-  .mutation(({ ctx, input }) => {
-    return saveRepository(ctx.user.id, input);
+  .mutation(async ({ ctx, input, errors }) => {
+    const repository = await repositories.findById(input.repositoryId);
+
+    if (!repository || repository.ownerId !== ctx.user.id) {
+      throw errors.NOT_FOUND({
+        data: {
+          code: 'repository_not_found',
+          message: 'Repository not found.',
+          repositoryId: input.repositoryId,
+        },
+      });
+    }
+
+    const updatedRepository = await repositories.update(repository.id, {
+      name: input.name,
+      visibility: input.visibility,
+    });
+
+    await auditEvents.record({
+      actorId: ctx.user.id,
+      event: 'repository.updated',
+      targetId: updatedRepository.id,
+    });
+
+    return updatedRepository;
   });
 
 const repository = {
