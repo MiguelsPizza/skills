@@ -14,6 +14,7 @@ Rules:
 - Do not add local try/catch blocks unless this function owns retry, fallback, cleanup, or boundary translation.
 - If a helper only forwards arguments, inline it or delete it.
 - If a helper only adds, removes, or renames fields from an object, inline it or delete it.
+- For internal TypeScript object construction, assign optional fields directly. Use guarded `if (value !== undefined) obj.field = value` mutation only when property presence is part of the contract.
 - Prefer one direct rewrite of the module over a helper-by-helper refactor.
 
 Before editing:

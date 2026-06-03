@@ -15,6 +15,7 @@ Look specifically for:
 - optionality creep: `input?.field`, optional callbacks, or no-op defaults where the caller should be required to provide the dependency
 - helper confetti: one-call helpers, forwarding helpers, or helpers that only return an object literal
 - spread fog: object spreads hiding the final shape, especially conditional spreads and repeated `{ ...thing, extra }` projections
+- optional assignment noise: guarded `if (value !== undefined) obj.field = value` blocks for internal objects where assigning `undefined` to an optional field would mean the same thing
 - exact-shape theater: private helpers that reject the canonical object and require a one-off subset only because they read fewer fields
 - fake extensibility: hooks, options bags, strategies, providers, adapters, or managers with one real use
 - error laundering: `try/catch` that only rewrites an internal error or logs below the top-level boundary
@@ -42,5 +43,6 @@ Rules:
 - Do not flag Zod/drizzle-zod `.pick()` or `.omit()` when it defines a real API, insert, update, or select schema.
 - Delete adapters, wrappers, defaults, and hooks that do not protect a real public boundary.
 - Delete spread projections that only add, remove, or rename fields on an already-owned object.
+- Prefer direct optional field assignment for internal TypeScript shapes; reserve guarded assignment for exact result shapes, persisted records, public wire payloads, or code that checks property presence.
 - Throw upward except at top-level operational boundaries.
 ```
