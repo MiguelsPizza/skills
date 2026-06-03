@@ -32,15 +32,34 @@ This rule is about whether a class should exist. If the problem is subclass laye
 ## Example
 
 ```typescript
-export class ReviewRunPolicy {
-  constructor(private readonly now: Date) {}
+export class RepositorySyncSession {
+  private closed = false;
 
-  canStart(run: ReviewRun): boolean {
-    return run.status === 'queued' && run.scheduledAt <= this.now;
+  constructor(private readonly client: UpstreamRepositoryClient) {}
+
+  async sync(repository: RepositoryInstallation): Promise<RepositorySyncResult> {
+    if (this.closed) {
+      throw new RepositorySyncSessionClosedError();
+    }
+
+    const upstreamRepository = await this.client.getRepository(repository.repositoryId);
+
+    if (upstreamRepository.archived) {
+      return { status: 'skipped', reason: 'archived' };
+    }
+
+    await this.client.syncRepository(repository.repositoryId);
+
+    return { status: 'synced' };
   }
 
-  canCancel(run: ReviewRun): boolean {
-    return run.status === 'queued' || run.status === 'running';
+  async close(): Promise<void> {
+    if (this.closed) {
+      return;
+    }
+
+    this.closed = true;
+    await this.client.close();
   }
 }
 ```

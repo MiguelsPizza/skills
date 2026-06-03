@@ -36,13 +36,39 @@ Signs you're abstracting too early:
 
 ```typescript
 import { createUserInputSchema } from '@repo/contracts/users/user';
+import { users } from '@repo/db/users';
 import { publicProcedure } from '../orpc';
-import { createUser } from '@/features/users/create-user';
+import { auditLog } from '@/observability/audit-log';
 
 export const createUserProcedure = publicProcedure
   .input(createUserInputSchema)
-  .handler(async ({ input }) => {
-    return await createUser(input);
+  .handler(async ({ input, context, errors }) => {
+    const email = input.email.trim().toLowerCase();
+    const existingUser = await users.findByEmail(email);
+
+    if (existingUser) {
+      throw errors.CONFLICT({
+        data: {
+          code: 'user_email_taken',
+          message: 'A user already exists with this email address.',
+          userId: existingUser.id,
+        },
+      });
+    }
+
+    const user = await users.create({
+      email,
+      displayName: input.displayName,
+      createdByUserId: context.user.id,
+    });
+
+    await auditLog.record({
+      actorId: context.user.id,
+      event: 'user.created',
+      targetId: user.id,
+    });
+
+    return user;
   });
 ```
 

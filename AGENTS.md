@@ -31,9 +31,11 @@ The correct approach, with rationale.
 Code showing the bad pattern and the good pattern.
 ```
 
-Keep portable opinions under 100 lines. If it needs more, it's two opinions.
+Keep portable opinions under 140 lines. If it needs more, it's probably two opinions, unless the extra length is necessary to show a realistic bad/good example pair.
 
-Exception: `stack/` files may exceed 100 lines when the doctrine is intentionally stack-specific and decision-complete. Do not use that exception for `doctrine/`.
+Exception: `stack/` files may exceed 140 lines when the doctrine is intentionally stack-specific and decision-complete. Do not use that exception for `doctrine/`.
+
+Examples train agents harder than prose. For code examples, prefer explicit bad/good pairs unless the rule is already unambiguous from one realistic example. Do not use one-line wrapper functions, one-line forwarding handlers, or toy helpers unless the example is explicitly showing code to delete. Every function in a "good" example should earn its existence through real policy, orchestration, validation boundary handling, lifecycle management, or meaningful transformation.
 
 ## Example metadata
 

@@ -36,6 +36,8 @@ Owner constants
 ```typescript
 export const MAX_GITHUB_FETCH_ATTEMPTS = 3;
 export const INITIAL_RETRY_DELAY_MS = 250;
+export const GITHUB_FETCH_TIMEOUT_MS = 5_000;
+export const MAX_GITHUB_DIFF_BYTES = 500_000;
 ```
 
 Feature usage
@@ -44,20 +46,38 @@ Feature usage
 import { getPullRequestDiffInputSchema } from '@repo/contracts/github/get-pull-request-diff';
 import {
   INITIAL_RETRY_DELAY_MS,
+  GITHUB_FETCH_TIMEOUT_MS,
+  MAX_GITHUB_DIFF_BYTES,
   MAX_GITHUB_FETCH_ATTEMPTS,
 } from '@repo/github-client/github-retry-policy';
 import { buildPullRequestDiffUrl } from '@/lib/github/build-pull-request-diff-url';
 import { publicProcedure } from '../orpc';
 import { sleep } from '@/lib/sleep';
 
-async function fetchPullRequestDiff(url: string): Promise<Response | null> {
+async function fetchPullRequestDiff(url: string): Promise<string | null> {
   for (let attempt = 0; attempt < MAX_GITHUB_FETCH_ATTEMPTS; attempt += 1) {
+    const abortController = new AbortController();
+    const timeout = setTimeout(() => abortController.abort(), GITHUB_FETCH_TIMEOUT_MS);
+
     try {
-      return await fetch(url);
+      const response = await fetch(url, { signal: abortController.signal });
+
+      if (!response.ok) {
+        continue;
+      }
+
+      const diff = await response.text();
+      if (diff.length > MAX_GITHUB_DIFF_BYTES) {
+        throw new PayloadTooLargeError(MAX_GITHUB_DIFF_BYTES);
+      }
+
+      return diff;
     } catch {
       if (attempt < MAX_GITHUB_FETCH_ATTEMPTS - 1) {
         await sleep(INITIAL_RETRY_DELAY_MS * 2 ** attempt);
       }
+    } finally {
+      clearTimeout(timeout);
     }
   }
 
@@ -67,11 +87,11 @@ async function fetchPullRequestDiff(url: string): Promise<Response | null> {
 export const getPullRequestDiff = publicProcedure
   .input(getPullRequestDiffInputSchema)
   .handler(async ({ input, errors }) => {
-    const response = await fetchPullRequestDiff(
+    const diff = await fetchPullRequestDiff(
       buildPullRequestDiffUrl(input.pullRequestNumber),
     );
 
-    if (!response) {
+    if (!diff) {
       throw errors.BAD_GATEWAY({
         data: {
           code: 'pull_request_diff_unavailable',
@@ -82,7 +102,7 @@ export const getPullRequestDiff = publicProcedure
       });
     }
 
-    return { diff: await response.text() };
+    return { diff };
   });
 ```
 

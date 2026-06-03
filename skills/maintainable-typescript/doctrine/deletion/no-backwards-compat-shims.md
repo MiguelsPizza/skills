@@ -33,9 +33,26 @@ If the answer is no, delete it in the same change that finishes the cutover.
 ```typescript
 import type { CreateUserInput } from '@repo/contracts/users/user';
 import { insertUser } from '@repo/db/users/insert-user';
+import { findUserByEmail } from '@repo/db/users/find-user-by-email';
+import { sendWelcomeEmail } from '@/features/users/send-welcome-email';
 
 export async function createUser(input: CreateUserInput) {
-  return await insertUser(input);
+  const email = input.email.trim().toLowerCase();
+  const existingUser = await findUserByEmail(email);
+
+  if (existingUser) {
+    throw new DuplicateUserEmailError(email);
+  }
+
+  const user = await insertUser({
+    email,
+    displayName: input.displayName,
+    invitedByUserId: input.invitedByUserId,
+  });
+
+  await sendWelcomeEmail(user.id);
+
+  return user;
 }
 ```
 

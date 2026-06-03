@@ -51,21 +51,26 @@ export async function getOpinionDirs() {
       continue;
     }
 
-    for (const child of LEGACY_OPINION_DIRS) {
-      const childPath = path.join(skillRoot, child);
-      if (await exists(childPath)) {
-        throw new Error(
-          `Legacy opinion directory ${path.relative(ROOT, childPath)} is not allowed. Use doctrine/ or stack/.`,
-        );
+    const stackPath = path.join(skillRoot, STACK_DIR);
+    const doctrinePath = path.join(skillRoot, DOCTRINE_DIR);
+    const hasOpinionStructure =
+      (await exists(stackPath)) || (await exists(doctrinePath));
+
+    if (hasOpinionStructure) {
+      for (const child of LEGACY_OPINION_DIRS) {
+        const childPath = path.join(skillRoot, child);
+        if (await exists(childPath)) {
+          throw new Error(
+            `Legacy opinion directory ${path.relative(ROOT, childPath)} is not allowed. Use doctrine/ or stack/.`,
+          );
+        }
       }
     }
 
-    const stackPath = path.join(skillRoot, STACK_DIR);
     if (await exists(stackPath)) {
       opinionDirs.push(path.relative(ROOT, stackPath));
     }
 
-    const doctrinePath = path.join(skillRoot, DOCTRINE_DIR);
     if (await containsMarkdownFiles(doctrinePath)) {
       opinionDirs.push(path.relative(ROOT, doctrinePath));
     }

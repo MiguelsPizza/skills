@@ -36,14 +36,40 @@ If the answer is "no," stop preserving the shape.
 
 ## Example
 
+Bad: preserve the old owner and add a sibling for the new requirement.
+
 ```typescript
-export async function getDisplayPrice(
-  productId: string,
-  customerGroup: CustomerGroup,
-  currency: Currency = 'USD',
-) {
-  const price = await pricingApi.getPrice(productId, currency);
+export async function getDisplayPrice(productId: ProductId, customerGroup: CustomerGroup) {
+  const price = await pricingApi.getPrice(productId, 'USD');
   return applyCustomerDiscount(price, customerGroup);
+}
+
+export async function getDisplayPriceWithCurrency(input: {
+  productId: ProductId;
+  customerGroup: CustomerGroup;
+  currency: Currency;
+}) {
+  const price = await pricingApi.getPrice(input.productId, input.currency);
+  return applyCustomerDiscount(price, input.customerGroup);
+}
+```
+
+Good: edit the owner and update callers to pass the new required contract.
+
+```typescript
+type DisplayPriceRequest = {
+  productId: ProductId;
+  customerGroup: CustomerGroup;
+  currency: Currency;
+};
+
+export async function getDisplayPrice(input: DisplayPriceRequest) {
+  const price = await pricingApi.getPrice(input.productId, input.currency);
+
+  return {
+    currency: input.currency,
+    amountCents: applyCustomerDiscount(price, input.customerGroup),
+  };
 }
 ```
 

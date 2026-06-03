@@ -58,7 +58,7 @@ There are narrow exceptions, but if you feel you need one, there is almost alway
 ```typescript
 import { useQuery } from "@tanstack/react-query";
 import { createFileRoute } from "@tanstack/react-router";
-import { UsersPageScreen } from "@/features/users/components/users-page-screen";
+import { UsersPageScreen } from "./-users-page-screen";
 import { useORPC } from "@/utils/orpc";
 import { usersSearchSchema } from "@repo/contracts/users/users-search";
 
@@ -93,19 +93,21 @@ Feature component
 
 ```typescript
 import { getRouteApi } from "@tanstack/react-router";
-import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
+import { Button } from "@/ui/button";
+import { Input } from "@/ui/input";
 import { userTabValues } from "@repo/contracts/users/users-search";
 import type { User } from "@repo/contracts/users/user";
 
 const usersRouteApi = getRouteApi("/users");
+type UserTab = (typeof userTabValues)[number];
+
+const USER_TAB_LABELS = {
+  all: "All users",
+  active: "Active users",
+} satisfies Record<UserTab, string>;
 
 interface UsersPageScreenProps {
   readonly users: readonly User[];
-}
-
-function getUserTabLabel(tab: (typeof userTabValues)[number]) {
-  return tab === "all" ? "All users" : "Active users";
 }
 
 export function UsersPageScreen({ users }: UsersPageScreenProps) {
@@ -119,8 +121,8 @@ export function UsersPageScreen({ users }: UsersPageScreenProps) {
         onChange={(event) =>
           navigate({
             replace: true,
-            search: (prev) => ({
-              ...prev,
+            search: (current) => ({
+              tab: current.tab,
               query: event.target.value || undefined,
             }),
           })
@@ -135,14 +137,14 @@ export function UsersPageScreen({ users }: UsersPageScreenProps) {
             variant={tab === userTab ? "default" : "ghost"}
             onClick={() =>
               navigate({
-                search: (prev) => ({
-                  ...prev,
+                search: (current) => ({
                   tab: userTab,
+                  query: current.query,
                 }),
               })
             }
           >
-            {getUserTabLabel(userTab)}
+            {USER_TAB_LABELS[userTab]}
           </Button>
         ))}
       </div>

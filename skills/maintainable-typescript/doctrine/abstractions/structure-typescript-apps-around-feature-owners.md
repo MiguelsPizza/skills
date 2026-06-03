@@ -38,8 +38,10 @@ Use runtime boundaries at the top and feature owners inside them:
 apps/
   web/
     src/
-      app/ or routes/          # framework route tree only
-      features/                # product UI and browser workflows
+      app/ or routes/          # framework route tree and frontend feature owners
+      hooks/                   # app-wide hooks only, not product workflows
+      ui/                      # app-wide reusable UI primitives, not product screens
+      lib/                     # app-wide clients, adapters, and pure helpers
       server/                  # web-app server primitives when the framework has them
       test/
 
@@ -69,7 +71,9 @@ If the framework combines web and backend in one app, keep the same ideas under 
 ```text
 apps/web/src/
   app/ or routes/
-  features/
+  hooks/
+  ui/
+  lib/
   server/
   jobs/
   test/
@@ -77,17 +81,31 @@ apps/web/src/
 
 Do not add a second app just to look architectural. Add a separate `apps/api` or `apps/worker` only when it is a separate deployable runtime, scaling unit, permission boundary, or build target.
 
-## Route files are adapters
+## Backend route files are adapters
 
-Routes, pages, controllers, and RPC handlers parse transport state and call the owner. They should be small because the framework already makes them findable.
+HTTP routes, controllers, RPC handlers, webhooks, queue handlers, and cron entrypoints parse transport state and call the owner. They should be small because the framework already makes them findable.
 
 ```typescript
 // apps/api/src/routes/review-runs.ts
 export async function postReviewRun(request: Request) {
-  const input = await readJson(request);
+  const body = createReviewRunRequestSchema.parse(await request.json());
   const user = await requireSession(request);
-  const result = await createReviewRun({ input, user });
-  return json(result);
+
+  try {
+    const reviewRun = await createReviewRun({
+      installationId: body.installationId,
+      pullRequestNumber: body.pullRequestNumber,
+      requestedByUserId: user.id,
+    });
+
+    return json(reviewRun, { status: 202 });
+  } catch (error) {
+    if (error instanceof ReviewRunBlockedError) {
+      return json({ code: 'review_run_blocked', reason: error.reason }, { status: 409 });
+    }
+
+    throw error;
+  }
 }
 ```
 
@@ -97,11 +115,13 @@ The route does not own validation policy, permissions, persistence, events, or a
 apps/api/src/features/review-runs/create-review-run.server.ts
 ```
 
-Framework route trees are allowed to colocate route-only UI, loaders, and tiny helpers when the framework makes non-route files safe and obvious. Keep the route tree thin anyway. Once a behavior is reused by another route, move it to `features/`.
+Frontend route trees are different. When the frontend framework has a strong filesystem routing and colocation model, the route branch is the frontend feature owner. Keep route files readable, but do not make them hollow shells that import all real behavior from ad hoc `components/`, `hooks/`, `utils/`, or `features/` directories. Colocate route-owned UI, loaders, search validation, guards, pending/error states, tests, and private helpers with the route branch using the framework's non-route or private-file convention.
+
+Promote frontend code out of the route tree only when it is shared across unrelated route branches and belongs in app-wide `hooks/`, `ui/`, or `lib/`, or when it is stable enough for a shared package. Product-specific frontend code should follow the framework's routing filesystem instead of a generic `features/` tree.
 
 ## Feature owners own product behavior
 
-A feature directory is the canonical home for one product area. It may contain UI, server workflows, policies, contracts, jobs, tests, and feature-local integration use.
+A feature owner is the canonical home for one product area. Backend features usually live in `features/<product-area>` and may contain workflows, policies, contracts, jobs, tests, and feature-local integration use. Frontend features usually live in the framework route branch when the framework provides strong filesystem routing; those branches own UI composition, route state, loaders, search validation, guards, pending/error states, tests, and route-local components or hooks.
 
 Prefer cohesive files over one-helper files:
 
@@ -114,11 +134,13 @@ apps/api/src/features/review-runs/
   review-runs.contract.ts
   review-runs.test.ts
 
-apps/web/src/features/review-runs/
-  review-runs.page.tsx
-  review-run-detail.page.tsx
-  create-review-run-form.tsx
-  review-run-status-badge.tsx
+apps/web/src/routes/_authenticated/review-runs/
+  route.tsx
+  index.tsx
+  $reviewRunId.tsx
+  -create-review-run-form.tsx
+  -review-run-status-badge.tsx
+  -review-runs.test.tsx
 ```
 
 Do not split `create-review-run.server.ts` into `validate-create-review-run.ts`, `authorize-create-review-run.ts`, `build-review-run.ts`, `save-review-run.ts`, `publish-review-run-created.ts`, and `audit-review-run-created.ts` unless those files have independent callers, independent tests, or a strong convention that makes the split findable.
@@ -247,17 +269,23 @@ Do not make `@repo/ui` a root mega-barrel. The import path should tell the model
 import { Button } from "@repo/ui/button";
 ```
 
-`packages/ui` owns reusable primitives and design-system components. It does not own product screens:
+App-wide `ui/`, `hooks/`, and `lib/` are shared-code directories, not feature owners. Use them for reusable primitives, cross-route hooks, clients, adapters, and pure helpers that have no product-screen ownership. Promote UI primitives to `packages/ui` only when they are a real shared package boundary. Neither app-wide shared code nor packages own product screens:
 
 ```text
-# Package-owned
+# App-wide shared code
+apps/web/src/ui/button.tsx
+apps/web/src/ui/dialog.tsx
+apps/web/src/hooks/use-media-query.ts
+apps/web/src/lib/orpc-client.ts
+
+# Package-owned when shared across apps
 packages/ui/src/button.tsx
 packages/ui/src/dialog.tsx
 packages/ui/src/data-table.tsx
 
 # Feature-owned
-apps/web/src/features/billing/billing-plan-card.tsx
-apps/web/src/features/review-runs/review-run-status-badge.tsx
+apps/web/src/routes/_authenticated/billing/-billing-plan-card.tsx
+apps/web/src/routes/_authenticated/review-runs/-review-run-status-badge.tsx
 ```
 
 Product language stays with the feature.
@@ -288,11 +316,11 @@ If a schema is only used inside one backend workflow, keep it in that feature un
 
 Put tests where the reader already is.
 
-Feature tests:
+Owner tests:
 
 ```text
 apps/api/src/features/review-runs/review-runs.test.ts
-apps/web/src/features/review-runs/create-review-run-form.test.tsx
+apps/web/src/routes/_authenticated/review-runs/-create-review-run-form.test.tsx
 ```
 
 Package tests:
@@ -318,7 +346,7 @@ Use suffixes to make runtime boundaries visible:
 - `.client.tsx` for browser-only modules
 - `.job.ts` for job behavior
 - `.contract.ts` for public schemas and DTOs
-- `.page.tsx` for feature page components outside framework route files
+- `.page.tsx` for page components only when the framework route file is not already the page owner
 - `.test.ts` or `.test.tsx` beside the owner
 
 Avoid vague buckets:
@@ -327,17 +355,20 @@ Avoid vague buckets:
 utils/
 helpers/
 services/
-hooks/
 components/
 types/
 data/
 ```
 
-These names are acceptable only when nested under a strong owner and still specific:
+Top-level `hooks/`, `ui/`, and `lib/` are acceptable only for app-wide shared code with no product ownership. Route-local hooks, UI, and helpers should stay under the route branch. Other generic names are acceptable only when nested under a strong owner and still specific:
 
 ```text
 features/review-runs/review-run-policy.ts
-features/review-runs/use-review-run-events.ts
+routes/_authenticated/review-runs/-use-review-run-events.ts
+routes/_authenticated/review-runs/-review-run-status-badge.tsx
+ui/button.tsx
+hooks/use-media-query.ts
+lib/orpc-client.ts
 server/auth/session.ts
 ```
 
@@ -381,11 +412,11 @@ apps/api/src/features/review-runs/review-runs.contract.ts
   Feature-local until another runtime needs it. Promote to
   packages/contracts only when it becomes public across runtimes.
 
-apps/web/src/features/review-runs/create-review-run-form.tsx
-  Product UI. Uses @repo/ui primitives but owns product language.
+apps/web/src/routes/_authenticated/review-runs/-create-review-run-form.tsx
+  Product UI. Uses app-wide UI or @repo/ui primitives but owns product language.
 
-packages/ui/src/button.tsx
-  Shared primitive. No review-run language.
+apps/web/src/ui/button.tsx
+  App-wide UI primitive. No review-run language.
 
 Bad: the same feature split by arbitrary layer buckets.
 
@@ -397,6 +428,7 @@ apps/api/src/jobs/expire-review-runs-job.ts
 apps/api/src/events/review-run-events.ts
 apps/web/src/components/review-run-status-badge.tsx
 apps/web/src/hooks/use-create-review-run.ts
+apps/web/src/features/review-runs/create-review-run-form.tsx
 
 This is only acceptable when the framework owns that convention strongly
 enough that every file is mechanically findable. Otherwise it turns product

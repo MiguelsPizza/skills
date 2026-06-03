@@ -10,14 +10,15 @@ Focus on findings, not praise.
 AI slop means code that looks locally defensive or flexible but weakens the system contract. Find places where the implementation preserves uncertainty instead of resolving it into a type, schema, owner, or real boundary.
 
 Look specifically for:
-- shape churn: `normalize*`, `to*`, `map*`, `adapt*`, `coerce*`, `Input`, `Context`, `Params`, `State`, or `Result` shapes between internal callers
+- shape churn: `normalize*`, `to*`, `map*`, `adapt*`, `coerce*`, `Input`, `Context`, `Params`, `State`, `Result`, TypeScript `Pick`, or TypeScript `Omit` shapes between internal callers
 - boundary theater: validation, fallback, or compatibility code inside already-typed internal code
 - optionality creep: `input?.field`, optional callbacks, or no-op defaults where the caller should be required to provide the dependency
 - helper confetti: one-call helpers, forwarding helpers, or helpers that only return an object literal
 - spread fog: object spreads hiding the final shape, especially conditional spreads and repeated `{ ...thing, extra }` projections
+- exact-shape theater: private helpers that reject the canonical object and require a one-off subset only because they read fewer fields
 - fake extensibility: hooks, options bags, strategies, providers, adapters, or managers with one real use
 - error laundering: `try/catch` that only rewrites an internal error or logs below the top-level boundary
-- type erosion: `unknown`, `Record<string, unknown>`, casts, `Pick`, or `Omit` where a named domain type should exist
+- type erosion: `unknown`, `Record<string, unknown>`, casts, TypeScript `Pick`, or TypeScript `Omit` where a named domain type should exist
 - schema drift: hand-written JSON Schema plus manual parsing, or duplicate schema/type/runtime descriptions
 - defensive defaults: empty objects, empty arrays, `"<unknown>"`, or no-op callbacks hiding programmer errors
 - compatibility debt without compatibility: legacy/private migration paths where we own all callers
@@ -36,7 +37,10 @@ Rules:
 - Validate at external boundaries only.
 - Make required state required.
 - Prefer one canonical shape at the source.
+- Inside one owner, pass the canonical domain object or named input type; unused fields are cheaper than shape churn.
 - Prefer Zod schema plus inferred type for tool/input contracts.
+- Do not flag Zod/drizzle-zod `.pick()` or `.omit()` when it defines a real API, insert, update, or select schema.
 - Delete adapters, wrappers, defaults, and hooks that do not protect a real public boundary.
+- Delete spread projections that only add, remove, or rename fields on an already-owned object.
 - Throw upward except at top-level operational boundaries.
 ```

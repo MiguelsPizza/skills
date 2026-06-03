@@ -20,7 +20,6 @@ Agents add `console.log` the way humans add `print` when debugging — everywher
 ## What to do instead
 
 Log:
-- incoming requests and completed responses
 - errors that cross a system boundary
 - state transitions that matter operationally
 - external calls that are expensive, flaky, or rate-limited
@@ -45,8 +44,13 @@ import { appRouter } from '@/worker/orpc/router';
 
 const handler = new OpenAPIHandler(appRouter, {
   interceptors: [
-    onError((error) => {
-      logger.error(LOG_EVENTS.API_REQUEST_FAILED, { error });
+    onError((error, context) => {
+      logger.error(LOG_EVENTS.API_REQUEST_FAILED, {
+        error,
+        [OTEL_ATTRS.HTTP_ROUTE]: context.path,
+        [OTEL_ATTRS.HTTP_REQUEST_METHOD]: context.method,
+        [OTEL_ATTRS.REQUEST_ID]: context.requestId,
+      });
     }),
   ],
 });
@@ -54,26 +58,21 @@ const handler = new OpenAPIHandler(appRouter, {
 export default async function fetch(request: Request) {
   const requestId = crypto.randomUUID();
 
-  logger.info(LOG_EVENTS.API_REQUEST_STARTED, {
-    [OTEL_ATTRS.HTTP_ROUTE]: new URL(request.url).pathname,
-    [OTEL_ATTRS.HTTP_REQUEST_METHOD]: request.method,
-    [OTEL_ATTRS.REQUEST_ID]: requestId,
-  });
-
   const { response } = await handler.handle(request, {
     prefix: '/api',
     context: { requestId },
   });
 
   if (response) {
-    logger.info(LOG_EVENTS.API_REQUEST_COMPLETED, {
-      [OTEL_ATTRS.HTTP_ROUTE]: new URL(request.url).pathname,
-      [OTEL_ATTRS.HTTP_RESPONSE_STATUS_CODE]: response.status,
-      [OTEL_ATTRS.REQUEST_ID]: requestId,
-    });
-
     return response;
   }
+
+  logger.warn(LOG_EVENTS.API_ROUTE_NOT_FOUND, {
+    [OTEL_ATTRS.HTTP_ROUTE]: new URL(request.url).pathname,
+    [OTEL_ATTRS.HTTP_REQUEST_METHOD]: request.method,
+    [OTEL_ATTRS.HTTP_RESPONSE_STATUS_CODE]: 404,
+    [OTEL_ATTRS.REQUEST_ID]: requestId,
+  });
 
   return new Response('Not Found', { status: 404 });
 }

@@ -22,6 +22,7 @@ Agents optimize for the immediate task: "make the test pass," "add this endpoint
 Before marking a task as done, ask:
 - Could someone else (human or AI) understand this change from the diff alone?
 - Did I introduce any new concepts that duplicate existing ones?
+- Did I make the code easier to reason about, or did I add new shapes, wrappers, and projections that must be compared?
 - Would I be comfortable if every future change in this area followed this pattern?
 - Did I leave any files worse than I found them?
 

@@ -33,9 +33,11 @@ Do not add local design tokens inside a feature just to get a screen done. A mis
 
 ## Example
 
+Bad: this bypasses the system with local styling, even though the class names look semantic.
+
 ```typescript
-import { Button } from '@repo/ui/button';
-import { Card } from '@repo/ui/card';
+import { Button } from '@/ui/button';
+import { Card } from '@/ui/card';
 
 export function UpgradeBanner() {
   return (
@@ -46,6 +48,23 @@ export function UpgradeBanner() {
       </p>
       <Button variant="primary">Upgrade</Button>
     </Card>
+  );
+}
+```
+
+Good: feature code consumes an approved design-system primitive. The visual decisions live centrally.
+
+```typescript
+import { Button } from '@/ui/button';
+import { UpgradeNotice } from '@/ui/upgrade-notice';
+
+export function UpgradeBanner() {
+  return (
+    <UpgradeNotice
+      title="Upgrade to Pro"
+      description="Unlock repository-wide review queues and audit history."
+      action={<Button variant="primary">Upgrade</Button>}
+    />
   );
 }
 ```

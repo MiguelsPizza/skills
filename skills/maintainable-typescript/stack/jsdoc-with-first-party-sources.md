@@ -113,8 +113,16 @@ No JSDoc for an obvious internal helper
 import type { ReviewRun } from '@repo/contracts/review-runs/review-run';
 import { REVIEW_RUN_STATUS } from '@repo/contracts/review-runs/review-run';
 
-function isCompletedReviewRun(reviewRun: ReviewRun): boolean {
-  return reviewRun.status === REVIEW_RUN_STATUS.COMPLETED;
+function getReviewRunDisplayState(reviewRun: ReviewRun): 'queued' | 'running' | 'finished' {
+  if (reviewRun.status === REVIEW_RUN_STATUS.QUEUED) {
+    return 'queued';
+  }
+
+  if (reviewRun.status === REVIEW_RUN_STATUS.RUNNING) {
+    return 'running';
+  }
+
+  return 'finished';
 }
 ```
 

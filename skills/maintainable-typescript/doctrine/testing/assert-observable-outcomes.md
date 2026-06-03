@@ -52,9 +52,16 @@ expect(buildSummary).toHaveBeenCalledBefore(writeArtifact);
 Better:
 
 ```typescript
+const response = await app.request('/api/review-runs', {
+  method: 'POST',
+  body: JSON.stringify(createReviewRunInput),
+});
+const body = await response.json();
+const runProjection = await reviewRunProjections.findById(body.reviewRunId);
+
 expect(response.status).toBe(202);
 expect(runProjection.status).toBe("completed");
-expect(screen.getByText("Status: completed")).toBeVisible();
+expect(runProjection.summaryPath).toMatch(/review-runs\/.+\/summary.md$/);
 ```
 
 Example implements: [Assert Observable Outcomes](./assert-observable-outcomes.md), [Integration-First Testing](./integration-first-testing.md), [Bounded Behavior](../foundations/bounded-behavior.md).

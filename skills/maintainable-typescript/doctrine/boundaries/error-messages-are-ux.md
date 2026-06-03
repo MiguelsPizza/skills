@@ -44,23 +44,34 @@ Mask internal failures in production responses. Expose the real failure only in 
 import { connectRepositoryInputSchema } from '@repo/contracts/github/connect-repository';
 import { publicProcedure } from '../orpc';
 import { createInstallation } from '@/features/installations/create-installation';
-import { isRepositoryAlreadyConnected } from '@/features/installations/is-repository-already-connected';
+import { findConnectedRepository } from '@/features/installations/find-connected-repository';
 
 export const connectRepository = publicProcedure
   .input(connectRepositoryInputSchema)
   .handler(async ({ input, context, errors }) => {
-    if (await isRepositoryAlreadyConnected(input.repoName)) {
+    const connectedRepository = await findConnectedRepository(input.repoName);
+
+    if (connectedRepository) {
       throw errors.CONFLICT({
         data: {
           code: 'repository_already_connected',
           message: 'Repository is already connected. Remove the existing installation first.',
-          installationId: input.installationId,
+          installationId: connectedRepository.installationId,
           requestId: context.requestId,
         },
       });
     }
 
-    return await createInstallation(input);
+    const installation = await createInstallation({
+      installationId: input.installationId,
+      repositoryName: input.repoName,
+      connectedByUserId: context.user.id,
+    });
+
+    return {
+      installationId: installation.id,
+      repositoryName: installation.repositoryName,
+    };
   });
 ```
 
@@ -73,8 +84,13 @@ import { appRouter } from '@/worker/orpc/router';
 
 const handler = new OpenAPIHandler(appRouter, {
   interceptors: [
-    onError((error) => {
-      logger.error(LOG_EVENTS.REPOSITORY_CONNECTION_FAILED, { error });
+    onError((error, context) => {
+      logger.error(LOG_EVENTS.REPOSITORY_CONNECTION_FAILED, {
+        error,
+        operation: 'connect_repository',
+        requestId: context.requestId,
+        route: context.path,
+      });
     }),
   ],
 });

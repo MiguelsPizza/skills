@@ -42,24 +42,31 @@ Do not normalize this as "validation everywhere." The point is to validate at th
 ## Example
 
 ```typescript
-const payload = listUsersResponseSchema.parse({
-  users: [{ id: "usr_123", name: "Ada Lovelace" }],
-});
-
-worker.use(
-  http.get("/api/users", () => HttpResponse.json(payload)),
-);
-```
-
-External provider example:
-
-```typescript
 const payload = gitHubPullRequestWebhookPayloadSchema.parse({
   action: "opened",
   repository: { id: 101, full_name: "acme/app" },
   installation: { id: 1 },
   pull_request: { number: 42, html_url: "https://github.com/acme/app/pull/42" },
 });
+
+worker.use(
+  http.post("https://api.github.com/app/hook", () => HttpResponse.json(payload)),
+);
+```
+
+App-owned route example:
+
+```typescript
+const response = await app.request("/api/review-runs", {
+  method: "POST",
+  body: JSON.stringify(createReviewRunInputSchema.parse({
+    installationId: "inst_123",
+    repositoryName: "acme/app",
+    pullRequestNumber: 42,
+  })),
+});
+
+expect(response.status).toBe(202);
 ```
 
 Example implements: [Contract-Gate Synthetic Fixtures](./contract-gate-synthetic-fixtures.md), [SSOT or Die](../abstractions/ssot-or-die.md), [Boundaries Validate, Internals Trust](../boundaries/boundaries-validate-internals-trust.md).

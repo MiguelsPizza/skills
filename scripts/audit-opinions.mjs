@@ -9,6 +9,7 @@ const REQUIRED_H2 = [
   'What to do instead',
   'Example',
 ];
+const PORTABLE_OPINION_LINE_LIMIT = 140;
 const IGNORED_FILES = new Set([
   'skills/maintainable-typescript/doctrine/abstractions/structure-typescript-apps-around-feature-owners.md',
   'skills/maintainable-typescript/doctrine/tooling/maintainability-tooling.md',
@@ -113,8 +114,10 @@ function validateOpinion(filePath, text) {
   }
 
   const lineCount = content.split('\n').length;
-  if (isPortableOpinion && lineCount > 100) {
-    issues.push(`portable opinion exceeds 100 lines (${lineCount})`);
+  if (isPortableOpinion && lineCount > PORTABLE_OPINION_LINE_LIMIT) {
+    issues.push(
+      `portable opinion exceeds ${PORTABLE_OPINION_LINE_LIMIT} lines (${lineCount})`,
+    );
   }
 
   return issues;

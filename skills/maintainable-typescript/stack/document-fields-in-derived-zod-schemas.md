@@ -93,7 +93,10 @@ Derived contract schema owner
 
 ```typescript
 import { createSelectSchema } from 'drizzle-zod';
+import { z } from 'zod';
 import { users } from '@repo/db/schema/users';
+
+export const userIdSchema = z.string().min(1).brand<'UserId'>();
 
 export const userSchema = createSelectSchema(users, {
   id: (schema) =>
@@ -109,13 +112,19 @@ export const userSchema = createSelectSchema(users, {
   created_at: (schema) =>
     schema.describe('Timestamp when the user record was created.'),
 }).describe('Platform user returned by the API.');
+
+export const userNotFoundErrorSchema = z.object({
+  code: z.literal('user_not_found'),
+  message: z.literal('User not found.'),
+  userId: userIdSchema,
+});
 ```
 
 Procedure
 
 ```typescript
 import { publicProcedure } from '../orpc';
-import { userSchema } from '@repo/contracts/users/user';
+import { userNotFoundErrorSchema, userSchema } from '@repo/contracts/users/user';
 import { getUserInputSchema } from '@repo/contracts/users/get-user';
 
 export const getUser = publicProcedure
@@ -129,8 +138,25 @@ export const getUser = publicProcedure
   })
   .input(getUserInputSchema)
   .output(userSchema)
-  .handler(async ({ input }) => {
-    return await loadUser(input.id);
+  .errors({
+    NOT_FOUND: {
+      data: userNotFoundErrorSchema,
+    },
+  })
+  .handler(async ({ input, errors }) => {
+    const user = await loadUser(input.id);
+
+    if (!user) {
+      throw errors.NOT_FOUND({
+        data: {
+          code: 'user_not_found',
+          message: 'User not found.',
+          userId: input.id,
+        },
+      });
+    }
+
+    return user;
   });
 ```
 
