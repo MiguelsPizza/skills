@@ -130,7 +130,7 @@ test("renders users returned by the API in a real browser", async ({
   ] satisfies readonly User[];
 
   worker.use(
-    http.get("https://api.workos.com/users", () =>
+    http.get("/api/users", () =>
       HttpResponse.json(usersResponseSchema.parse(users)),
     ),
   );

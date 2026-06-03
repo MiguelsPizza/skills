@@ -96,7 +96,6 @@ If you are working from this repo instead of the standalone skill archive, the s
 
 **Abstractions & Architecture**
 - [Build Deep Modules, Not Shallow Abstractions](./doctrine/abstractions/build-deep-modules-not-shallow-abstractions.md)
-- [Structure TypeScript Apps Around Feature Owners](./doctrine/abstractions/structure-typescript-apps-around-feature-owners.md)
 - [No Premature Abstractions](./doctrine/abstractions/no-premature-abstractions.md)
 - [Delete Fake Layers](./doctrine/deletion/delete-fake-layers.md)
 - [Design Around Composable Primitives](./doctrine/abstractions/design-around-composable-primitives.md)
@@ -167,6 +166,7 @@ If you are working from this repo instead of the standalone skill archive, the s
 - [Catalog Dependencies](./stack/catalog-dependencies.md)
 
 **Monorepo & Database**
+- [Structure TypeScript Apps Around Feature Owners](./stack/structure-typescript-apps-around-feature-owners.md)
 - [Schema Migrations Are Generated](./stack/schema-migrations-are-generated.md)
 
 **Testing**

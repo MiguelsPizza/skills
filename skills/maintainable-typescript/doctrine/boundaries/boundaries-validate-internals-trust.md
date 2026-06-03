@@ -41,7 +41,6 @@ Draw a clear line between trusted and untrusted zones:
 ```typescript
 import {
   createOrderInputSchema,
-  type CreateOrderInput,
 } from '@repo/contracts/orders/order';
 import { publicProcedure } from '../orpc';
 
@@ -54,25 +53,21 @@ type OrderPreview = {
 export const createOrderPreview = publicProcedure
   .input(createOrderInputSchema)
   .handler(async ({ input }) => {
-    return buildOrderPreview(input);
+    let subtotalCents = 0;
+
+    for (const item of input.items) {
+      subtotalCents += item.unitPriceCents * item.quantity;
+    }
+
+    const discountCents =
+      input.customerTier === 'enterprise' ? Math.floor(subtotalCents * 0.1) : 0;
+
+    return {
+      subtotalCents,
+      discountCents,
+      totalCents: subtotalCents - discountCents,
+    } satisfies OrderPreview;
   });
-
-function buildOrderPreview(input: CreateOrderInput): OrderPreview {
-  let subtotalCents = 0;
-
-  for (const item of input.items) {
-    subtotalCents += item.unitPriceCents * item.quantity;
-  }
-
-  const discountCents =
-    input.customerTier === 'enterprise' ? Math.floor(subtotalCents * 0.1) : 0;
-
-  return {
-    subtotalCents,
-    discountCents,
-    totalCents: subtotalCents - discountCents,
-  };
-}
 ```
 
 Example implements: [Boundaries Validate, Internals Trust](./boundaries-validate-internals-trust.md), [No Defensive Catches](./no-defensive-catches.md), [No Defensive Null Checks](./no-defensive-null-checks.md).

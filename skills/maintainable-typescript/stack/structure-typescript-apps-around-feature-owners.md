@@ -11,7 +11,7 @@ example:
 
 **Rule:** Keep framework entrypoints thin, put product behavior in predictable feature owners, and promote only true shared contracts or primitives into packages.
 
-See also: [Build Deep Modules, Not Shallow Abstractions](./build-deep-modules-not-shallow-abstractions.md), [Monorepo Package Boundaries](../packages/monorepo-package-boundaries.md), and [Naming Is Navigation](../foundations/naming-is-navigation.md).
+See also: [Build Deep Modules, Not Shallow Abstractions](../doctrine/abstractions/build-deep-modules-not-shallow-abstractions.md), [Monorepo Package Boundaries](../doctrine/packages/monorepo-package-boundaries.md), and [Naming Is Navigation](../doctrine/foundations/naming-is-navigation.md).
 
 ## Why agents get this wrong
 
@@ -435,4 +435,4 @@ enough that every file is mechanically findable. Otherwise it turns product
 behavior into a search problem.
 ```
 
-Example implements: [Structure TypeScript Apps Around Feature Owners](./structure-typescript-apps-around-feature-owners.md), [Build Deep Modules, Not Shallow Abstractions](./build-deep-modules-not-shallow-abstractions.md), [Monorepo Package Boundaries](../packages/monorepo-package-boundaries.md).
+Example implements: [Structure TypeScript Apps Around Feature Owners](./structure-typescript-apps-around-feature-owners.md), [Build Deep Modules, Not Shallow Abstractions](../doctrine/abstractions/build-deep-modules-not-shallow-abstractions.md), [Monorepo Package Boundaries](../doctrine/packages/monorepo-package-boundaries.md).

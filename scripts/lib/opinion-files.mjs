@@ -15,25 +15,24 @@ async function exists(targetPath) {
   }
 }
 
-async function listChildDirs(rootDir) {
-  if (!(await exists(rootDir))) {
-    return [];
-  }
-
-  const entries = await readdir(rootDir, { withFileTypes: true });
-  return entries
-    .filter((entry) => entry.isDirectory())
-    .map((entry) => path.join(rootDir, entry.name))
-    .sort();
-}
-
 async function containsMarkdownFiles(dir) {
   if (!(await exists(dir))) {
     return false;
   }
 
   const entries = await readdir(dir, { withFileTypes: true });
-  return entries.some((entry) => entry.isFile() && entry.name.endsWith('.md'));
+  for (const entry of entries) {
+    const childPath = path.join(dir, entry.name);
+    if (entry.isDirectory() && (await containsMarkdownFiles(childPath))) {
+      return true;
+    }
+
+    if (entry.isFile() && entry.name.endsWith('.md')) {
+      return true;
+    }
+  }
+
+  return false;
 }
 
 export async function getOpinionDirs() {
@@ -67,18 +66,12 @@ export async function getOpinionDirs() {
       }
     }
 
-    if (await exists(stackPath)) {
+    if (await containsMarkdownFiles(stackPath)) {
       opinionDirs.push(path.relative(ROOT, stackPath));
     }
 
     if (await containsMarkdownFiles(doctrinePath)) {
       opinionDirs.push(path.relative(ROOT, doctrinePath));
-    }
-
-    for (const childPath of await listChildDirs(doctrinePath)) {
-      if (await containsMarkdownFiles(childPath)) {
-        opinionDirs.push(path.relative(ROOT, childPath));
-      }
     }
   }
 
@@ -88,10 +81,21 @@ export async function getOpinionDirs() {
 export async function listMarkdownFiles(dir) {
   const directory = path.join(ROOT, dir);
   const entries = await readdir(directory, { withFileTypes: true });
-  return entries
-    .filter((entry) => entry.isFile() && entry.name.endsWith('.md'))
-    .map((entry) => path.join(directory, entry.name))
-    .sort();
+  const files = [];
+
+  for (const entry of entries) {
+    const childPath = path.join(directory, entry.name);
+    if (entry.isDirectory()) {
+      files.push(...(await listMarkdownFiles(path.relative(ROOT, childPath))));
+      continue;
+    }
+
+    if (entry.isFile() && entry.name.endsWith('.md')) {
+      files.push(childPath);
+    }
+  }
+
+  return files.sort();
 }
 
 export function formatRelative(filePath) {

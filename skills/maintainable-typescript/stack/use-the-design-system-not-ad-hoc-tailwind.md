@@ -56,11 +56,11 @@ Good: feature code consumes an approved design-system primitive. The visual deci
 
 ```typescript
 import { Button } from '@/ui/button';
-import { UpgradeNotice } from '@/ui/upgrade-notice';
+import { Notice } from '@/ui/notice';
 
 export function UpgradeBanner() {
   return (
-    <UpgradeNotice
+    <Notice
       title="Upgrade to Pro"
       description="Unlock repository-wide review queues and audit history."
       action={<Button variant="primary">Upgrade</Button>}

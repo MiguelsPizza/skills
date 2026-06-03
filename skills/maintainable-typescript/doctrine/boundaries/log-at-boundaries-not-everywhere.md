@@ -9,7 +9,7 @@ example:
 ---
 # Log at Boundaries, Not Everywhere
 
-**Rule:** Log at system boundaries — incoming requests, outgoing responses, errors, and state transitions. Don't scatter `console.log` through business logic. Every log line should be structured, purposeful, and useful for debugging production issues. If you're paying per log line (Cloudflare Workers, Datadog, etc.), treat logging as a budget.
+**Rule:** Log operationally meaningful events at system boundaries — errors, important state transitions, and expensive or flaky external calls. Don't scatter `console.log` through business logic. Every log line should be structured, purposeful, and useful for debugging production issues. If you're paying per log line (Cloudflare Workers, Datadog, etc.), treat logging as a budget.
 
 See also: [Error Messages Are UX](./error-messages-are-ux.md), [No Defensive Catches](./no-defensive-catches.md), and [OTEL Conventions from Day One](../../stack/otel-conventions-from-day-one.md).
 

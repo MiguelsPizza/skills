@@ -44,16 +44,14 @@ export const reviewRuns = sqliteTable('review_runs', {
 });
 ```
 
-If a repeated column helper earns its keep, it should encode real policy, not just save one line.
+If current behavior needs an index, add that concrete policy beside the table. Do not introduce a helper just to save one column line.
 
 ```typescript
 import { index, integer, sqliteTable, text } from 'drizzle-orm/sqlite-core';
 
-const installationId = () => text('installation_id').notNull();
-
 export const reviewRuns = sqliteTable('review_runs', {
   id: text('id').primaryKey(),
-  installationId: installationId(),
+  installationId: text('installation_id').notNull(),
   pullRequestNumber: integer('pull_request_number').notNull(),
 }, (table) => ({
   installationLookup: index('review_runs_installation_id_idx').on(table.installationId),

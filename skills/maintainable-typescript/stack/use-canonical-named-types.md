@@ -42,7 +42,7 @@ Shared types package
 
 ```typescript
 import { z } from 'zod';
-import { createInsertSchema } from 'drizzle-zod';
+import { createInsertSchema, createSelectSchema } from 'drizzle-zod';
 import { installations } from '@repo/db/schema/installations';
 
 /**
@@ -50,13 +50,14 @@ import { installations } from '@repo/db/schema/installations';
  */
 export const installationIdSchema = z.string().min(1).brand<'InstallationId'>();
 
-export const installationSchema = z.object({
+export const installationSchema = createSelectSchema(installations, {
   installationId: installationIdSchema,
-  repositoryName: z.string().min(1),
 });
 
 // Public contract schema for a creation boundary.
-export const createInstallationInputSchema = createInsertSchema(installations).pick({
+export const createInstallationInputSchema = createInsertSchema(installations, {
+  installationId: installationIdSchema,
+}).pick({
   installationId: true,
   repositoryName: true,
 });

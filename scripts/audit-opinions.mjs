@@ -11,7 +11,6 @@ const REQUIRED_H2 = [
 ];
 const PORTABLE_OPINION_LINE_LIMIT = 140;
 const IGNORED_FILES = new Set([
-  'skills/maintainable-typescript/doctrine/abstractions/structure-typescript-apps-around-feature-owners.md',
   'skills/maintainable-typescript/doctrine/tooling/maintainability-tooling.md',
   'skills/maintainable-typescript/stack/start-here.md',
   'skills/maintainable-typescript/stack/stack-overview.md',
@@ -69,6 +68,15 @@ function getHeadings(text) {
   return headings;
 }
 
+function countLines(text) {
+  const normalizedText = text.endsWith('\n') ? text.slice(0, -1) : text;
+  if (normalizedText.length === 0) {
+    return 0;
+  }
+
+  return normalizedText.split('\n').length;
+}
+
 function validateOpinion(filePath, text) {
   const issues = [];
   const content = stripFrontMatter(text);
@@ -113,7 +121,7 @@ function validateOpinion(filePath, text) {
     previousIndex = currentIndex;
   }
 
-  const lineCount = content.split('\n').length;
+  const lineCount = countLines(content);
   if (isPortableOpinion && lineCount > PORTABLE_OPINION_LINE_LIMIT) {
     issues.push(
       `portable opinion exceeds ${PORTABLE_OPINION_LINE_LIMIT} lines (${lineCount})`,

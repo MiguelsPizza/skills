@@ -54,7 +54,12 @@ import { buildPullRequestDiffUrl } from '@/lib/github/build-pull-request-diff-ur
 import { publicProcedure } from '../orpc';
 import { sleep } from '@/lib/sleep';
 
-async function fetchPullRequestDiff(url: string): Promise<string | null> {
+type PullRequestDiffFetchResult =
+  | { status: 'loaded'; diff: string }
+  | { status: 'too-large'; maxBytes: number }
+  | { status: 'unavailable' };
+
+async function fetchPullRequestDiff(url: string): Promise<PullRequestDiffFetchResult> {
   for (let attempt = 0; attempt < MAX_GITHUB_FETCH_ATTEMPTS; attempt += 1) {
     const abortController = new AbortController();
     const timeout = setTimeout(() => abortController.abort(), GITHUB_FETCH_TIMEOUT_MS);
@@ -62,36 +67,46 @@ async function fetchPullRequestDiff(url: string): Promise<string | null> {
     try {
       const response = await fetch(url, { signal: abortController.signal });
 
-      if (!response.ok) {
-        continue;
-      }
+      if (response.ok) {
+        const diff = await response.text();
+        if (diff.length > MAX_GITHUB_DIFF_BYTES) {
+          return { status: 'too-large', maxBytes: MAX_GITHUB_DIFF_BYTES };
+        }
 
-      const diff = await response.text();
-      if (diff.length > MAX_GITHUB_DIFF_BYTES) {
-        throw new PayloadTooLargeError(MAX_GITHUB_DIFF_BYTES);
+        return { status: 'loaded', diff };
       }
-
-      return diff;
     } catch {
-      if (attempt < MAX_GITHUB_FETCH_ATTEMPTS - 1) {
-        await sleep(INITIAL_RETRY_DELAY_MS * 2 ** attempt);
-      }
+      // Network errors and aborts are retried below with the same bounded policy.
     } finally {
       clearTimeout(timeout);
     }
+
+    if (attempt < MAX_GITHUB_FETCH_ATTEMPTS - 1) {
+      await sleep(INITIAL_RETRY_DELAY_MS * 2 ** attempt);
+    }
   }
 
-  return null;
+  return { status: 'unavailable' };
 }
 
 export const getPullRequestDiff = publicProcedure
   .input(getPullRequestDiffInputSchema)
   .handler(async ({ input, errors }) => {
-    const diff = await fetchPullRequestDiff(
+    const result = await fetchPullRequestDiff(
       buildPullRequestDiffUrl(input.pullRequestNumber),
     );
 
-    if (!diff) {
+    if (result.status === 'too-large') {
+      throw errors.PAYLOAD_TOO_LARGE({
+        data: {
+          code: 'pull_request_diff_too_large',
+          message: 'Pull request diff is too large to load.',
+          maxBytes: result.maxBytes,
+        },
+      });
+    }
+
+    if (result.status === 'unavailable') {
       throw errors.BAD_GATEWAY({
         data: {
           code: 'pull_request_diff_unavailable',
@@ -102,7 +117,7 @@ export const getPullRequestDiff = publicProcedure
       });
     }
 
-    return { diff };
+    return { diff: result.diff };
   });
 ```
 

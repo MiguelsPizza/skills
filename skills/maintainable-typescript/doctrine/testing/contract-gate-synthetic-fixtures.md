@@ -41,17 +41,26 @@ Do not normalize this as "validation everywhere." The point is to validate at th
 
 ## Example
 
+Inbound webhook example:
+
 ```typescript
-const payload = gitHubPullRequestWebhookPayloadSchema.parse({
+const webhookPayload = gitHubPullRequestWebhookPayloadSchema.parse({
   action: "opened",
   repository: { id: 101, full_name: "acme/app" },
   installation: { id: 1 },
   pull_request: { number: 42, html_url: "https://github.com/acme/app/pull/42" },
 });
 
-worker.use(
-  http.post("https://api.github.com/app/hook", () => HttpResponse.json(payload)),
-);
+const response = await app.request("/api/github/webhooks", {
+  method: "POST",
+  headers: {
+    "X-GitHub-Event": "pull_request",
+    "X-GitHub-Delivery": "delivery_123",
+  },
+  body: JSON.stringify(webhookPayload),
+});
+
+expect(response.status).toBe(202);
 ```
 
 App-owned route example:
