@@ -1,0 +1,10 @@
+{
+  "name": "flatten-fake-layers-scripts",
+  "private": true,
+  "type": "module",
+  "description": "Dependencies for find-fake-layers.mts. Run `npm install` here, then `node_modules/.bin/tsx find-fake-layers.mts <tsconfig>`.",
+  "dependencies": {
+    "ts-morph": "^25.0.0",
+    "tsx": "^4.19.0"
+  }
+}
