@@ -4,7 +4,8 @@ description: >-
   Find and flatten "fake layer" indirection in a TypeScript codebase — functions with exactly
   one caller that only forward, reshape, or inject dependencies and add no fact. Runs a
   deterministic AST detector that flags candidates, then uses agent judgment to inline the
-  real slop while keeping genuine named helpers. Use when asked to reduce over-abstraction,
+  real slop while keeping functions that do real work (type narrowing, throwing, validation,
+  lifecycle). Use when asked to reduce over-abstraction,
   "un-slop" or simplify code, flatten dependency-injection ceremony, delete single-use
   wrappers, or clean up AI-generated indirection. Pairs with a goal/loop prompt to run
   iteratively across a codebase until clean.
@@ -34,11 +35,23 @@ with **one** caller that should not exist. That is this script's gap to fill.
 
 ## When NOT to flatten
 
-A one-caller function is fine — often good — when its **name carries information the call site
-would lose**. `hasConfiguredCloudflareAccess(env)` reads better than its inlined boolean.
-`toHex(bytes)` names a computation. These are not slop. The detector already suppresses
-predicates, hooks, and lifecycle code; for everything it flags, you still apply the judgment:
-**does the name add information the caller lacks?** If yes, keep. If no, inline.
+A one-caller function earns its keep when it **does work the caller would lose by inlining it** —
+not when it merely reads nicer with a name. A nice name is a weak reason and usually an inline
+target anyway. Real work means it changes types or control flow, or owns a boundary:
+
+- **Tightens an optional** — `requireSession(req): Session` narrows `Session | undefined` to
+  `Session` (and throws if absent). Inlining loses the narrowing; the caller would re-handle
+  `undefined` everywhere.
+- **Throws / asserts** — centralizes a failure path and its error, so the caller stays on the
+  happy path with a guaranteed type.
+- **Enforces an invariant, validates a boundary, or owns a lifecycle** (e.g. middleware that sets
+  a tightened context var for every downstream handler, `try/finally` cleanup).
+
+This is the `delete-fake-layers` test: *what becomes true after this layer runs?* If a real
+guarantee becomes true (a narrowed type, a thrown error, a validated value), keep it — even at one
+caller, even when it is registered as middleware. If the honest answer is "same data, different
+name", inline it. The judgment per flagged item is therefore: **does this do real work the caller
+would lose, or does it only forward/reshape/rename?**
 
 ## Step 1 — install and run the detector
 

@@ -24,9 +24,10 @@ linter). You will run them after every change.
    by fewest injected const fields).
 
 3. **Judge it** with the one question that the tool cannot answer:
-   **does the name add information the call site would lose?**
-   - YES (a meaningful predicate, named computation, or domain concept) → it is a false positive.
-     Leave it. Record it so you do not re-evaluate it next iteration.
+   **does it do real work the caller would lose by inlining — narrow a type, throw/assert,
+   enforce an invariant, or own a validation/lifecycle boundary?**
+   - YES → it earns its keep even at one caller (a nice name alone does not). Leave it, and
+     record it so you do not re-evaluate it next iteration.
    - NO (it only forwards, reshapes, or injects a dependency) → it is slop. Flatten it.
 
 4. **Flatten** using ONLY delete + inline. Never add a function, type, factory, or file. The
