@@ -5,6 +5,7 @@
   "packageManager": "pnpm@10.33.0",
   "scripts": {
     "check": "pnpm test && pnpm typecheck && pnpm lint && pnpm check:docs",
+    "check:vite": "tsx --test tooling/oxlint/integration/vite.test.ts",
     "test": "tsx --test tooling/oxlint/tests/*.test.ts",
     "typecheck": "tsc --noEmit",
     "lint": "oxlint -c skills/oxlint-maintainability/assets/maintainable/config.json skills/oxlint-maintainability/assets/maintainable tooling/oxlint skills/oxlint-maintainability/scripts",

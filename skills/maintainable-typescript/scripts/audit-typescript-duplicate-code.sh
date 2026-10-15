@@ -18,3 +18,4 @@ fi
 
 echo
 echo "Duplicate code audit finished."
+exit "$AUDIT_STATUS"

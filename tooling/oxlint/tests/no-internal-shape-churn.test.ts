@@ -12,6 +12,68 @@ const error = { messageId: "shapeChurn" };
 
 tester.run("maintainable/no-internal-shape-churn", noInternalShapeChurnRule, {
   valid: [{
+    name: "quoted prototype setter changes the result prototype",
+    code: `const withPrototype = (input: InstallationPrototype) => ({ '__proto__': input['__proto__'] });`,
+  }, {
+    name: "returned getter retains lazy property evaluation",
+    code: `const toTarget = (input: Installation) => ({ get installationId() { return input.installationId; } });`,
+  }, {
+    name: "dynamic output key evaluates a policy function",
+    code: `const toTarget = (input: Installation) => ({ [chooseTargetField()]: input.installationId });`,
+  }, {
+    name: "dynamic source key evaluates a policy function",
+    code: `const toTarget = (input: Installation) => ({ installationId: input[chooseTargetField()] });`,
+  }, {
+    name: "destructuring default performs a meaningful fallback",
+    code: `function toTarget(input: Installation) {
+      const { installationId = allocateInstallationId(), ...target } = input;
+      return target;
+    }`,
+  }, {
+    name: "computed omitted key evaluates additional policy",
+    code: `function toTarget(input: Installation) {
+      const { [choosePrivateField()]: omitted, ...target } = input;
+      return target;
+    }`,
+  }, {
+    name: "conditional spread preserves optional property presence",
+    code: `function toTarget(input: Installation) {
+      return { ...(input.archivedAt === undefined ? {} : { archivedAt: input.archivedAt }) };
+    }`,
+  }, {
+    name: "decorated field carries serialization policy",
+    code: `class Serializer { @redactPrivateFields toPayload = (input: Installation) => ({ installationId: input.installationId }); }`,
+  }, {
+    name: "parameter decorator validates the projected input",
+    code: `class Serializer { toPayload(@validateInstallation input: Installation) { return { installationId: input.installationId }; } }`,
+  }, {
+    name: "getter owns deferred projection lifecycle",
+    code: `class Serializer { get target() { return { installationId: this.installation.installationId }; } }`,
+  }, {
+    name: "async projection owns a promise boundary",
+    code: `async function toTarget(input: Installation) { return { installationId: input.installationId }; }`,
+  }, {
+    name: "generator owns lazy projection lifecycle",
+    code: `function* toTarget(input: Installation) { return { installationId: input.installationId }; }`,
+  }, {
+    name: "local generic class owns a type contract",
+    code: `class Pick<T, Policy> { installation!: T; policy!: Policy; }
+      type Selection = Pick<Installation, InstallationPolicy>;`,
+  }, {
+    name: "local interface owns a type contract",
+    code: `interface Omit<T, Policy> { installation: T; policy: Policy; }
+      type Selection = Omit<Installation, InstallationPolicy>;`,
+  }, {
+    name: "object prototype setter performs a runtime transformation",
+    code: `function withInstallationPrototype(input: InstallationPrototype) {
+      return { __proto__: input.__proto__ };
+    }`,
+  }, {
+    name: "import-equals type alias is a domain contract",
+    code: `namespace InstallationContracts { export type Pick<T, K> = { selected: T; field: K }; }
+      import Pick = InstallationContracts.Pick;
+      type Selection = Pick<RepositoryInstallation, InstallationSource>;`,
+  }, {
     name: "decorated projection method carries serialization policy",
     code: "class Serializer { @redactPrivateFields toPayload(input: User) { return { id: input.id }; } }",
   }, {
@@ -36,6 +98,37 @@ tester.run("maintainable/no-internal-shape-churn", noInternalShapeChurnRule, {
     }`,
   ],
   invalid: [{
+    name: "computed literal output key preserves a projection",
+    code: `const toTarget = (input: Installation) => ({ ['installationId']: input.installationId });`,
+    errors: [error],
+  }, {
+    name: "computed proto name creates an own field rather than setting a prototype",
+    code: `const toTarget = (input: InstallationPrototype) => ({ ['__proto__']: input['__proto__'] });`,
+    errors: [error],
+  }, {
+    name: "default-exported arrow only projects canonical fields",
+    code: `export default (input: Installation) => ({ installationId: input.installationId });`,
+    errors: [error],
+  }, {
+    name: "default-exported function only projects canonical fields",
+    code: `export default function(input: Installation) { return { installationId: input.installationId }; }`,
+    errors: [error],
+  }, {
+    name: "aliased omitted binding still removes only the canonical field",
+    code: `function toTarget(input: Installation) {
+      const { archivedAt: unusedArchiveTime, ...target } = input;
+      return target;
+    }`,
+    errors: [error],
+  }, {
+    name: "literal property names preserve the same projection",
+    code: `const toTarget = (input: Installation) => ({ 'installationId': input['installationId'] });`,
+    errors: [error],
+  }, {
+    name: "class field only projects canonical fields",
+    code: "class Helpers { toTarget = (input: Installation) => ({ id: input.id }); }",
+    errors: [error],
+  }, {
     name: "object arrow property only projects canonical fields",
     code: "const helpers = { toTarget: (input: Installation) => ({ id: input.id }) };",
     errors: [error],

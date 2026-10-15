@@ -1,14 +1,21 @@
 import { defineRule } from "@oxlint/plugins";
 import type { ESTree, Scope } from "@oxlint/plugins";
 
+function staticPropertyName(key: ESTree.Node, computed: boolean): string | null {
+  if (!computed && key.type === "Identifier") return key.name;
+  if (key.type === "Literal" && (typeof key.value === "string" || typeof key.value === "number")) return String(key.value);
+  return null;
+}
+
 function isTransparentProjection(expression: ESTree.Expression | null, parameter: string): boolean {
   if (expression?.type !== "ObjectExpression" || expression.properties.length === 0) return false;
   return expression.properties.every(property => {
-    if (property.type !== "Property" || property.computed || property.kind !== "init") return false;
+    if (property.type !== "Property" || property.kind !== "init") return false;
+    const name = staticPropertyName(property.key, property.computed);
+    if (name === null || (name === "__proto__" && !property.computed)) return false;
     const value = property.value;
-    return property.key.type === "Identifier" && value.type === "MemberExpression" &&
-      !value.computed && value.object.type === "Identifier" && value.object.name === parameter &&
-      value.property.type === "Identifier" && value.property.name === property.key.name;
+    return value.type === "MemberExpression" && value.object.type === "Identifier" && value.object.name === parameter &&
+      staticPropertyName(value.property, value.computed) === name;
   });
 }
 
@@ -27,7 +34,8 @@ export const noInternalShapeChurnRule = defineRule({
   createOnce(context) {
     function inspect(node: ESTree.Function | ESTree.ArrowFunctionExpression) {
       if (node.async || node.generator || node.params.length !== 1) return;
-      if (node.parent.type === "MethodDefinition" && node.parent.decorators.length > 0) return;
+      if ((node.parent.type === "MethodDefinition" || node.parent.type === "PropertyDefinition") &&
+        node.parent.decorators.length > 0) return;
       if (node.params.some(parameter => (parameter.decorators?.length ?? 0) > 0)) return;
       const parameter = node.params[0];
       if (parameter?.type !== "Identifier") return;
@@ -60,11 +68,13 @@ export const noInternalShapeChurnRule = defineRule({
       ArrowFunctionExpression(node) {
         if (node.parent.type === "VariableDeclarator" && node.parent.id.type === "Identifier") inspect(node);
         else if (node.parent.type === "Property" && node.parent.kind === "init") inspect(node);
+        else if (node.parent.type === "PropertyDefinition" || node.parent.type === "ExportDefaultDeclaration") inspect(node);
       },
       FunctionExpression(node) {
         if (node.parent.type === "MethodDefinition" && node.parent.kind === "method") inspect(node);
         else if (node.parent.type === "Property" && node.parent.kind === "init") inspect(node);
         else if (node.parent.type === "VariableDeclarator" && node.parent.id.type === "Identifier") inspect(node);
+        else if (node.parent.type === "PropertyDefinition" || node.parent.type === "ExportDefaultDeclaration") inspect(node);
       },
       TSTypeReference(node) {
         if (node.typeName.type !== "Identifier") return;

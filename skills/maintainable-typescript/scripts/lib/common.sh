@@ -2,9 +2,10 @@
 
 set -euo pipefail
 
-SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
-SKILL_DIR="$(cd "$SCRIPT_DIR/../.." && pwd)"
+AUDIT_COMMON_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+SKILL_DIR="$(cd "$AUDIT_COMMON_DIR/../.." && pwd)"
 TEMPLATE_DIR="$SKILL_DIR/assets/tooling-templates"
+AUDIT_STATUS=0
 
 print_section() {
   echo
@@ -42,14 +43,14 @@ run_local_bin() {
   local target_dir="$1"
   local bin_name="$2"
   shift 2
-  "$target_dir/node_modules/.bin/$bin_name" "$@"
+  run_in_target_dir "$target_dir" "$target_dir/node_modules/.bin/$bin_name" "$@"
 }
 
 run_in_target_dir() {
   local target_dir="$1"
   shift
   (
-    cd "$target_dir"
+    cd "$target_dir" || exit
     "$@"
   )
 }
@@ -58,5 +59,15 @@ run_or_skip() {
   local label="$1"
   shift
   print_section "$label"
-  "$@" || true
+  local status
+  if "$@"; then
+    return 0
+  else
+    status=$?
+  fi
+  if (( status > AUDIT_STATUS )); then
+    AUDIT_STATUS=$status
+  fi
+  echo "Failed ($status): $label" >&2
+  return 0
 }

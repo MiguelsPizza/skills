@@ -11,6 +11,8 @@ Use these tools to find maintainability problems in TypeScript repos.
 
 Resolve bundled scripts from the skill root and run them against the current project.
 
+The scripts run installed tools from the target directory and skip missing tools. Every check runs even after a failure; the final status is the highest exit code. Read tool output to distinguish findings from execution errors. Oxlint skips `node_modules`; keep other generated-file ignores in the project config.
+
 If the target repo uses Vite+, prefer its `vp` workflow for linting, formatting, testing, and package operations. Do not install wrapped tools like Vitest, Oxfmt, Oxlint, or tsdown separately just to reach their binaries.
 
 ## Bundled templates

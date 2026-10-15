@@ -13,6 +13,137 @@ const error = { messageId: "forwarding" };
 tester.run("maintainable/no-trivial-forwarding-wrapper", noTrivialForwardingWrapperRule, {
   valid: [
     {
+      name: "static template implementation matches a literal predicate overload",
+      code: "class InstallationPolicy { isActive(input: unknown): input is ActiveInstallation; [`isActive`](input: unknown) { return installationSchema.safeCheck(input); } }",
+    },
+    {
+      name: "escaped template method name matches its cooked predicate name",
+      code: "class InstallationPolicy { [`\\u0069sActive`](input: unknown): input is ActiveInstallation; isActive(input: unknown) { return installationSchema.safeCheck(input); } }",
+    },
+    {
+      name: "static template method overload establishes caller-visible narrowing",
+      code: "class InstallationPolicy { [`isActive`](input: unknown): input is ActiveInstallation; isActive(input: unknown) { return installationSchema.safeCheck(input); } }",
+    },
+    {
+      name: "overloaded explicit receiver contract is preserved",
+      code: `function persistInstallation(this: InstallationRepository, input: InstallationInput): Installation;
+        function persistInstallation(input: InstallationInput) { return this.saveInstallation(input); }`,
+    },
+    {
+      name: "private predicate overload establishes caller narrowing",
+      code: `class InstallationPolicy {
+        #isActive(input: unknown): input is ActiveInstallation;
+        #isActive(input: unknown) { return installationSchema.safeCheck(input); }
+      }`,
+    },
+    {
+      name: "literal method overload establishes caller-visible narrowing",
+      code: `class InstallationPolicy {
+        ['isActive'](input: unknown): input is ActiveInstallation;
+        isActive(input: unknown) { return installationSchema.safeCheck(input); }
+      }`,
+    },
+    {
+      name: "overloaded method establishes caller-visible narrowing",
+      code: `class InstallationPolicy {
+        isActive(input: unknown): input is ActiveInstallation;
+        isActive(input: unknown) { return installationSchema.safeCheck(input); }
+      }`,
+    },
+    {
+      name: "overloaded predicate establishes caller-visible narrowing",
+      code: `function isActiveInstallation(input: unknown): input is ActiveInstallation;
+        function isActiveInstallation(input: unknown) { return installationSchema.safeCheck(input); }`,
+    },
+    {
+      name: "assertion function establishes validated input",
+      code: `function assertInstallation(input: unknown): asserts input is Installation {
+        installationSchema.assert(input);
+      }`,
+    },
+    {
+      name: "class field predicate establishes caller narrowing",
+      code: `class InstallationPolicy {
+        isActive: (input: unknown) => input is ActiveInstallation = input => installationSchema.safeCheck(input);
+      }`,
+    },
+    {
+      name: "decorated field owns logging policy",
+      code: `class InstallationService { @logOperation save = (input: InstallationInput) => persistInstallation(input); }`,
+    },
+    {
+      name: "parameter decorator establishes validation policy",
+      code: `class InstallationService { save(@validateInstallation input: InstallationInput) { return persistInstallation(input); } }`,
+    },
+    {
+      name: "using declaration owns resource disposal",
+      code: `function persistInstallation(input: InstallationInput) {
+        using lease = acquireInstallationLease(input.installationId);
+        return saveRepositoryInstallation(input);
+      }`,
+    },
+    {
+      name: "arguments count changes the forwarded contract",
+      code: `function persistInstallation(input?: InstallationInput) {
+        return saveRepositoryInstallation(input, arguments.length);
+      }`,
+    },
+    {
+      name: "receiver restoration is an actual argument adaptation",
+      code: `const persistInstallation = (input: InstallationInput) => repository.save.call(repository, input);`,
+    },
+    {
+      name: "dynamic writer selection evaluates additional policy",
+      code: `const persistInstallation = (input: InstallationInput) => repository[chooseWriter(input)](input);`,
+    },
+    {
+      name: "optional invocation guards an unavailable writer",
+      code: `const persistInstallation = (input: InstallationInput) => repository.save?.(input);`,
+    },
+    {
+      name: "tuple reordering is a meaningful argument transformation",
+      code: `const persistInstallation = (...args: [InstallationInput, AuditContext]) => saveRepositoryInstallation(args[1], args[0]);`,
+    },
+    {
+      name: "rest slicing changes the forwarded tuple",
+      code: `const persistInstallation = (...args: [AuditContext, ...InstallationInput[]]) => saveRepositoryInstallation(...args.slice(1));`,
+    },
+    {
+      name: "async generator owns lazy iteration",
+      code: `async function* persistInstallation(input: InstallationInput) { return saveRepositoryInstallation(input); }`,
+    },
+    {
+      name: "destructured input changes property evaluation",
+      code: `function persistInstallation({ installationId }: InstallationInput) { return saveRepositoryInstallation(installationId); }`,
+    },
+    {
+      name: "contextual this annotation preserves the required receiver",
+      code: `const persistInstallation: (this: InstallationRepository, input: InstallationInput) => Installation =
+        function(input) { return this.saveInstallation(input); };`,
+    },
+    {
+      name: "explicit this contract preserves the required receiver",
+      code: `function persistInstallation(this: InstallationRepository, input: InstallationInput) {
+        return this.saveInstallation(input);
+      }`,
+    },
+    {
+      name: "parenthesized contextual predicate keeps its narrowing contract",
+      code: `const isActiveInstallation: ((input: unknown) => input is ActiveInstallation) =
+        input => installationSchema.safeCheck(input);`,
+    },
+    {
+      name: "contextual assertion annotation establishes a caller-visible contract",
+      code: `const assertActiveInstallation: (input: unknown) => asserts input is ActiveInstallation =
+        input => installationSchema.assert(input);`,
+    },
+    {
+      name: "forwarded predicate establishes a caller-visible narrowing contract",
+      code: `function isActiveInstallation(input: unknown): input is ActiveInstallation {
+        return installationSchema.safeCheck(input);
+      }`,
+    },
+    {
       name: "creation workflow owns persistence and sync policy",
       code: `export async function createRepositoryInstallation(input: CreateRepositoryInstallationInput): Promise<RepositoryInstallation> {
         const installation = await saveRepositoryInstallation({
@@ -59,6 +190,55 @@ tester.run("maintainable/no-trivial-forwarding-wrapper", noTrivialForwardingWrap
     }`,
   ],
   invalid: [{
+    name: "unrelated template predicate overload cannot suppress another method",
+    code: "class InstallationPolicy { [`isEnabled`](input: unknown): input is ActiveInstallation; isEnabled(input: unknown) { return installationSchema.safeCheck(input); } isActive(input: unknown) { return installationSchema.safeCheck(input); } }",
+    errors: [error],
+  }, {
+    name: "static predicate overload cannot suppress unrelated instance delegation",
+    code: `class InstallationPolicy {
+      static isActive(input: unknown): input is ActiveInstallation;
+      static isActive(input: unknown) { return installationSchema.safeCheck(input); }
+      isActive(input: unknown) { return installationSchema.safeCheck(input); }
+    }`,
+    errors: [error],
+  }, {
+    name: "public predicate overload cannot suppress unrelated private delegation",
+    code: `class InstallationPolicy {
+      isActive(input: unknown): input is ActiveInstallation;
+      isActive(input: unknown) { return installationSchema.safeCheck(input); }
+      #isActive(input: unknown) { return installationSchema.safeCheck(input); }
+    }`,
+    errors: [error],
+  }, {
+    name: "typed async delegation remains a review warning",
+    code: `const persistInstallation = async (input: InstallationInput): Promise<Installation> =>
+      await saveRepositoryInstallation(input);`,
+    errors: [error],
+  }, {
+    name: "class arrow receiver delegation remains a review warning",
+    code: `class InstallationService { save = (input: InstallationInput) => this.repository.save(input); }`,
+    errors: [error],
+  }, {
+    name: "mixed ordinary and rest parameters forward the original tuple",
+    code: `const persistInstallation = (input: InstallationInput, ...audit: AuditEntry[]) => saveRepositoryInstallation(input, ...audit);`,
+    errors: [error],
+  }, {
+    name: "optional input remains a reviewable contract rather than proof of ownership",
+    code: `function persistInstallation(input?: InstallationInput) { return saveRepositoryInstallation(input); }`,
+    errors: [error],
+  }, {
+    name: "literal method lookup preserves direct delegation",
+    code: `const persistInstallation = (input: InstallationInput) => repository['saveInstallation'](input);`,
+    errors: [error],
+  }, {
+    name: "anonymous default-exported function forwards canonical input",
+    code: "export default function(input: InstallationInput) { return persistInstallation(input); }",
+    errors: [error],
+  }, {
+    name: "class field forwards canonical input",
+    code: "class InstallationService { save = (input: InstallationInput) => persistInstallation(input); }",
+    errors: [error],
+  }, {
     name: "arrow property only forwards canonical input",
     code: "const handlers = { save: (input: InstallationInput) => persistInstallation(input) };",
     errors: [error],

@@ -17,8 +17,8 @@ Install the bundled plugin and presets. Use [coverage.md](references/coverage.md
    node <skill-directory>/scripts/install.mjs
    ```
 
-   The default destination is `tools/oxlint/maintainable/`; pass another path as the first argument. The installer refuses to overwrite files. Compare the installed copy before upgrading.
-3. Check installed versions. Tested: Node **22**, Oxlint and `@oxlint/plugins` **1.88.0**, `oxlint-tsgolint` **7.0.2004**.
+   For Vite+, add `--vite`. This generates typed object presets from the bundled JSON. The default destination is `tools/oxlint/maintainable/`; pass another path to change it. The installer refuses existing paths and removes partial copies on failure. Compare the installed copy before upgrading.
+3. Check installed versions. Tested: Node **22/24** on macOS/Linux, Vite+ **1.2.0**, Oxlint and `@oxlint/plugins` **1.88.0**, `oxlint-tsgolint` **7.0.2004**.
 
    For standalone Oxlint, use the repository's package manager to add compatible `oxlint` and matching `@oxlint/plugins` dev dependencies. For Vite+, use bundled Oxlint and add a compatible plugin dependency. Upgrade Vite+ if its Oxlint is too old.
 4. Merge the preset into the existing configuration. For `.oxlintrc.json`:
@@ -34,17 +34,18 @@ Install the bundled plugin and presets. Use [coverage.md](references/coverage.md
 
    ```ts
    import { defineConfig } from 'vite-plus';
+   import maintainable from './tools/oxlint/maintainable/vite.ts';
 
    export default defineConfig({
      lint: {
-       extends: ['./tools/oxlint/maintainable/config.json'],
+       extends: [maintainable],
        ignorePatterns: ['tools/oxlint/maintainable/**'],
      },
      fmt: { ignorePatterns: ['tools/oxlint/maintainable/**'] },
    });
    ```
 
-   Keep existing entries and adjust paths for a custom destination. Apply the repository's ignore policy to agent assets and generated code. Plugin paths resolve relative to the preset.
+   Keep existing entries and adjust paths for a custom destination. Vite+ uses object presets in `lint.extends`. Apply the repository's ignore policy to agent assets and generated code. Plugin paths resolve from the installed preset.
 5. Set `maintainable/no-internal-module-mocking` prefixes for internal packages. Defaults cover relative and absolute paths, `@/`, `~/`, `#`, and `@repo/`. Add other workspace packages:
 
    ```json
@@ -62,11 +63,11 @@ Install the bundled plugin and presets. Use [coverage.md](references/coverage.md
 
 ## Optional Presets
 
-For the house SPA stack, append [stack.json](assets/maintainable/stack.json) to `extends`. It restricts Next.js, simulated DOM imports, and state mirroring in effects; console calls and numeric literals produce warnings. Merge any existing `no-restricted-imports` options: later options replace earlier ones.
+For the house SPA stack, append [stack.json](assets/maintainable/stack.json) to `extends`. In Vite+, import the generated `vite-stack.ts` object and append it to `lint.extends`. It restricts Next.js, simulated DOM imports, and state mirroring in effects; console calls and numeric literals produce warnings. Merge existing `no-restricted-imports` options: later options replace earlier ones.
 
-For type-aware checks, append [type-aware.json](assets/maintainable/type-aware.json). Standalone Oxlint needs compatible `oxlint-tsgolint` and root `options: { typeAware: true }` or `--type-aware`. Vite+ uses `lint.options` and its bundled toolchain. Use strict TypeScript settings and resolve workspace declarations first.
+For type-aware checks, append [type-aware.json](assets/maintainable/type-aware.json). Standalone Oxlint needs compatible `oxlint-tsgolint` and root `options: { typeAware: true }` or `--type-aware`. In Vite+, import `vite-type-aware.ts`, append it to `lint.extends`, and set `lint.options.typeAware: true`. Use strict TypeScript settings and resolve workspace declarations first.
 
-Keep `config.json` in `extends` with either add-on. Enable type analysis separately from its rule list.
+Keep the base preset enabled with either add-on. Enable type analysis separately from its rule list.
 
 ## Exceptions
 
@@ -87,6 +88,6 @@ Use [anti-slop](https://github.com/dmmulroy/anti-slop) as a reference for rule s
 
 Start with a real violation. Write one failing `RuleTester` or CLI test, then implement the check. Add allowed and ambiguous cases one at a time. Resolve lexical scope for shadowable names. Test multiple files in one lint run if the rule stores per-file state.
 
-Edit [assets/maintainable/](assets/maintainable/) directly; it is the shipped source. Keep tests outside that directory. Run `pnpm check` in this repository for tests, TypeScript, self-lint, and doc checks. Rebuild the ZIP after changes.
+Edit [assets/maintainable/](assets/maintainable/) directly; it is the shipped source. Keep tests outside that directory. Run `pnpm check` for tests, TypeScript, self-lint, and docs; `pnpm check:vite` tests an isolated Vite+ consumer. Rebuild the ZIP after changes.
 
 Sources: [Oxlint JS plugins](https://oxc.rs/docs/guide/usage/linter/js-plugins), [writing rules and RuleTester](https://oxc.rs/docs/guide/usage/linter/writing-js-plugins), [type-aware configuration](https://oxc.rs/docs/guide/usage/linter/type-aware.html), [Vite+ lint configuration](https://viteplus.dev/config/lint).

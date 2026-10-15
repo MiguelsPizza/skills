@@ -23,7 +23,7 @@ fi
 if has_local_bin "$TARGET_DIR" vp; then
   run_or_skip "Vite+ lint" run_in_target_dir "$TARGET_DIR" "$TARGET_DIR/node_modules/.bin/vp" lint
 elif has_local_bin "$TARGET_DIR" oxlint; then
-  run_or_skip "Oxlint" run_local_bin "$TARGET_DIR" oxlint "$TARGET_DIR"
+  run_or_skip "Oxlint" run_local_bin "$TARGET_DIR" oxlint --ignore-pattern '**/node_modules/**' .
 else
   print_section "Lint"
   echo "Skipped: install oxlint or use Vite+ in the target repo"
@@ -39,3 +39,4 @@ fi
 
 echo
 echo "Dead code audit finished."
+exit "$AUDIT_STATUS"
