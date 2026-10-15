@@ -15,20 +15,19 @@ See also: [Atomic Changes](../foundations/atomic-changes.md) and [Delete Obsolet
 
 ## Why agents get this wrong
 
-Agents treat every interface change as a breaking change that needs a migration path. They add function overloads, optional parameters with defaults, or thin wrapper functions so existing callers don't need to change. This is correct behavior for a published library with external consumers. It's wrong for a private codebase where you control all the callers.
+Overloads, defaults, and wrappers can keep obsolete internal calls working after an interface changes. When the repo owns every caller, those shims defer the migration and leave two interfaces to maintain.
 
 ## What to do instead
 
-Change the interface. Update every caller. One PR. If that touches 20 files, so be it — that's the actual scope of the change. Hiding the migration behind a compatibility shim just defers the work and doubles the API surface in the meantime.
+Change the interface and update every caller in the same PR, even when that requires editing many files.
 
-Treat temporary migration layers the same way. A migration adapter, dual-write helper, or branch-by-abstraction layer can exist only while both paths are live. Before keeping it, ask:
-- does it still hide a live vendor or protocol boundary?
-- does it still support multiple implementations?
-- does it still own policy the application needs?
+Keep a migration adapter, dual-write helper, or branch-by-abstraction layer only while both paths are live. At cutover, retain it only if it still owns a vendor or protocol boundary, supports multiple implementations, or enforces required application policy.
 
-If the answer is no, delete it in the same change that finishes the cutover.
+Otherwise, delete it in the change that completes the cutover.
 
 ## Example
+
+Delete this forwarding wrapper and update callers to import `insertUser` from its owner:
 
 ```typescript
 import type { CreateUserInput } from '@repo/contracts/users/user';
@@ -43,4 +42,4 @@ Example implements: [No Backwards Compatibility Shims](./no-backwards-compat-shi
 
 ## When this doesn't apply
 
-Published npm packages with external consumers do need deprecation cycles and backwards compatibility. This opinion is about internal code where you control every call site.
+Published npm packages with external consumers need deprecation cycles and backwards compatibility. This rule applies to internal code where the repo controls every call site.

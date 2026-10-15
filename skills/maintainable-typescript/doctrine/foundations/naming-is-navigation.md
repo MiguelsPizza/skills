@@ -9,38 +9,26 @@ example:
 ---
 # Naming Is Navigation
 
-**Rule:** Every package, path segment, file, variable, and function name must be self-explanatory to someone seeing the repo for the first time. Agents learn a codebase by searching the tree, so names must tell them where to go before they open a file.
+**Rule:** Name packages, paths, files, variables, and functions so a new contributor can identify their purpose without opening every file.
 
 See also: [Build Deep Modules, Not Shallow Abstractions](../abstractions/build-deep-modules-not-shallow-abstractions.md) and [Monorepo Package Boundaries](../packages/monorepo-package-boundaries.md).
 
 ## Why agents get this wrong
 
-Agents name things generically. They create `utils.ts`, `helpers.ts`, `types.ts`, `data.ts`, `constants.ts` (singular, catch-all). They name variables `result`, `data`, `response`, `item`, `temp`. Every new session starts by reading file names to build a mental map — generic names force the agent to open every file to understand what it does.
+Catch-all files such as `utils.ts`, `helpers.ts`, and `types.ts` hide their domain. Generic variables such as `data`, `item`, and `temp` force readers to trace assignments to understand them.
 
 ## What to do instead
 
-Name paths so they answer three questions immediately:
-- what kind of owner is this package?
-- what domain or resource is this path about?
-- what coherent behavior does this file own?
-
-Name by domain and ownership, not by implementation bucket:
-- packages should tell you what kind of truth they own
-- directories should tell you what domain or resource they own
-- files should tell you which coherent subsystem or behavior they own inside that area
-- variables should describe the thing, not its type
-- functions should read like an action on a domain concept
-- booleans should read like true/false questions
+Name packages for the responsibility they own, directories for their domain or resource, and files for the coherent behavior within that area. Name variables for the thing they hold, functions for actions on domain concepts, and booleans as true/false questions.
 
 Import paths are part of navigation too:
+
 - use short relative imports for nearby files
 - use an app alias such as `@/` for nonlocal imports within the same app
 - use package or subpath imports across package boundaries
 - avoid deep traversal imports like `../../../../foo` because they hide ownership and break easily when code moves
 
-If a name would force a new contributor to open the file just to learn what it contains, the name is too vague.
-
-A conventional filename such as `index.ts` is fine when its directory identifies the owner and the file defines its exports. [No Re-exports](../packages/no-re-exports.md) enforces declaration ownership regardless of filename.
+A filename such as `index.ts` works when its directory identifies the owner and the file defines its exports. Follow [No Re-exports](../packages/no-re-exports.md) for declaration ownership.
 
 ## Example
 

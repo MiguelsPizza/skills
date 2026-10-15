@@ -9,25 +9,17 @@ example:
 ---
 # Your Pattern Will Be Copied
 
-**Rule:** Whatever you write becomes the template. The next AI agent will copy your pattern exactly. If you cut a corner, every generated file inherits that corner. Make the pattern worth copying.
+**Rule:** Write patterns worth copying; future agents use local code as their template.
 
 See also: [No Type Casts](../boundaries/no-type-casts.md), [Boundaries Validate, Internals Trust](../boundaries/boundaries-validate-internals-trust.md), and [Use Branded Scalar Types](../../stack/use-branded-scalar-types.md).
 
 ## Why agents get this wrong
 
-Agents pattern-match from local examples. They do not ask whether the local example was intentional, temporary, or already a mistake. If a repo contains one sloppy pattern, agents will amplify it because imitation is cheaper than design.
-
-This means:
-- One sloppy error handler becomes the template for every future error handler
-- One over-abstracted utility becomes the template for every future utility
-- One file with commented-out code signals that commenting out code is acceptable
-- One function with 8 parameters signals that functions with 8 parameters are normal
+Local examples can turn temporary shortcuts into conventions. A weak error handler, unnecessary abstraction, commented-out block, or eight-parameter function gives later agents a pattern to repeat.
 
 ## What to do instead
 
-Write every file as if it's the example in a style guide. Because it is.
-
-Before you ship, ask: "If an agent copies this pattern 50 times across the codebase, would that be good?" If the answer is no, fix the pattern before it propagates.
+Treat each file as a reference example. Before shipping, fix any pattern that would make the codebase harder to maintain if repeated.
 
 ## Example
 

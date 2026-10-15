@@ -1,6 +1,6 @@
 # Opinionated Stack
 
-This file is the canonical architecture summary for the house stack. Other stack opinions should link here instead of repeating the full stack description.
+This file defines the house stack. Other stack opinions link here for architecture and layout.
 
 ## Monorepo Layout
 
@@ -32,16 +32,16 @@ project/
 
 ## Toolchain
 
-Everything runs through `vp` (Vite+). Treat it as the unified toolchain, not just a task alias. Vite+ wraps package management, runtime management, and the underlying frontend tools behind one CLI.
+Use `vp` (Vite+) for package management, runtime management, and frontend tooling.
 
 In this stack:
 
-- do not use `pnpm`, `npm`, or `yarn` directly in normal workflow
+- use `vp` for normal workflows instead of calling `pnpm`, `npm`, or `yarn` directly
 - do not install wrapped tools like `vitest`, `oxlint`, `oxfmt`, or `tsdown` just to reach their CLIs
 - use `vp run <script>` for custom package scripts, because `vp dev`, `vp build`, `vp test`, and similar built-ins always run the Vite+ tool, not a same-named script
 - import JavaScript modules from `vite-plus`, not from `vite` or `vitest`, when the repo is already on Vite+
 
-High-signal commands:
+Common commands:
 
 - `vp install`
 - `vp dev`
@@ -86,7 +86,7 @@ For dependency ownership and install policy, see [Catalog Dependencies](./catalo
   -> client hooks
 ```
 
-One source, everything derived.
+Derive contracts, types, clients, and documentation from the owning schema.
 
 ## Canonical doctrine map
 

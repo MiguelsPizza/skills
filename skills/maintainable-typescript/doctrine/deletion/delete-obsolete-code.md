@@ -9,21 +9,15 @@ example:
 ---
 # Delete Obsolete Code
 
-**Rule:** If something is replaced, remove it in the same PR. Don't deprecate it, don't comment it out, don't rename it with an underscore prefix.
+**Rule:** Remove replaced code in the same PR, update every caller, and delete old export paths.
 
 ## Why agents get this wrong
 
-Agents are trained to be cautious. When they replace a function, they leave the old one "just in case" — adding a `@deprecated` tag, commenting it out, or renaming it to `_oldFunction`. This feels safe in the moment but creates a codebase full of ghost code that misleads every future reader.
+Keeping a replaced function with `@deprecated`, a comment block, or an underscore prefix leaves it in searches and IDE suggestions. Readers must then work out which version to use.
 
 ## What to do instead
 
-Delete it. In the same PR that introduces the replacement. If the old code had callers, update them all. If you're worried about losing it, that's what `git log` is for.
-
-Dead code is worse than no code. It:
-- Misleads the next agent into thinking it's load-bearing
-- Shows up in searches and IDE suggestions
-- Creates confusion about which version is canonical
-- Accumulates until someone has to do a dedicated cleanup sprint
+Update every caller, remove the old exports, and delete the replaced implementation. Use `git log` to recover history. Do not retain dead code through deprecation tags, comment blocks, or underscore prefixes.
 
 ## Example
 

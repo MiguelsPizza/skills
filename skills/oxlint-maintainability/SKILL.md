@@ -1,24 +1,26 @@
 ---
 name: oxlint-maintainability
-description: Install, configure, and extend Oxlint enforcement for TypeScript maintainability doctrine. Use for executable re-export, type-safety, mocking, forwarding-wrapper, and shape-churn checks, including Vite+ projects.
+description: Install and extend Oxlint rules for TypeScript maintainability, including Vite+ projects. Covers re-exports, type safety, internal mocks, forwarding wrappers, and shape churn.
 license: MIT
 ---
 
 # Enforce TypeScript Maintainability with Oxlint
 
-Install the bundled plugin and presets into the target repository. Use native Oxlint rules where they already express the doctrine. Read [coverage.md](references/coverage.md) for the exact checks, allowed cases, and behaviors that still need review or project-wide tools.
+Install the bundled plugin and presets. Use [coverage.md](references/coverage.md) to check each rule's scope and exceptions.
 
 ## Install
 
-1. Read the target repository's instructions, status, package manager, lint config, path aliases, and workspace package names. Preserve existing rules, ignores, overrides, and unrelated edits.
+1. Read the repository's instructions. Check Git status, the toolchain, lint config, path aliases, and workspace names. Preserve existing config and unrelated edits.
 2. Copy the assets from the target repository root:
 
    ```sh
    node <skill-directory>/scripts/install.mjs
    ```
 
-   This creates `tools/oxlint/maintainable/`. An optional first argument changes that destination. The installer refuses to overwrite existing files. For an upgrade, compare the installed copy with this skill before replacing it.
-3. Use the existing toolchain. These assets are tested with Oxlint and `@oxlint/plugins` **1.88.0**, Node **22**, and `oxlint-tsgolint` **7.0.2004**. For standalone Oxlint, install compatible `oxlint` and matching `@oxlint/plugins` development dependencies with the repository's package manager. For Vite+, use its bundled Oxlint and add only the compatible plugin dependency; update Vite+ if its Oxlint is too old. Check installed versions rather than silently adding a second linter.
+   The default destination is `tools/oxlint/maintainable/`; pass another path as the first argument. The installer refuses to overwrite files. Compare the installed copy before upgrading.
+3. Check installed versions. Tested: Node **22**, Oxlint and `@oxlint/plugins` **1.88.0**, `oxlint-tsgolint` **7.0.2004**.
+
+   For standalone Oxlint, use the repository's package manager to add compatible `oxlint` and matching `@oxlint/plugins` dev dependencies. For Vite+, use bundled Oxlint and add a compatible plugin dependency. Upgrade Vite+ if its Oxlint is too old.
 4. Merge the preset into the existing configuration. For `.oxlintrc.json`:
 
    ```json
@@ -42,8 +44,8 @@ Install the bundled plugin and presets into the target repository. Use native Ox
    });
    ```
 
-   Keep all existing entries. Adjust paths for a custom destination. Ignore installed agent assets and generated code according to the repository's existing policy. Oxlint resolves the preset's plugin path relative to the preset itself.
-5. Configure `maintainable/no-internal-module-mocking` with the repository's actual internal module prefixes. Defaults cover relative/absolute paths, `@/`, `~/`, `#`, and `@repo/`. Other bare workspace packages require explicit prefixes:
+   Keep existing entries and adjust paths for a custom destination. Apply the repository's ignore policy to agent assets and generated code. Plugin paths resolve relative to the preset.
+5. Set `maintainable/no-internal-module-mocking` prefixes for internal packages. Defaults cover relative and absolute paths, `@/`, `~/`, `#`, and `@repo/`. Add other workspace packages:
 
    ```json
    {
@@ -55,20 +57,20 @@ Install the bundled plugin and presets into the target repository. Use native Ox
    }
    ```
 
-   This option replaces the default prefix list; relative and absolute paths remain internal. A package name matches itself and its subpaths. A trailing slash matches that scope or alias prefix.
-6. Run `vp lint` or the existing Oxlint command. Errors are enforced contracts. Review every wrapper/shape warning against its owning doctrine. Delete fake layers; preserve real validation, authorization, lifecycle, transformation, and public contracts.
+   This list replaces the default prefixes; relative and absolute paths stay internal. Package names match themselves and their subpaths. A trailing slash matches a scope or alias prefix.
+6. Run `vp lint` or the repository's Oxlint command. Fix errors and review wrapper and shape warnings against their linked rules.
 
 ## Optional Presets
 
-Append [stack.json](assets/maintainable/stack.json) to the same `extends` array only for the house SPA stack. It restricts Next.js and simulated DOM imports, rejects synchronous state mirroring in effects, and warns about console output and numeric behavior literals. Merge existing `no-restricted-imports` restrictions if the target already configures that rule; later rule options replace earlier options.
+For the house SPA stack, append [stack.json](assets/maintainable/stack.json) to `extends`. It restricts Next.js, simulated DOM imports, and state mirroring in effects; console calls and numeric literals produce warnings. Merge any existing `no-restricted-imports` options: later options replace earlier ones.
 
-Append [type-aware.json](assets/maintainable/type-aware.json) only when the repository can run type-aware Oxlint. Install a compatible `oxlint-tsgolint` for standalone Oxlint, then enable `options: { typeAware: true }` in the root config (or run `oxlint --type-aware`). Vite+ uses the same root `lint.options` setting and its own toolchain. Ensure strict TypeScript configuration and resolvable workspace declarations.
+For type-aware checks, append [type-aware.json](assets/maintainable/type-aware.json). Standalone Oxlint needs compatible `oxlint-tsgolint` and root `options: { typeAware: true }` or `--type-aware`. Vite+ uses `lint.options` and its bundled toolchain. Use strict TypeScript settings and resolve workspace declarations first.
 
-These files are add-ons: keep `config.json` in `extends` too. Loading the type-aware rule list alone does not turn on type analysis.
+Keep `config.json` in `extends` with either add-on. Enable type analysis separately from its rule list.
 
 ## Exceptions
 
-Use a narrow path override for an established boundary or generated surface. For a single review finding, record why the layer earns its existence:
+Use path overrides for boundaries or generated code. Explain individual review exceptions:
 
 ```ts
 // oxlint-disable-next-line maintainable/no-trivial-forwarding-wrapper -- framework requires this named loader entrypoint
@@ -77,14 +79,14 @@ export async function loader(args: LoaderArgs) {
 }
 ```
 
-These detectors have no autofixes. Inspect semantics before removing wrappers or changing object presence. Do not promote review warnings to errors without reviewing existing findings and configuring boundaries. A clean lint run does not prove that schemas, trust boundaries, browser tests, or architecture are correct.
+Review warnings before removing code. Keep layers that own validation, authorization, lifecycle, transformation, or a public contract. Check property-presence semantics before changing objects. These rules have no autofixes. Review findings and configure boundaries before promoting warnings to errors.
 
 ## Extend with TDD
 
-Follow the source/test layout and real `RuleTester` usage in [anti-slop](https://github.com/dmmulroy/anti-slop). Its implementation style informed this plugin; its policies are not enabled wholesale.
+Use [anti-slop](https://github.com/dmmulroy/anti-slop) as a reference for rule structure and `RuleTester` usage.
 
-Start with a real violating snippet from the target repository. Add one failing test through Oxlint's public `RuleTester` or CLI, implement the smallest detector, then add one realistic allowed or ambiguous case at a time. Use lexical scope information when identifiers can be shadowed. Test two files in one lint run when keeping per-file state.
+Start with a real violation. Write one failing `RuleTester` or CLI test, then implement the check. Add allowed and ambiguous cases one at a time. Resolve lexical scope for shadowable names. Test multiple files in one lint run if the rule stores per-file state.
 
-The canonical shipped source is [assets/maintainable/](assets/maintainable/); edit it directly. Keep tests outside that directory so installed copies contain only runtime assets. In this repository, `pnpm check` runs the RuleTester/consumer CLI suites, TypeScript, self-lint, and document checks. Rebuild the skill ZIP after changes.
+Edit [assets/maintainable/](assets/maintainable/) directly; it is the shipped source. Keep tests outside that directory. Run `pnpm check` in this repository for tests, TypeScript, self-lint, and doc checks. Rebuild the ZIP after changes.
 
 Sources: [Oxlint JS plugins](https://oxc.rs/docs/guide/usage/linter/js-plugins), [writing rules and RuleTester](https://oxc.rs/docs/guide/usage/linter/writing-js-plugins), [type-aware configuration](https://oxc.rs/docs/guide/usage/linter/type-aware.html), [Vite+ lint configuration](https://viteplus.dev/config/lint).

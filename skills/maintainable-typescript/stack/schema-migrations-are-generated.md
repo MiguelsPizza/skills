@@ -9,26 +9,24 @@ example:
 ---
 # Schema Migrations Are Generated
 
-**Rule:** Never hand-write migration SQL. Edit the Drizzle schema, generate the migration, review it, and apply it without editing the generated file.
+**Rule:** Edit the Drizzle schema, generate the migration, review it, and apply it without editing the generated SQL.
 
 See also: [SSOT or Die](../doctrine/abstractions/ssot-or-die.md) and [Opinionated Stack](./stack-overview.md).
 
 ## Why agents get this wrong
 
-Agents often jump straight to SQL because it feels faster. That breaks the schema derivation chain, makes the migration provenance ambiguous, and invites drift between the Drizzle model and the actual database.
+Hand-written SQL can drift from the Drizzle schema and obscure how a migration was produced.
 
 ## What to do instead
 
-Use this workflow every time:
+Edit the Drizzle schema first, then run:
 
 ```bash
 vp dlx drizzle-kit generate
 vp dlx drizzle-kit migrate
 ```
 
-That assumes the Drizzle schema was edited first. Review the generated SQL, but do not hand-edit it afterward.
-
-Schema changes still require human judgment. Additive changes are usually safe. Renames, type changes, and drops need an explicit rollout plan.
+Review the generated SQL without editing it. Additive changes are usually safe; renames, type changes, and drops require an explicit rollout plan.
 
 ## Example
 

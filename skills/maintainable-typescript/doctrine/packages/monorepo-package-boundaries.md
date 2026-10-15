@@ -9,28 +9,29 @@ example:
 ---
 # Monorepo Package Boundaries
 
-**Rule:** Packages are single-purpose, well-tested units with explicit public entrypoints. Dependencies flow one direction: packages never import from apps, shared packages never import from domain packages. Keep runtime behavior in the app by default, but respect established package ownership for canonical contracts and schemas.
+**Rule:** Give packages one purpose, tests, and explicit public entrypoints. Packages never import from apps; shared packages never import from domain packages. Keep runtime behavior in apps by default and canonical contracts in their established packages.
 
 See also: [No Premature Abstractions](../abstractions/no-premature-abstractions.md), [Build Deep Modules, Not Shallow Abstractions](../abstractions/build-deep-modules-not-shallow-abstractions.md), and [No Re-exports](./no-re-exports.md).
 
 ## Why agents get this wrong
 
-Agents create packages eagerly. They see shared logic and immediately extract it into a new package, even when only one app uses it. They also violate dependency direction — importing from apps into packages, creating circular references, or importing from the wrong layer.
+Extracting a package for one app adds a boundary without a second consumer. Imports from apps into packages or from the wrong layer reverse ownership and can create cycles.
 
 ## What to do instead
 
-Keep runtime code in the app until there is a second real consumer. When extraction is justified, make the package single-purpose, expose leaf modules through `package.json` subpath exports, and keep dependency flow one-way.
+Keep ordinary runtime code in the app until there is a second real consumer. For foundational auth, security, or protocol code, follow [Treat Critical Code Like a Library](../foundations/treat-critical-code-like-a-library.md). When extraction is justified, expose leaf modules through `package.json` subpath exports and keep dependency flow one-way.
 
-Do not confuse runtime ownership with canonical contract ownership. If the repo already centralizes source-of-truth schemas or shared Zod contracts in packages, preserve that convention even when only one app currently uses the feature. Let apps own route handlers, session behavior, and local orchestration. Let the established package own the canonical schema.
+Keep canonical schemas and Zod contracts in their established packages, even with one consuming app. Apps own route handlers, session behavior, and local orchestration.
 
 Import style should reinforce those boundaries:
+
 - use package imports across package boundaries, never relative filesystem hops between packages
 - use app-local aliases such as `@/` for nonlocal imports inside an app
 - keep relative imports for genuinely local neighbors inside the same area
 
-Those leaf modules are ownership signals, not one-helper file mandates. Export `./review-runs/review-run` while that file still gives callers the context they need; if unrelated responsibilities grow inside it, split the module and expose the new owning leaves instead.
+Export coherent modules such as `./review-runs/review-run`. Split them when unrelated responsibilities accumulate, then expose the new owners.
 
-In practice, directories usually carry the higher-level feature or domain boundary. Files inside them should be deep modules around coherent behavior: routes, contracts, persistence, client wrappers, or session/cookie subsystems. Do not split the feature into one-helper files just because each helper can be named.
+Use directories for feature or domain boundaries and files for coherent behavior: routes, contracts, persistence, client wrappers, or session/cookie subsystems. Keep related helpers together.
 
 Use this boundary model:
 
@@ -41,17 +42,14 @@ apps/web/
 apps/api/
 ```
 
-Create a package when:
-- Two or more apps need the same code
-- The code has a clear, testable contract
-- The public entrypoints can be explicit
-- The repo convention says this package owns canonical contracts for that kind of data
+Extract shared runtime code when two or more apps need it, the contract is clear and testable, and public entrypoints can be explicit. Follow established package ownership for canonical contracts.
 
 Do not create a package when:
-- Only one app uses it — keep it as a directory in that app
-- It's "shared" utilities with no coherent domain — don't create `packages/utils`
-- You're creating it speculatively for "future" consumers
-- You are moving runtime behavior out of the app just to colocate it with a schema
+
+- Only one app uses ordinary runtime code
+- The utilities have no coherent domain, as in `packages/utils`
+- Consumers are speculative
+- The only reason is to colocate runtime behavior with a schema
 
 ## Example
 

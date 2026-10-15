@@ -15,20 +15,20 @@ See also: [Boundaries Validate, Internals Trust](./boundaries-validate-internals
 
 ## Why agents get this wrong
 
-When an agent hits a type error, the fastest fix is `as SomeType`. The code compiles, the test passes, and the agent moves on. But the type error was a signal — something about the contract is wrong. The cast silences the signal without fixing the problem, and every future agent that reads the code inherits the cast as a "pattern."
+Agents silence type errors with `as SomeType`. The cast leaves the broken contract in place and gives later code an unsafe pattern to copy.
 
 ## What to do instead
 
-When you hit a type error:
+When a type error appears:
 
-1. Identify the real boundary that is incorrectly typed
-2. Fix the type definition at the source
-3. If you can't fix the source (third-party), use a type guard with runtime narrowing
-4. If none of the above work, add a `// @ts-expect-error` with a reason — never a silent cast
+1. Find the incorrectly typed boundary.
+2. Fix its type at the source.
+3. For third-party types you cannot fix, use a runtime type guard.
+4. If those fail, add `// @ts-expect-error` with a reason.
 
-Do not cast globals to reach your own properties. Declare the global type properly.
+Declare your global properties in the global type.
 
-Do not replace a cast with explicit `any` or a non-null assertion such as `user!`. Establish the contract or narrow the value where the guarantee becomes true.
+Do not bypass a type error with explicit `any` or a non-null assertion such as `user!`. Establish the contract or narrow the value where the guarantee becomes true.
 
 ## Example
 

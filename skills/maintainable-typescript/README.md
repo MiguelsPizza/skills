@@ -1,22 +1,15 @@
 # Maintainable TypeScript
 
-Maintainability-first doctrine for strict TypeScript repos and monorepos.
-
-## Why This Exists
-
-Coding agents optimize for "works right now." This skill is meant to push them toward "leave the repo easier to change next month."
-
-The doctrine is opinionated on purpose. It treats maintainability as a correctness concern, not as polish to add later.
-In the agent era, code generation is cheap. Reviewer attention, conceptual stability, and truthful structure are not.
+Rules for strict TypeScript repos and monorepos. Keep code correct, easy to find, and easy to change.
 
 ## What's In Here
 
 - [SKILL.md](SKILL.md) is the skill entrypoint.
-- [doctrine/](doctrine) contains portable rules for strict TypeScript repos, grouped by concept.
-- [stack/](stack) contains stack-specific doctrine for the Vite+ / TanStack Router / Drizzle / oRPC / Cloudflare architecture.
-- [prompts/](prompts) contains reusable prompt text for cleanup, review, and refactor tasks that need to fight default agent behavior.
-- [scripts/](scripts) contains bundled audit helpers for dead code, duplicate code, and architecture checks.
-- [assets/tooling-templates/](assets/tooling-templates) contains copyable config templates for target repos.
+- [doctrine/](doctrine): portable TypeScript rules.
+- [stack/](stack): rules for Vite+, TanStack Router, Drizzle, oRPC, and Cloudflare.
+- [prompts/](prompts): cleanup, review, and refactor prompts.
+- [scripts/](scripts): dead code, duplication, and architecture audits.
+- [assets/tooling-templates/](assets/tooling-templates): copyable config.
 
 ## Install
 
@@ -26,7 +19,7 @@ In the agent era, code generation is cheap. Reviewer attention, conceptual stabi
 npx skills add miguelspizza/skills --skill maintainable-typescript
 ```
 
-This works with any agent that supports skills (Claude Code, Cursor, etc.). Use `--list` to see all available skills in this repo, or `--all` to install everything:
+Use with any agent that supports skills. List or install all skills:
 
 ```bash
 npx skills add miguelspizza/skills --list
@@ -40,7 +33,7 @@ npx skills add miguelspizza/skills --all
 /plugin install skills@miguelspizza-skills
 ```
 
-This repo ships [plugin.json](../../.claude-plugin/plugin.json) and [marketplace.json](../../.claude-plugin/marketplace.json) at the repo root, so Claude Code can install it as a plugin.
+Plugin files: [plugin.json](../../.claude-plugin/plugin.json) and [marketplace.json](../../.claude-plugin/marketplace.json).
 
 **Claude.ai standalone skill**
 
@@ -58,11 +51,11 @@ That regenerates [skills/maintainable-typescript.zip](../../skills/maintainable-
 
 ## Use Without The Skill
 
-You can reference this doctrine from your own `AGENTS.md` or `CLAUDE.md`, or copy individual files into another repo and adapt them.
+Link these rules from `AGENTS.md` or `CLAUDE.md`, or copy individual files into your repo.
 
 ## Use The TypeScript Tooling
 
-The tooling templates are independent of the skill. In the standalone skill archive, they live under `assets/tooling-templates/`:
+Copyable templates live in `assets/tooling-templates/`. To run the audit tools:
 
 ```bash
 pnpm add -D fallow typescript
@@ -70,15 +63,15 @@ pnpm add -D fallow typescript
 bash scripts/audit-typescript-repo.sh .
 ```
 
-Run Fallow without config first. Copy `assets/tooling-templates/.fallowrc.json` only when the target repo needs explicit severities, ignore patterns, boundaries, thresholds, or baselines.
+Run Fallow without config first. Add `assets/tooling-templates/.fallowrc.json` when you need severities, ignores, boundaries, thresholds, or baselines.
 
-If the target repo already uses Vite+, prefer its `vp` commands for linting, formatting, testing, and package operations instead of installing wrapped tool binaries just to reach them.
+In Vite+ repos, use `vp` for linting, formatting, testing, and package operations.
 
-Put repo-specific bans and style rules in the target repo's existing linter and formatter configs.
+Add local rules to the existing linter and formatter config.
 
-Install [Oxlint Maintainability](../oxlint-maintainability/SKILL.md) for executable enforcement of the syntax-level doctrine. It combines native Oxlint rules with tested custom checks, including strict no-re-exports enforcement. Read its [coverage map](../oxlint-maintainability/references/coverage.md) before enabling optional stack/type-aware presets or acting on wrapper and shape warnings.
+Install [Oxlint Maintainability](../oxlint-maintainability/SKILL.md) for lint enforcement. Read its [coverage map](../oxlint-maintainability/references/coverage.md) before enabling optional presets or acting on wrapper and shape warnings.
 
-If you are working from this repo instead of the standalone skill archive, the same files also exist in [tooling/templates/](../../tooling/templates) and are documented in [tooling/README.md](../../tooling/README.md).
+Repository copies: [tooling/templates/](../../tooling/templates) and [tooling/README.md](../../tooling/README.md).
 
 ## Opinions Index
 

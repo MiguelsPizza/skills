@@ -16,36 +16,17 @@ references:
 ---
 # Document Fields in Derived Zod Schemas
 
-**Rule:** Put field descriptions and examples on the derived Zod schemas that feed oRPC and OpenAPI. Drizzle owns structure and constraints; the contract schema owns semantic API documentation.
+**Rule:** Put field descriptions and examples on the derived Zod schemas used by oRPC and OpenAPI. Drizzle owns database structure and constraints.
 
 See also: [Design OpenAPI for Inference](./design-openapi-for-inference.md), [Use Canonical Named Types, Not Inline Object Shapes](./use-canonical-named-types.md), and [SSOT or Die](../doctrine/abstractions/ssot-or-die.md).
 
 ## Why agents get this wrong
 
-Agents see the database schema first and assume it should also own the API documentation. They try to put every semantic definition on Drizzle columns, or they give up and write the missing descriptions manually in OpenAPI prose later.
-
-That is the wrong split for this stack.
-
-Drizzle is excellent at owning relational facts:
-
-- column names
-- nullability
-- defaults
-- enum domains
-- indexes and constraints
-
-But the OpenAPI generator does not read your intent from the database layer alone. The contract layer is where field semantics actually matter to clients:
-
-- what the field means
-- how it is represented over the wire
-- examples
-- endpoint-specific output shape
-
-If you push that documentation into sidecar prose instead of the contract schema, you create a second source of truth.
+Database columns define relational facts but do not fully describe wire formats, field meaning, examples, or endpoint output. Writing those details in separate docs creates another source to maintain.
 
 ## What to do instead
 
-Keep the ownership split explicit:
+Keep database structure and API documentation in this chain:
 
 ```text
 Drizzle
@@ -64,15 +45,13 @@ OpenAPI
   -> inferred published spec
 ```
 
-Practical rule:
-
 1. Define the table in Drizzle.
 2. Derive the schema with `createSelectSchema`, `createInsertSchema`, or `createUpdateSchema`.
 3. Add `.describe(...)` and examples in the `drizzle-zod` field callbacks or on the derived schema.
-4. Reuse that documented schema in oRPC `.input(...)` and `.output(...)`.
-5. Do not hand-write the same field explanations again in route prose unless the endpoint itself adds extra context.
+4. Reuse the documented schema in oRPC `.input(...)` and `.output(...)`.
+5. Add route prose only for context specific to that endpoint.
 
-If your OpenAPI tooling expects an extended Zod instance, use `createSchemaFactory({ zodInstance: ... })` and attach metadata there. The key point is the same: document the field where the contract is derived, not in a parallel documentation layer.
+If OpenAPI tooling requires an extended Zod instance, use `createSchemaFactory({ zodInstance: ... })` and attach metadata there. Field documentation must reach OpenAPI through the contract schema.
 
 ## Example
 
@@ -135,14 +114,3 @@ export const getUser = publicProcedure
 ```
 
 Example implements: [Document Fields in Derived Zod Schemas](./document-fields-in-derived-zod-schemas.md), [Design OpenAPI for Inference](./design-openapi-for-inference.md), [SSOT or Die](../doctrine/abstractions/ssot-or-die.md).
-
-## The test
-
-Ask:
-
-- Is this field description attached to the schema the API contract actually uses?
-- If the field meaning changes, will the OpenAPI spec update without touching sidecar docs?
-- Am I trying to make the Drizzle layer own API semantics that really belong to the contract layer?
-- Did I derive the schema first and then enrich it, instead of hand-writing a duplicate object schema?
-
-If the answer to those questions is no, the semantic contract is in the wrong place.

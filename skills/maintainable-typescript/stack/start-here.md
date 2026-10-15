@@ -1,6 +1,6 @@
 # Start Here
 
-This directory is the house doctrine for repos that intentionally use the full opinionated stack. Use this file as the map, not as the place where every decision is re-explained.
+Use these rules in repos that adopt the house stack. Start with the architecture overview, then read the rule for your task.
 
 ## Use this directory when
 

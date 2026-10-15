@@ -28,31 +28,25 @@ references:
 ---
 # Do Not Synchronize State with useEffect
 
-**Rule:** In this stack, do not use `useEffect` to synchronize application state. Route state belongs to TanStack Router, server state belongs to TanStack Query, derived state belongs in render, and external synchronization belongs in a low-level provider or adapter.
+**Rule:** Do not use `useEffect` to synchronize application state. Router owns route state, Query owns server state, render computes derived state, and low-level adapters own external synchronization.
 
 See also: [Opinionated Stack](./stack-overview.md) and [Do Not Use Next.js](./do-not-use-nextjs.md).
 
 ## Why agents get this wrong
 
-Agents treat `useEffect` as the generic place for "stuff that should happen after render." That leads them to fetch in effects, copy router state into component state, mirror query results into local arrays, and keep tabs, filters, pagination, and modal state outside the route.
-
-That pattern breaks the ownership model the stack is built around. It hides state in multiple places, causes avoidable rerenders, makes back/forward navigation worse, and teaches the next agent to keep synchronizing one React state container to another.
-
-Agents also tend to lift this synchronized state too high in the tree. Then every downstream subtree rerenders because a tab, filter, or derived list was placed near the app shell instead of near the feature that actually needs it.
+Effects that copy router state, query results, or derived lists into component state create competing owners and extra renders. Lifting that state to the app shell spreads those renders across unrelated features.
 
 ## What to do instead
 
-Use the owner that already exists:
+Assign each value to its owner:
 
 1. Put navigable and shareable UI state in TanStack Router search params.
 2. Put server state in TanStack Query.
 3. Derive filtered, sorted, or decorated values during render.
-4. Use local `useState` only for truly local transient UI state that does not belong in the URL.
-5. If you must synchronize with an external system, isolate that `useEffect` in a dedicated provider or adapter hook as low in the tree as practical.
+4. Use `useState` for local, transient UI state that does not belong in the URL.
+5. Isolate external synchronization in a provider or adapter hook near the subtree that needs it.
 
-For normal feature components, `useEffect` is effectively banned. React's own docs define effects as synchronization with external systems. If there is no external system, there should usually be no effect.
-
-There are narrow exceptions, but if you feel you need one, there is almost always an existing structural issue. Try to fix that first. Even then, keep the effect near the subtree that needs it. Do not place effectful providers at the top of the app unless the whole app truly depends on that external system.
+Feature components must not use effects to copy state between React containers. Before adding an exception, fix any ownership problem that could remove the effect. Put an effectful provider at the app root only when the whole app depends on the external system.
 
 ## Example
 ```typescript
@@ -154,15 +148,3 @@ export function UsersPageScreen({ users }: UsersPageScreenProps) {
 ```
 
 Example implements: [Do Not Synchronize State with useEffect](./do-not-synchronize-state-with-useeffect.md), [Opinionated Stack](./stack-overview.md), [Do Not Use Next.js](./do-not-use-nextjs.md).
-
-## The test
-
-Before shipping any `useEffect`, ask:
-
-- Is this effect only synchronizing one React state container to another?
-- Should this state live in the route instead?
-- Should this data come from TanStack Query instead?
-- Can this value be derived in render instead of stored?
-- If this effect is truly necessary, why is it not isolated to a provider or adapter near the subtree that needs it?
-
-If those questions point back to Router, Query, or render-time derivation, delete the effect.

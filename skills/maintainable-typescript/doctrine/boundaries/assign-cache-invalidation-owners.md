@@ -10,26 +10,19 @@ example:
 ---
 # Assign Cache Invalidation Owners
 
-**Rule:** Every cache must have a named owner and explicit invalidation triggers. If nobody owns invalidation, the cache should not exist.
+**Rule:** Give every cache a named owner and explicit invalidation triggers. Remove caches without an invalidation owner.
 
 See also: [SSOT or Die](../abstractions/ssot-or-die.md), [Naming Is Navigation](../foundations/naming-is-navigation.md), and [Bounded Behavior](../foundations/bounded-behavior.md).
 
 ## Why agents get this wrong
 
-Agents add caches as local optimizations. They memoize a fetch, drop a key into KV, or add a module-level map, then stop once the read path is fast. The invalidation story stays implicit.
-
-That creates hidden state. A future editor can see the cache read, but not who clears it, when it is cleared, or whether it is safe to trust. A cache with no visible invalidation owner becomes permanent maintenance drag.
+Cache reads without write invalidation leave stale values. Readers need to know who clears the cache and which changes trigger it.
 
 ## What to do instead
 
-Every cache must answer four questions in code:
+Make the cache owner, invalidating state changes, and invalidation calls visible in code. The write path must trigger invalidation. Name the cache so its owner is easy to find.
 
-- who owns this cache
-- what writes or state changes invalidate it
-- where invalidation is triggered
-- whether the cache can be deleted if ownership is unclear
-
-Do not treat caches as silent shared state. The write side must own the invalidation path, and the cache name should make that ownership easy to find.
+If ownership is unclear, establish whether the cache is safe to delete and remove it when safe.
 
 ## Example
 
@@ -71,13 +64,3 @@ export async function syncInstallationRepositories(installationId: InstallationI
 ```
 
 Example implements: [Assign Cache Invalidation Owners](./assign-cache-invalidation-owners.md), [SSOT or Die](../abstractions/ssot-or-die.md), [Naming Is Navigation](../foundations/naming-is-navigation.md), [Bounded Behavior](../foundations/bounded-behavior.md).
-
-## The test
-
-Ask:
-
-- can a new editor find the invalidation owner by search alone?
-- does the write path invalidate the cache in the same change?
-- if ownership is unclear, is the cache safe to delete?
-
-If those answers are not obvious from the codebase, the cache is under-specified.

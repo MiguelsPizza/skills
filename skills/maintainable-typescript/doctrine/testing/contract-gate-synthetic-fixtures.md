@@ -9,35 +9,19 @@ example:
 ---
 # Contract-Gate Synthetic Fixtures
 
-**Rule:** Any payload invented by a durable test should be parsed by a runtime schema before the test returns it or sends it.
+**Rule:** Parse payloads invented by durable tests with a runtime schema before returning or sending them.
 
 See also: [SSOT or Die](../abstractions/ssot-or-die.md) and [Boundaries Validate, Internals Trust](../boundaries/boundaries-validate-internals-trust.md).
 
 ## Why agents get this wrong
 
-Agents hand-write JSON fixtures inline because it is fast. That creates silent drift:
-
-- renamed fields
-- missing required fields
-- wrong nested object shapes
-- stale assumptions about external APIs
-
-The tests still compile, but they stop modeling the real contract.
+Hand-written JSON fixtures drift from real contracts as fields are renamed, required fields change, or nested shapes evolve. The tests may still compile.
 
 ## What to do instead
 
-Before a test injects synthetic data:
+Build each synthetic payload through its canonical runtime schema before serializing or returning it. Use the app-owned contract schema for app data and an explicit external-boundary schema for provider data.
 
-1. choose the canonical runtime schema
-2. build the payload through that schema
-3. only then serialize or return it
-
-Prefer:
-
-- app-owned schemas from the real contract package
-- explicit external-boundary schemas when the payload belongs to a third-party provider
-
-Do not normalize this as "validation everywhere." The point is to validate at the synthetic edge where the test invents data.
+Validate where the test invents the data; internal consumers can trust the parsed result.
 
 ## Example
 

@@ -9,25 +9,19 @@ example:
 ---
 # Use Classes for Object APIs, Not Service Buckets
 
-**Rule:** Use a class when methods hanging off one named object make the API clearer. Do not use classes as DI buckets, fake namespaces, or inheritance hooks.
+**Rule:** Use a class when one named object gives callers a clearer API. Keep dependency containers, namespaces, and unrelated service methods in modules.
 
 See also: [Design Around Composable Primitives](./design-around-composable-primitives.md) and [Compose Behavior, Do Not Specialize Classes](./compose-behavior-do-not-specialize-classes.md).
 
 ## Why agents get this wrong
 
-Agents do not default to classes in every repo. They mirror the dominant local style. In OO-leaning codebases or prompts, that means they reach for `FooService` and `FooManager` classes for ordinary backend logic. The class becomes a namespace with constructor injection, a few private helpers, and no real public shape beyond "here are some related methods."
+Agents copy service classes that hold dependencies and group related methods. The class adds construction and state without giving callers a useful object API.
 
 ## What to do instead
 
-Start with values, functions, and modules. Use a class when the object itself is the concept and the method surface improves readability:
-- a builder or fluent API
-- a parser, formatter, or policy object
-- a domain object with a small, coherent public surface
-- a resource wrapper with lifecycle or state
+Start with values, functions, and modules. Use a class for a coherent object API: a builder, parser, formatter, policy, domain object, or resource with state or a lifecycle.
 
-If the class exists only to hold injected dependencies and expose verbs like `create`, `update`, `delete`, or `process`, it is probably a service bucket. Prefer a module or a smaller object with a sharper point of view.
-
-This rule is about whether a class should exist. If the problem is subclass layering, use [Compose Behavior, Do Not Specialize Classes](./compose-behavior-do-not-specialize-classes.md).
+Replace a class that only holds injected dependencies and exposes `create`, `update`, `delete`, or `process` methods with a module or a focused object. Compose capabilities using [Compose Behavior, Do Not Specialize Classes](./compose-behavior-do-not-specialize-classes.md).
 
 ## Example
 
@@ -46,6 +40,3 @@ export class ReviewRunPolicy {
 ```
 
 Example implements: [Use Classes for Object APIs, Not Service Buckets](./use-classes-for-object-apis-not-service-buckets.md), [Design Around Composable Primitives](./design-around-composable-primitives.md), [Compose Behavior, Do Not Specialize Classes](./compose-behavior-do-not-specialize-classes.md).
-## The test
-
-Ask: does the class present one readable object API, or is it just a pile of related verbs? If it is the latter, the class is fake structure.

@@ -1,16 +1,14 @@
 # TypeScript Repo Tooling
 
-Portable tooling templates and scripts for maintainable TypeScript repos.
+Templates and audit scripts for TypeScript applications and packages.
 
-[Oxlint Maintainability](../skills/oxlint-maintainability/SKILL.md) ships the executable lint companion. Its canonical source is bundled under the skill's `assets/maintainable/`; [tooling/oxlint/tests/](oxlint/tests) tests that exact source and copied consumer installations. Run `pnpm check` from the repository root.
-
-These are not for maintaining this repo's markdown opinions. They are for auditing real application and package repos.
+[Oxlint Maintainability](../skills/oxlint-maintainability/SKILL.md) ships lint rules in `assets/maintainable/`. [Tests](oxlint/tests) cover that source and copied installs. Run `pnpm check` from the repository root.
 
 ## What to copy into a target repo root
 
 - `tooling/templates/.fallowrc.json` -> `.fallowrc.json`
 
-Run Fallow without config first. Copy the template only when the target repo needs explicit severities, ignores, boundaries, thresholds, or baselines.
+Run Fallow without config first. Add the template when you need severities, ignores, boundaries, thresholds, or baselines.
 
 ## Recommended install
 
@@ -18,7 +16,7 @@ Run Fallow without config first. Copy the template only when the target repo nee
 pnpm add -D fallow typescript
 ```
 
-If the repo already uses Vite+ / `vp`, do not treat that install command as the default. Keep TypeScript, linting, formatting, testing, and package operations aligned with Vite+. Prefer `vp lint` and `vp fmt`, and do not install wrapped tools like Vitest, Oxfmt, Oxlint, or tsdown separately just to reach their CLIs.
+In Vite+ repos, use `vp` for installs, linting, formatting, tests, and builds. Use its bundled tools.
 
 ## Generic audit runner
 
@@ -35,9 +33,7 @@ What it does:
 - otherwise runs `oxlint` when installed
 - runs `fallow` when installed
 
-This script is intentionally thin. The real policy lives in the target repo config files.
-
-Put repo-specific bans and style rules in the target repo's existing linter and formatter configs.
+Configure local rules in the target repo's existing linter and formatter.
 
 ## Suggested package.json scripts for the target repo
 
@@ -61,13 +57,11 @@ For non-Vite+ repos, replace `vp lint` and `vp run ...` with the repo's actual p
 
 ## What each tool is for
 
-- `fallow`: dead code, dependency hygiene, pnpm catalog and override hygiene, cycles, boundaries, duplication, complexity, health, and changed-code audit gates
-- `oxlint`: fast default lint engine, usually reached through `vp lint` in Vite+ repos
+- `fallow`: dead code, dependencies, catalogs, overrides, cycles, boundaries, duplication, complexity, health, and change audits
+- `oxlint`: lint rules; use `vp lint` in Vite+ repos
 
 ## Opinionated defaults
 
-- Dead code should be detected by static tooling, not by memory
-- Dependency direction should be enforced, not merely documented
-- Duplicate code should be reported before it normalizes
-- Complexity should become visible before it becomes architecture
-- Repo-specific lint and formatting doctrine should live in executable linter or formatter config, not in tribal knowledge
+- Detect dead code, duplication, and complexity with static tools.
+- Enforce dependency direction.
+- Keep lint and formatting rules in executable config.

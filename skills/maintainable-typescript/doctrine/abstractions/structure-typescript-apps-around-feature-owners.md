@@ -9,26 +9,13 @@ example:
 ---
 # Structure TypeScript Apps Around Feature Owners
 
-**Rule:** Keep framework entrypoints thin, put product behavior in predictable feature owners, and promote only true shared contracts or primitives into packages.
+**Rule:** Keep framework entrypoints thin. Put product behavior in feature modules and shared contracts or primitives in packages.
 
 See also: [Build Deep Modules, Not Shallow Abstractions](./build-deep-modules-not-shallow-abstractions.md), [Monorepo Package Boundaries](../packages/monorepo-package-boundaries.md), and [Naming Is Navigation](../foundations/naming-is-navigation.md).
 
 ## Why agents get this wrong
 
-Agents copy layer names without copying the convention that made those layers usable. They create `controllers/`, `services/`, `repositories/`, `utils/`, `hooks/`, `components/`, and `jobs/`, then spread one feature across every bucket. That looks familiar, but it is not navigable unless the framework makes the next file mechanically obvious.
-
-Modern TypeScript web apps usually have MVC-shaped forces:
-- interface code: routes, pages, controllers, RPC handlers
-- product code: workflows, policies, state transitions, permissions
-- persistence code: schema, queries, migrations
-- integration code: Stripe, GitHub, OpenAI, email, storage, webhooks
-- job code: cron, queues, scheduled workers
-- UI code: design-system primitives and feature-specific screens
-- contract code: schemas, API contracts, shared DTOs
-
-The mistake is letting any adapter bucket own product behavior. A route, cron handler, queue consumer, or Stripe client should not become the place where the business rule lives.
-
-AI makes this worse. The model can read a large feature file quickly once it finds it. It is much worse at discovering that a single workflow is split across seven arbitrary directories.
+Agents spread one feature across controllers, services, repositories, hooks, and jobs without a framework convention connecting them. Readers must search several directories to understand one workflow. Routes and vendor clients also accumulate product rules that belong to a feature.
 
 ## What to do instead
 
@@ -64,7 +51,7 @@ packages/
   config/                      # shared tooling presets, if needed
 ```
 
-If the framework combines web and backend in one app, keep the same ideas under one runtime:
+If the framework combines web and backend, use one runtime:
 
 ```text
 apps/web/src/
@@ -75,11 +62,11 @@ apps/web/src/
   test/
 ```
 
-Do not add a second app just to look architectural. Add a separate `apps/api` or `apps/worker` only when it is a separate deployable runtime, scaling unit, permission boundary, or build target.
+Add `apps/api` or `apps/worker` only for a separate deployable runtime, scaling unit, permission boundary, or build target.
 
 ## Route files are adapters
 
-Routes, pages, controllers, and RPC handlers parse transport state and call the owner. They should be small because the framework already makes them findable.
+Routes, pages, controllers, and RPC handlers parse transport state and call the feature owner.
 
 ```typescript
 // apps/api/src/routes/review-runs.ts
@@ -91,19 +78,17 @@ export async function postReviewRun(request: Request) {
 }
 ```
 
-The route does not own validation policy, permissions, persistence, events, or audit logging. Those live in the feature:
+Put validation policy, permissions, persistence, events, and audit logging in the feature:
 
 ```text
 apps/api/src/features/review-runs/create-review-run.server.ts
 ```
 
-Framework route trees are allowed to colocate route-only UI, loaders, and tiny helpers when the framework makes non-route files safe and obvious. Keep the route tree thin anyway. Once a behavior is reused by another route, move it to `features/`.
+Colocate route-only UI, loaders, and small helpers when the framework safely distinguishes them from routes. Move behavior to `features/` once another route uses it.
 
 ## Feature owners own product behavior
 
-A feature directory is the canonical home for one product area. It may contain UI, server workflows, policies, contracts, jobs, tests, and feature-local integration use.
-
-Prefer cohesive files over one-helper files:
+Keep each product area in one feature directory. Include its UI, workflows, policies, contracts, jobs, tests, and integration calls. Use cohesive files:
 
 ```text
 apps/api/src/features/review-runs/
@@ -121,13 +106,11 @@ apps/web/src/features/review-runs/
   review-run-status-badge.tsx
 ```
 
-Do not split `create-review-run.server.ts` into `validate-create-review-run.ts`, `authorize-create-review-run.ts`, `build-review-run.ts`, `save-review-run.ts`, `publish-review-run-created.ts`, and `audit-review-run-created.ts` unless those files have independent callers, independent tests, or a strong convention that makes the split findable.
-
-A 500-line feature workflow can be more maintainable than nine files with one caller each. Split when the new file becomes a deeper module, not when a section can be named.
+Keep validation, authorization, construction, persistence, events, and audit steps together unless they have independent callers, independent tests, or a predictable framework convention. Split when a new module hides complexity; line count alone is insufficient.
 
 ## Server primitives are cross-feature infrastructure
 
-Use `server/` for reusable backend primitives, not product logic:
+Use `server/` for reusable runtime infrastructure:
 
 ```text
 apps/api/src/server/
@@ -140,7 +123,7 @@ apps/api/src/server/
   email/send-email.ts
 ```
 
-This code should answer "how does this runtime work?" not "what does billing do?"
+Keep product workflows in their features.
 
 Bad:
 
@@ -158,7 +141,7 @@ apps/api/src/features/review-runs/create-review-run.server.ts
 
 ## Jobs and cron are entrypoints
 
-Cron files, scheduled handlers, and queue consumers are adapters. Put them where the host requires, then delegate.
+Put cron handlers and queue consumers where the host requires. Delegate to feature workflows.
 
 ```typescript
 // apps/worker/src/scheduled.ts
@@ -177,7 +160,7 @@ apps/api/src/features/review-runs/expire-old-review-runs.job.ts
 apps/api/src/features/billing/sync-past-due-subscriptions.job.ts
 ```
 
-Do not put product policy in `cron.ts`, `scheduled.ts`, `queue-consumer.ts`, or `jobs/index.ts`. Those files should tell you what runs, not define what the product means.
+Keep entrypoints limited to scheduling and dispatch. Product policy belongs to the called feature.
 
 ## Integrations have two layers
 
@@ -197,19 +180,19 @@ apps/api/src/features/billing/handle-stripe-webhook.server.ts
 apps/api/src/features/repositories/import-github-repository.server.ts
 ```
 
-The integration package should know how to sign, retry, paginate, normalize vendor errors, and call the vendor API. It should not know what a trial, review run, team, tenant, or billing entitlement means. Product meaning belongs to the feature.
+Vendor clients own signing, retries, pagination, error normalization, and API calls. Features own product concepts such as trials, teams, and billing entitlements.
 
-If only one app uses the integration, keep the client app-local until a second real consumer appears:
+Keep a client local while only one app uses it:
 
 ```text
 apps/api/src/server/integrations/stripe-client.ts
 ```
 
-Promote to `packages/integrations` when reuse is real or the client is foundational enough to test and version like a library.
+Move it to `packages/integrations` for reuse or when it needs library-level testing and versioning.
 
 ## Packages are public boundaries
 
-Use packages for stable shared ownership:
+Give stable shared code a package owner:
 
 ```text
 packages/ui/
@@ -241,13 +224,13 @@ Package exports must be explicit:
 }
 ```
 
-Point each public path at the module that defines the component. Do not forward components through another module:
+Point each public path directly at the module that defines the component:
 
 ```typescript
 import { Button } from "@repo/ui/button";
 ```
 
-`packages/ui` owns reusable primitives and design-system components. It does not own product screens:
+Keep reusable primitives and design-system components in `packages/ui`, and product screens in features:
 
 ```text
 # Package-owned
@@ -260,13 +243,10 @@ apps/web/src/features/billing/billing-plan-card.tsx
 apps/web/src/features/review-runs/review-run-status-badge.tsx
 ```
 
-Product language stays with the feature.
 
-## Contracts are not shared internals
+## Share public contracts
 
-`packages/contracts` exists so runtimes agree on public shapes. It should contain schemas, branded scalars, API contracts, event payloads, and generated client types.
-
-It should not import app code. It should not import backend models. It should not contain feature workflows.
+Use `packages/contracts` for schemas, branded scalars, API contracts, event payloads, and generated client types shared across runtimes. Keep app code, backend models, and feature workflows out of it.
 
 Good:
 
@@ -282,11 +262,11 @@ packages/contracts/src/review-runs/create-review-run-service.ts
 packages/contracts/src/billing/sync-stripe-subscription.ts
 ```
 
-If a schema is only used inside one backend workflow, keep it in that feature until it becomes a real contract.
+Keep a schema in its feature until another runtime needs the contract.
 
 ## Tests follow the owner
 
-Put tests where the reader already is.
+Put tests beside their owner.
 
 Feature tests:
 
@@ -308,11 +288,11 @@ Cross-runtime browser tests can live in a top-level e2e area:
 e2e/review-runs/create-review-run.spec.ts
 ```
 
-Core policies should have focused unit tests. Workflows should usually have integration-style tests that use real internal wiring and fake only external systems.
+Unit-test policies. Test workflows through real internal wiring, faking only external systems.
 
 ## Naming rules
 
-Use suffixes to make runtime boundaries visible:
+Mark runtime boundaries with suffixes:
 
 - `.server.ts` for server-only modules
 - `.client.tsx` for browser-only modules
@@ -333,7 +313,7 @@ types/
 data/
 ```
 
-These names are acceptable only when nested under a strong owner and still specific:
+Use generic directory names only under a clear owner. Keep filenames specific:
 
 ```text
 features/review-runs/review-run-policy.ts
@@ -343,21 +323,17 @@ server/auth/session.ts
 
 ## When to split
 
-Split a file when the new file has at least one of these:
-- multiple real callers
-- a stable public contract
-- a separate deploy/runtime boundary
-- a separately testable domain policy
-- a framework convention that makes it mechanically findable
-- a dependency boundary worth enforcing
-- a lifecycle that is genuinely different from the caller
+Split when the new file has at least one of these:
 
-Do not split because:
-- the file crossed an arbitrary line count
-- a helper can be named
-- a class/service/repository pattern exists in another framework
-- a linter or agent suggested smaller files without explaining the owner
-- a workflow looks more "enterprise" when spread across directories
+- multiple callers
+- a stable public contract
+- a separate deployment or runtime
+- an independently testable domain policy
+- a predictable framework location
+- an enforceable dependency boundary
+- a lifecycle distinct from its caller
+
+A line count, helper name, borrowed pattern, or linter suggestion alone does not justify a split.
 
 ## Example
 

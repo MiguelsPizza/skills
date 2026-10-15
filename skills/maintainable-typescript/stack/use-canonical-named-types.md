@@ -9,26 +9,24 @@ example:
 ---
 # Use Canonical Named Types, Not Inline Object Shapes
 
-**Rule:** For domain concepts, do not write inline object parameter types. Import the canonical named type or infer it from the source of truth.
+**Rule:** Use canonical named or schema-inferred types for domain objects. Reserve inline object parameter types for small, local shapes.
 
 See also: [SSOT or Die](../doctrine/abstractions/ssot-or-die.md), [Comments and JSDoc Must Carry Information](./jsdoc-with-first-party-sources.md), and [Use Branded Scalar Types](./use-branded-scalar-types.md).
 
 ## Why agents get this wrong
 
-Agents work locally. They see a function signature that needs a shape and write `{ foo: string; bar: number }` inline because it's fast and type-checks immediately. They don't stop to ask whether that shape already exists, could be inferred, or carries domain meaning that deserves a name.
-
-This erases vocabulary from the codebase. The next reader sees fields, not a concept. If the canonical type had JSDoc, source links, or usage constraints, all of that is lost. Now the same shape exists twice and will drift.
+Inline object types duplicate domain definitions and lose their names, documentation, source links, and usage constraints.
 
 ## What to do instead
 
-Before writing an inline object type:
+Before writing an inline object parameter type:
 
-1. Look for an existing named type in the domain package/module
-2. If the shape comes from a schema, infer it from that schema
-3. If it's a real domain concept used in more than one place, give it a name and colocate it with that domain
-4. Use an inline object shape only when it is tiny, truly local, and has no meaning outside that one function
+1. Look for a named type in the owning domain module or package.
+2. Infer the type from its schema when one exists.
+3. Name shared domain concepts and colocate them with their owner.
+4. Keep a shape inline only when it is small, used by one function, and has no wider domain meaning.
 
-This is adjacent to the branded-scalar problem, not the same problem. Branded scalars protect non-interchangeable primitives. This file is about naming and source ownership for object shapes.
+Use the canonical type whenever a shape already exists, its name clarifies the code, or it carries documentation and source references.
 
 ## Example
 
@@ -71,12 +69,3 @@ export async function createInstallation(input: CreateInstallationInput) {
 ```
 
 Example implements: [Use Canonical Named Types, Not Inline Object Shapes](./use-canonical-named-types.md), [SSOT or Die](../doctrine/abstractions/ssot-or-die.md), [Use Branded Scalar Types](./use-branded-scalar-types.md).
-## The test
-
-If a function parameter is an inline object type, ask:
-
-- Does this shape already exist somewhere else?
-- Would a type name make the code easier to understand?
-- Am I throwing away JSDoc or source references by writing it inline?
-
-If the answer to any of those is yes, stop and use the canonical named type.

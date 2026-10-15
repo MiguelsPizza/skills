@@ -9,27 +9,28 @@ example:
 ---
 # Write for the Agent Era
 
-**Rule:** Optimize for review, deletion, and safe replacement under high churn. Code is cheap now. Structure is expensive.
+**Rule:** Organize code for review, deletion, and safe replacement under frequent change.
 
 See also: [Maintainability Equals Correctness](./maintainability-equals-correctness.md), [Your Pattern Will Be Copied](./your-pattern-will-be-copied.md), and [Delete Fake Layers](../deletion/delete-fake-layers.md).
 
 ## Why agents get this wrong
 
-Older clean-code instincts were formed when writing code was expensive. Agents invert that cost. They can generate huge amounts of code quickly, so the main risk is no longer underproduction. The risk is preserving stale structure, adding low-value layers, and making a long series of "safe" local edits that leave the module harder to understand than a rewrite would have.
+Repeated local edits can preserve stale structure and add layers until a module becomes harder to understand than a rewrite. Rapid code generation compounds the problem.
 
 ## What to do instead
 
-Preserve contracts, tests, and invariants. Do not preserve obsolete decomposition.
+Preserve contracts, tests, and invariants. Replace obsolete internal structure.
 
-When a file has churned enough that its names, control flow, or data model no longer match the real job, rewrite the internals in one pass. Small diffs are not a design goal. Truthful code is.
+When names, control flow, or data models no longer match the file's job, rewrite its internals in one pass.
 
 In agent-heavy repos, optimize for:
+
 - scanability under heavy change
-- fewer concepts and fewer files, not fewer lines
+- fewer concepts and files, even when that requires more lines
 - colocated code that must be understood together
 - deleting dead structure early
 - rewriting churned modules behind stable contracts
-- patterns you would want copied 100 times
+- patterns worth repeating
 
 ## Example
 
@@ -40,6 +41,3 @@ Good: keep the exported contract and tests, rewrite the file so the current work
 ```
 
 Example implements: [Write for the Agent Era](./write-for-the-agent-era.md), [Maintainability Equals Correctness](./maintainability-equals-correctness.md), [Your Pattern Will Be Copied](./your-pattern-will-be-copied.md).
-## The test
-
-If writing the file fresh to today's requirements would produce a materially simpler design, stop preserving yesterday's structure.

@@ -15,18 +15,13 @@ See also: [No Premature Abstractions](./no-premature-abstractions.md) and [Your 
 
 ## Why agents get this wrong
 
-Agents rarely invent inheritance trees from scratch in a vacuum. They do, however, cargo-cult OO structure from Java and C# whenever the local code or prompt leans that way. Then they create `BaseService`, `AuthenticatedService`, `AuditedService`, and `CachedAuditedService`. Each subclass adds one concern, but the hierarchy couples unrelated behaviors and makes changes expensive.
+Agents copy inheritance patterns into `BaseService`, `AuthenticatedService`, and `CachedAuditedService`. The hierarchy couples capabilities that should vary independently.
 
 ## What to do instead
 
-Model each capability as a composable unit:
-- a function wrapper
-- a contained dependency
-- a narrow module with one responsibility
+Implement each capability as a function wrapper, contained dependency, or focused module. Assemble them in the feature that needs them so readers can see the behavior in one place.
 
-Then assemble the final behavior directly in the feature that needs it. Composition keeps the behavior graph explicit. Inheritance hides it in class ancestry and constructor chains.
-
-This rule is specifically about inheritance and subclass specialization. Whether a class is warranted at all is the separate question answered by [Use Classes for Object APIs, Not Service Buckets](./use-classes-for-object-apis-not-service-buckets.md).
+Decide whether the API needs a class using [Use Classes for Object APIs, Not Service Buckets](./use-classes-for-object-apis-not-service-buckets.md).
 
 ## Example
 
@@ -42,6 +37,3 @@ await saveRepository({
 ```
 
 Example implements: [Compose Behavior, Do Not Specialize Classes](./compose-behavior-do-not-specialize-classes.md), [No Premature Abstractions](./no-premature-abstractions.md), [Your Pattern Will Be Copied](../foundations/your-pattern-will-be-copied.md).
-## The rule of thumb
-
-If the important behavior lives in `extends`, your design is hiding composition from the reader.

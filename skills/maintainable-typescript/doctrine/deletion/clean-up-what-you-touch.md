@@ -9,19 +9,20 @@ example:
 ---
 # Clean Up What You Touch
 
-**Rule:** If you're editing a file and notice dead imports, unused variables, outdated comments, or inconsistent formatting — fix them. Not in a separate PR. Right now.
+**Rule:** Fix dead imports, unused variables, outdated comments, and inconsistent formatting in files you edit, in the same PR.
 
 See also: [Maintainability Equals Correctness](../foundations/maintainability-equals-correctness.md), [Delete Obsolete Code](./delete-obsolete-code.md), [No Re-exports](../packages/no-re-exports.md), and [Use Branded Scalar Types](../../stack/use-branded-scalar-types.md).
 
 ## Why agents get this wrong
 
-Agents scope their changes narrowly to minimize risk. They'll add a new function to a file and ignore the three unused imports at the top, the commented-out block from six months ago, and the variable that was renamed everywhere except line 47. They treat cleanup as a separate concern from feature work.
+Focusing only on the requested feature leaves unused imports, commented-out code, and stale names beside the change. Each later edit inherits that clutter.
 
 ## What to do instead
 
-Every file you touch should be better when you leave it than when you found it. This isn't a separate task — it's part of the change. If the linter would flag it, fix it. If a human reviewer would comment on it, fix it.
+Address lint findings and obvious review issues in the files you edit.
 
-This doesn't mean refactor entire files you're passing through. It means:
+Keep cleanup local; avoid unrelated file-wide refactors:
+
 - Remove unused imports you see
 - Delete commented-out code
 - Fix obvious typos in nearby comments

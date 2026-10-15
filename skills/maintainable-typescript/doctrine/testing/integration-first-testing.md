@@ -9,51 +9,31 @@ example:
 ---
 # Integration-First Testing
 
-**Rule:** Default to durable tests that attach regressions to real product boundaries after the slice seam is stable. Use contract tests for pure logic, browser tests for real browser behavior, backend integration tests for request-driven server behavior, and end-to-end tests for user journeys. Mock external boundaries only.
+**Rule:** Default to integration tests at real product boundaries, stabilize module ownership before building a large harness, and mock external boundaries only.
 
 See also: [No Type Casts](../boundaries/no-type-casts.md).
 
 ## Why agents get this wrong
 
-Agents write isolated unit tests with heavy mocking. They mock the database, mock sibling modules, mock internal services, then assert that the code called the mocks in the right order. These tests pass when the implementation is correct but tell you nothing about whether the system actually works. They break on every refactor because they test choreography, not behavior.
+Tests that mock databases, sibling modules, and internal services can miss integration failures. Call-order assertions also break when working code is refactored.
 
 ## What to do instead
 
-Stabilize the ownership boundary before investing in a large test harness. If you already suspect the file split, package placement, or route decomposition is wrong, fix that first. Do not lock in a bad shape by building helpers, fixtures, and mocks around it.
+Fix known problems with file splits, package placement, or route decomposition before building a large harness around them.
 
-Use this test stack:
+Choose tests by the behavior they cover:
 
 1. Contract tests for schemas, serialization, and pure transforms.
-2. Slice integration tests as the default for feature behavior.
-3. Browser tests for real browser APIs, route wiring, and DOM/runtime semantics.
-4. Request-driven backend integration tests for server routes, webhooks, and persisted state transitions.
-5. End-to-end tests for critical cross-package journeys.
+2. Feature integration tests for behavior across owned modules.
+3. Browser tests for browser APIs, route wiring, and DOM behavior.
+4. Request-driven backend integration tests for server routes, webhooks, auth flows, and persisted state transitions.
+5. End-to-end tests for critical journeys across the frontend and backend.
 
-Mock external boundaries only:
-- HTTP and network edges
-- time, randomness, and UUIDs when determinism matters
-- third-party SDK internals outside the subject under test
+Mock HTTP and network edges or third-party SDK internals only when they are outside the subject under test. Control time, randomness, and UUIDs when needed for determinism. Do not replace owned modules with mocks to assert call order.
 
-Do not mock sibling modules just to assert call order. If a test needs multiple internal mocks, the test shape is wrong.
+Parse invented fixtures through runtime schemas before sending or returning them. Assert rendered output, HTTP behavior, persisted state, projections, and published artifacts. Assert a helper call only when the call itself is the public contract.
 
-Choose the lane before writing the test:
-
-- browser lane when the regression depends on browser/runtime behavior
-- backend integration lane when the regression belongs to a server route, webhook, auth flow, or persisted state transition
-- e2e lane when the regression is a real user story across the frontend and backend
-
-When a test invents data, contract-gate that synthetic fixture with a runtime schema before sending or returning it.
-
-Assert on observable outcomes:
-
-- rendered output
-- HTTP behavior
-- persisted state
-- projections and published artifacts
-
-Avoid helper call-order assertions unless the call itself is the public contract.
-
-Use deterministic waits such as `vi.waitFor` or `expect.poll`. Clean up state in `beforeEach` and `afterEach`.
+Use deterministic waits such as `vi.waitFor` or `expect.poll`. Reset state in `beforeEach` and clean up in `afterEach`.
 
 ## Example
 

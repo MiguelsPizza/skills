@@ -9,23 +9,22 @@ example:
 ---
 # Maintainability Equals Correctness
 
-**Rule:** Code that works but is unmaintainable is not done. A PR that adds a feature but degrades the codebase is a net negative. Leave every file better than you found it.
+**Rule:** A change is complete when it works and remains maintainable. Leave every file better than you found it.
 
 See also: [Clean Up What You Touch](../deletion/clean-up-what-you-touch.md), [SSOT or Die](../abstractions/ssot-or-die.md), [Your Pattern Will Be Copied](./your-pattern-will-be-copied.md), and [Use Branded Scalar Types](../../stack/use-branded-scalar-types.md).
 
 ## Why agents get this wrong
 
-Agents optimize for the immediate task: "make the test pass," "add this endpoint," "fix this bug." They don't consider whether their solution makes the next change easier or harder. Working code that's tangled, duplicated, or poorly structured creates compounding maintenance costs that dwarf the time saved by shipping fast.
+Passing the current test or adding the requested endpoint can hide duplication, tangled control flow, and unclear ownership. Those costs carry into every later change.
 
 ## What to do instead
 
-Before marking a task as done, ask:
-- Could someone else (human or AI) understand this change from the diff alone?
-- Did I introduce any new concepts that duplicate existing ones?
-- Would I be comfortable if every future change in this area followed this pattern?
-- Did I leave any files worse than I found them?
+Before finishing:
 
-If the answer to any of these is no, the task isn't done.
+- Make the change understandable from the diff.
+- Reuse existing concepts instead of duplicating them.
+- Use patterns worth repeating in future changes.
+- Fix any file the change made worse.
 
 ## Example
 

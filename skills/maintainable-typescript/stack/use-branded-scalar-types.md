@@ -9,21 +9,17 @@ example:
 ---
 # Use Branded Scalar Types
 
-**Rule:** When two domain values share the same runtime primitive but are not interchangeable, define branded scalar types at the schema boundary and use those names everywhere else.
+**Rule:** Define branded scalar types at the schema boundary when domain values share a primitive but must not be interchangeable.
 
 See also: [SSOT or Die](../doctrine/abstractions/ssot-or-die.md), [Use Canonical Named Types, Not Inline Object Shapes](./use-canonical-named-types.md), and [Errors Are Schema, Not Strings](./errors-are-schema.md).
 
 ## Why agents get this wrong
 
-Agents see `string` and treat every domain identifier as interchangeable. That is how you end up with `reviewRunId: string`, `installationId: string`, and `userId: string` flowing through the same code with no signal about which value belongs where.
-
-That makes examples deceptively simple and production code easy to misuse. A repo that preaches canonical types should not teach anonymous primitives for domain-critical IDs.
+Plain `string` IDs allow unrelated values such as review run, installation, and user IDs to be passed to the same parameter.
 
 ## What to do instead
 
-Define branded scalar schemas once, infer their types, and import those named types everywhere else.
-
-For the house stack, brand at the Zod boundary so runtime validation and compile-time meaning come from the same source.
+Define branded Zod schemas once, infer their types, and import those named types throughout the app. Runtime validation and type meaning then share one source.
 
 ```typescript
 import { z } from 'zod';
@@ -35,7 +31,7 @@ export const installationIdSchema = z.string().min(1).brand<'InstallationId'>();
 export type InstallationId = z.infer<typeof installationIdSchema>;
 ```
 
-Use branded scalars for IDs, slugs, codes, and other primitives where accidental interchange would be a bug. Do not brand every number and string in the system just because you can.
+Brand IDs, slugs, codes, and other primitives when accidental interchange would be a bug. Leave ordinary numbers and strings unbranded.
 
 ## Example
 

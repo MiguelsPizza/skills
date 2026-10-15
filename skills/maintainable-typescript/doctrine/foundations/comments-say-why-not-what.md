@@ -15,21 +15,17 @@ See also: [Comments and JSDoc Must Carry Information](../../stack/jsdoc-with-fir
 
 ## Why agents get this wrong
 
-Agents narrate code by default. They add `// fetch the user` above a `fetchUser()` call, `// check if valid` above an `isValid` branch, and `// return the result` above a return statement. Every line gets a caption that restates what the code already says. The result is twice the reading with zero additional understanding, and the comments rot the moment the code changes.
+Comments such as `// fetch the user` above `fetchUser()` repeat the code and become stale when it changes.
 
 ## What to do instead
 
-Use this file as the short version:
-- code should explain what
-- comments should explain why, constraints, provenance, or guarantees
-- most line comments should be deleted
-- reusable public exports deserve better JSDoc than ordinary app code
+Let code explain its behavior. Keep comments that explain rationale, constraints, provenance, or guarantees; delete the rest. Document reusable public exports more thoroughly than ordinary app code.
 
-For the full rule, examples, and authoritative-source guidance, use the main doctrine file above.
+Follow the linked stack policy for JSDoc and authoritative sources.
 
 ## Example
 
-A single-line `//` is acceptable when explaining a non-obvious constraint that applies to one specific line and doesn't warrant a full JSDoc block. These should be rare.
+Use single-line `//` comments sparingly for non-obvious constraints that do not need a JSDoc block.
 
 ```typescript
 const repo = await octokit.repos.get({ owner, repo });

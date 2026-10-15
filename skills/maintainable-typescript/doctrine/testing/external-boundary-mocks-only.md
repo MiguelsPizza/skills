@@ -9,43 +9,19 @@ example:
 ---
 # Mock External Boundaries Only
 
-**Rule:** Durable tests may fake systems you do not control. They should not fake your own modules, routers, stores, or internal services.
+**Rule:** Durable tests may fake external systems, clocks, randomness, and UUIDs; they must exercise your own modules, routers, stores, and services.
 
 See also: [Integration-First Testing](./integration-first-testing.md).
 
 ## Why agents get this wrong
 
-Agents reach for whatever makes the test easiest to write:
-
-- `vi.mock`
-- spies on sibling modules
-- fake stores
-- fake routers
-- stubs for internal services
-
-That makes the test green, but it disconnects the regression from the real boundary where the product can break.
+Mocking sibling modules and internal services bypasses the code that can break. A passing test may prove only that the mocks agree.
 
 ## What to do instead
 
-Ask one question first:
+Mock third-party HTTP APIs and SDK calls. Control clocks, randomness, and UUIDs when tests need determinism.
 
-"Is the thing I want to fake outside the system I own?"
-
-Mocking is usually acceptable for:
-
-- third-party HTTP APIs
-- external SDK calls
-- clocks, randomness, and UUIDs when determinism matters
-
-Mocking is usually wrong for:
-
-- sibling app modules
-- route handlers
-- internal service classes
-- application stores
-- your own query or state management wiring
-
-If the test needs multiple internal mocks, the lane is probably wrong. Move outward until the subject under test is a real slice.
+Exercise real route handlers, internal services, application stores, and query or state wiring. If a test needs several internal mocks, expand its scope to cover those modules together.
 
 ## Example
 

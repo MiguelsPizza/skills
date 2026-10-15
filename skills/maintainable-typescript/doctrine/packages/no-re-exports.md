@@ -15,21 +15,17 @@ See also: [Delete Obsolete Code](../deletion/delete-obsolete-code.md), [No Backw
 
 ## Why agents get this wrong
 
-Agents like "clean" API surfaces, so they add forwarding modules and alias exports to avoid touching imports. That creates fake ownership. Now the symbol appears to live in two places, and every rename or move leaves another compatibility path behind.
-
-In internal monorepos this is usually needless. You control the code. Search for imports, update them, and delete the old path.
+Forwarding modules and alias exports make one declaration appear to have multiple owners. Keeping them after a move leaves stale import paths for later changes to copy.
 
 ## What to do instead
 
-Import from the owning module directly.
+Import directly from the owning module. If it splits, update imports to the new owners in the same change.
 
-That path is a statement of ownership, not a promise that the owner will never split. If the owning module becomes too broad, rename imports to the new leaves in the same change instead of adding forwarding exports.
-
-Importing a binding first does not make it locally owned. `import { User } ...; export { User }` and `export default importedUser` are forwarding exports too. Aliases do not change that ownership.
+Imported bindings remain owned by their source. `import { User } ...; export { User }` and `export default importedUser` are forwarding exports, including when aliased.
 
 Enforce this with `maintainable/no-re-exports` from the [Oxlint Maintainability skill](https://github.com/MiguelsPizza/skills/tree/main/skills/oxlint-maintainability).
 
-The filename does not decide ownership. An `index.ts` that defines its own schema, type, function, or constant is valid. Check what the file exports, not whether its filename looks like a barrel.
+An `index.ts` may export schemas, types, functions, or constants it defines.
 
 If a package needs stable public entrypoints, define them in `package.json` subpath exports and point each subpath at the real file:
 
@@ -48,9 +44,9 @@ When moving or renaming:
 2. Update every import
 3. Delete the old export path in the same PR
 
-If nothing imports an internal export anymore, remove the export. Unused exports are not harmless API surface; they are stale ownership claims.
+Remove internal exports that have no remaining importers.
 
-Published external packages may choose a deprecation path. Internal packages should not.
+Use deprecation paths only for published packages with external consumers.
 
 ## Example
 

@@ -9,21 +9,17 @@ example:
 ---
 # No Magic Values
 
-**Rule:** Every literal that controls behavior must be a named constant with provenance. Inline literals are for obvious identities only, not for business rules.
+**Rule:** Give every literal that controls behavior a named constant and provenance. Inline literals are allowed for obvious identities.
 
 See also: [Comments and JSDoc Must Carry Information](./jsdoc-with-first-party-sources.md) and [OTEL Conventions from Day One](./otel-conventions-from-day-one.md).
 
 ## Why agents get this wrong
 
-Agents inline values because it is locally convenient. `3`, `5000`, `'pending_review'`, and `'pull_request'` all type-check immediately, so they get buried in control flow instead of becoming visible decisions.
-
-Once one literal ships, future agents copy it without knowing whether it was deliberate, arbitrary, or already wrong.
+Values buried in control flow are easy to copy without knowing whether they were deliberate, arbitrary, or obsolete.
 
 ## What to do instead
 
-Extract behavioral literals into named constants, group them by domain, and document why the value exists.
-
-Use `as const satisfies` for constant objects so values stay literal and exhaustive.
+Group behavioral constants by domain and document why each value exists. Use `as const satisfies` for constant objects to preserve literal types and check completeness.
 
 ```typescript
 /** 3 balances reliability with GitHub's 10 second webhook timeout. */
@@ -42,7 +38,7 @@ await sleep(RETRY_BASE_DELAY_MS * 2 ** attempts);
 headers.set('X-GitHub-Event', GITHUB_EVENTS.PULL_REQUEST);
 ```
 
-If a value is arbitrary, say so explicitly in the JSDoc so the next contributor knows it can be tuned.
+Mark arbitrary values as `Arbitrary` in JSDoc and explain their rationale so contributors know they can be tuned.
 
 ## Example
 

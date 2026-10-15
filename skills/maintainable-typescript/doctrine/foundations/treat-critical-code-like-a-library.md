@@ -10,33 +10,27 @@ example:
 ---
 # Treat Critical Code Like a Library
 
-**Rule:** Foundational auth, security, protocol, and runtime-critical business logic should be extracted into dedicated packages or library-style modules with explicit exports, excellent documentation, and strong test coverage.
+**Rule:** Give foundational auth, security, protocol, and critical business logic dedicated packages or library-style modules with explicit exports, documentation, and thorough tests.
 
 See also: [Monorepo Package Boundaries](../packages/monorepo-package-boundaries.md), [Integration-First Testing](../testing/integration-first-testing.md), [Maintainability Equals Correctness](./maintainability-equals-correctness.md), and [Comments and JSDoc Must Carry Information](../../stack/jsdoc-with-first-party-sources.md).
 
 ## Why agents get this wrong
 
-Agents treat important code the same way they treat leaf feature code. They leave auth logic in an app directory, mix security checks into route handlers, skip package-level docs, and write only enough tests to satisfy the current change.
-
-That is exactly backwards for code where mistakes are expensive.
-
-Critical runtime code creates security vulnerabilities, corrupts access control, breaks protocol compatibility, and produces subtle production incidents. If that code is sloppy, under-tested, or hard to navigate, the whole repo inherits the risk.
+Security checks scattered through route handlers are hard to audit and test. In auth, protocol handling, and critical business logic, weak boundaries and missing edge cases can compromise access control or break production behavior.
 
 ## What to do instead
 
-Treat critical code as if you were publishing a small internal library.
-
-That means:
+Treat critical code as a maintained internal library:
 
 1. Give it a clear ownership boundary, usually a dedicated package when it is shared or foundational.
 2. Expose explicit public entrypoints through `package.json` subpath exports that point at owning modules.
-3. Write package-level docs and strong JSDoc on the exports that other code will depend on.
-4. Build the tests first or very close to first when the behavior is security-sensitive, protocol-sensitive, or expensive to get wrong.
-5. Bias toward exhaustive edge-case coverage, not just happy-path verification.
+3. Write package docs and JSDoc for public exports.
+4. Write tests before or alongside implementation for security, protocol handling, and other costly failure modes.
+5. Cover adversarial inputs and edge cases thoroughly.
 
-This is where test-driven development makes the most sense. For security, auth, token handling, protocol validation, and high-risk business rules, TDD is not ceremony. It is a way to lock the contract before implementation details sprawl.
+Use TDD to define the contract for security, auth, token handling, protocol validation, and high-risk business rules.
 
-Do not read this as "everything important must become a package." A one-off app feature can stay in the app. Foundational code with multiple consumers or system-wide risk should look like a maintained library, not incidental app glue.
+A one-off feature can stay in the app. Use library discipline for foundational code with multiple consumers or system-wide risk.
 
 ## Example
 
@@ -55,7 +49,7 @@ packages/auth/
   vitest.config.ts
 ```
 
-Public paths point directly at their owners. Forwarding TypeScript modules add no contract.
+Point public paths directly at their owners.
 
 ```json
 {
@@ -89,7 +83,3 @@ test('rejects tokens with the wrong issuer', async () => {
 ```
 
 Example implements: [Treat Critical Code Like a Library](./treat-critical-code-like-a-library.md), [Monorepo Package Boundaries](../packages/monorepo-package-boundaries.md), [Integration-First Testing](../testing/integration-first-testing.md), [Maintainability Equals Correctness](./maintainability-equals-correctness.md).
-
-## The test
-
-Ask: would a production failure in this code be a serious incident? Does it have multiple consumers or system-wide effect? Is the public surface explicit enough to use without spelunking internals? Does the test suite cover adversarial and edge-case behavior? If yes, treat it like a library. If not, the boundary and test discipline are too weak.
