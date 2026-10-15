@@ -9,11 +9,11 @@ example:
 ---
 # SSOT or Die
 
-**Rule:** Every piece of knowledge should have a single, authoritative source. Types, constants, schemas — define them once, derive everything else.
+**Rule:** Define each type, constant, schema, and business rule once. Derive or import every other use.
 
 ## Why agents get this wrong
 
-Agents work in context windows. They see the file they're editing, not the whole codebase. When they need a type, they define it locally. When they need a constant, they inline the value. When they need a schema, they write it by hand. This creates copies that drift from each other over time — the same concept defined slightly differently in three places.
+Agents define a local type, constant, or schema without finding its owner. The copies drift as each caller changes independently.
 
 ## What to do instead
 
@@ -36,7 +36,7 @@ Zod error schemas (defined once)
       → Client error types (auto-generated)
         → MCP tool error descriptions (auto-generated)
 ```
-Both chains follow the same principle: define once at the source, derive everything else. Never hand-write a type that can be inferred. Never duplicate a constant that can be imported. Never define a validation schema that can be derived from the database schema. That rule is broader than schemas: derive unions, option lists, route search contracts, and UI variants from canonical values or schemas instead of declaring parallel arrays, string unions, and lookup objects by hand.
+Infer types, import constants, and derive validation schemas from the database schema. Derive unions, option lists, route search contracts, and UI variants from their canonical values or schemas.
 
 ## Example
 

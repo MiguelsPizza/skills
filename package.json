@@ -1,0 +1,22 @@
+{
+  "name": "agent-opinions",
+  "private": true,
+  "type": "module",
+  "packageManager": "pnpm@10.33.0",
+  "scripts": {
+    "check": "pnpm test && pnpm typecheck && pnpm lint && pnpm check:docs",
+    "check:vite": "tsx --test tooling/oxlint/integration/vite.test.ts",
+    "test": "tsx --test tooling/oxlint/tests/*.test.ts",
+    "typecheck": "tsc --noEmit",
+    "lint": "oxlint -c skills/oxlint-maintainability/assets/maintainable/config.json skills/oxlint-maintainability/assets/maintainable tooling/oxlint skills/oxlint-maintainability/scripts",
+    "check:docs": "node scripts/audit-opinions.mjs && node scripts/verify-opinion-example-metadata.mjs && node scripts/find-duplicate-opinion-text.mjs && node scripts/check-markdown-links.mjs"
+  },
+  "devDependencies": {
+    "@oxlint/plugins": "1.88.0",
+    "@types/node": "26.2.0",
+    "oxlint": "1.88.0",
+    "oxlint-tsgolint": "7.0.2004",
+    "tsx": "4.23.15",
+    "typescript": "7.0.2"
+  }
+}

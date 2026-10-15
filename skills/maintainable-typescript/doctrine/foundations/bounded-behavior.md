@@ -9,15 +9,15 @@ example:
 ---
 # Bounded Behavior
 
-**Rule:** Every retry has a max. Every queue has a size limit. Every poll has a timeout. Every payload has a cap. Unbounded anything is a production incident waiting to happen.
+**Rule:** Set explicit limits on retries, queues, polling, payloads, and every recurring operation.
 
 ## Why agents get this wrong
 
-Agents write the happy path well. They add retry logic, polling loops, and queue processing. But they often forget to add bounds — `while (!done)` without a max iteration count, `setTimeout(poll, 1000)` without a deadline, retry logic without backoff or a ceiling.
+Retry logic without backoff or a ceiling can overload a failing service. Polling without a deadline can run forever. Unbounded queues and payloads can exhaust memory.
 
 ## What to do instead
 
-Every loop, retry, queue, buffer, or recurring operation needs an explicit bound. Define it as a constant. Make it visible.
+Define visible constants that bound every loop, retry, queue, buffer, or recurring operation.
 
 ## Checklist
 
@@ -26,7 +26,7 @@ Every loop, retry, queue, buffer, or recurring operation needs an explicit bound
 - [ ] Queues have a `MAX_QUEUE_SIZE` that applies backpressure
 - [ ] Payloads have a `MAX_PAYLOAD_BYTES` that rejects oversized input
 - [ ] Batch operations have a `BATCH_SIZE` limit
-- [ ] WebSocket reconnection has a max attempts before giving up
+- [ ] WebSocket reconnection has a maximum number of attempts
 - [ ] Recursive functions have a depth limit or are rewritten as iteration
 
 ## Example
@@ -87,6 +87,3 @@ export const getPullRequestDiff = publicProcedure
 ```
 
 Example implements: [Bounded Behavior](./bounded-behavior.md), [No Magic Values](../../stack/no-magic-values.md), [Log at Boundaries, Not Everywhere](../boundaries/log-at-boundaries-not-everywhere.md).
-## Why this is an agent-specific problem
-
-Humans intuit that a `while (true)` is dangerous. Agents don't have that instinct — they write structurally correct code that can run forever under the wrong conditions. Explicit bounds are the safeguard.

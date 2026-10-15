@@ -20,34 +20,26 @@ references:
 ---
 # Test React Apps in Real Browsers
 
-**Rule:** For browser-facing React apps, run durable frontend tests in Vitest Browser Mode with a Playwright provider, mount real route surfaces when product behavior matters, mock HTTP only at the browser boundary with MSW, and use Playwright for full user journeys. Do not default to jsdom.
+**Rule:** Test React frontend behavior in Vitest Browser Mode with Playwright, exercise real routes, and mock external HTTP with MSW. Use Playwright end-to-end tests for full user journeys.
 
 See also: [Integration-First Testing](../doctrine/testing/integration-first-testing.md), [Opinionated Stack](./stack-overview.md), and [Do Not Synchronize State with useEffect](./do-not-synchronize-state-with-useeffect.md).
 
 ## Why agents get this wrong
 
-Agents default to the cheapest test setup they know: jsdom, heavy internal mocks, and shallow assertions against implementation details.
-
-That is the wrong trade for this stack. Browser apps depend on real browser semantics: focus, events, navigation, service workers, fetch behavior, layout timing, and runtime integrations. jsdom smooths over those edges, so the tests stay green while the product breaks in the browser.
-
-Agents also confuse test lanes. They use Playwright for everything, which makes simple integration tests slow and expensive, or they use MSW everywhere, including end-to-end flows where the real backend boundary is the thing that should be under test.
+Simulated DOMs and internal mocks can miss browser failures in focus, events, navigation, service workers, fetch, and layout timing. Full end-to-end tests add unnecessary cost when a smaller browser integration test covers the behavior.
 
 ## What to do instead
 
-Use the right lane for the job:
+Choose the test scope by behavior:
 
 1. Contract tests for schemas, serialization, and pure transforms.
-2. Vitest Browser Mode for React components and hooks that depend on DOM or browser semantics.
-3. MSW in browser-mode tests to mock external HTTP boundaries without mocking your own modules.
-4. Playwright for cross-page, full-app, and critical user journeys.
+2. Vitest Browser Mode with a Playwright provider for components, hooks, and routes that depend on browser behavior. This is the frontend default; do not default to jsdom.
+3. MSW for HTTP boundaries outside the subject under test. Exercise your own modules and return fixtures validated by canonical shared schemas.
+4. Playwright end-to-end tests for full-page navigation, cross-page flows, and critical user journeys.
 
-For this stack, browser-mode tests are the default lane for frontend behavior. They should run in a real browser, not a simulated DOM.
+For application regressions, mount the real route tree or a subtree that preserves production behavior. Do not replace it with a probe component that bypasses the route wiring.
 
-MSW is a boundary mock, not a replacement backend. Use it when the network edge is outside the subject under test. If the backend integration itself is the subject, do not hide it behind MSW in the top E2E lane. Even in mocks, return canonical repo shapes: import shared schemas or types instead of inventing response objects inline.
-
-When the regression belongs to the application rather than a tiny leaf component, mount the real route tree or a production-faithful route subtree. Do not fall back to a hand-rolled probe component just because it is easier to render.
-
-Playwright is not a substitute for browser-mode tests. Use it for the flows that need a full page, real navigation, multiple routes, or end-to-end wiring.
+When an end-to-end test covers backend integration, use the real backend boundary instead of MSW.
 
 ## Example
 
@@ -73,7 +65,7 @@ export default defineConfig({
 Browser test harness
 
 ```typescript
-import { afterEach, expect, test as testBase, vi } from "vitest";
+import { afterEach, test as testBase } from "vitest";
 import { setupWorker } from "msw/browser";
 
 const worker = setupWorker();
@@ -102,18 +94,18 @@ afterEach(() => {
   document.body.innerHTML = "";
 });
 
-export { expect, vi };
 ```
 
 Browser integration test
 
 ```typescript
 import { page } from "@vitest/browser";
+import { expect } from "vitest";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { http, HttpResponse } from "msw";
 import { createRoot } from "react-dom/client";
 import { UsersPage } from "@/features/users/components/users-page";
-import { test, expect } from "@/test/browser-test";
+import { test } from "@/test/browser-test";
 import type { User } from "@repo/contracts/users/user";
 import { usersResponseSchema } from "@repo/contracts/users/list-users";
 
@@ -176,16 +168,3 @@ test("updates the URL and visible results when filtering users", async ({
 ```
 
 Example implements: [Test React Apps in Real Browsers](./test-react-apps-in-real-browsers.md), [Integration-First Testing](../doctrine/testing/integration-first-testing.md), [Opinionated Stack](./stack-overview.md).
-
-## The test
-
-Before writing a frontend test, ask:
-
-- Does this behavior depend on real browser semantics such as events, focus, navigation, service workers, or fetch behavior?
-- If so, why is this not a browser-mode test?
-- Am I mounting a real app surface, or a local probe that bypasses the thing I actually need confidence in?
-- Am I mocking an external boundary, or am I mocking my own implementation?
-- Does this flow need a full-page journey, or would a browser-mode test cover it faster?
-- Am I using MSW only where the network boundary is outside the subject under test?
-
-If the test is browser-facing and the answer still points to jsdom or internal mocks, the lane is probably wrong.

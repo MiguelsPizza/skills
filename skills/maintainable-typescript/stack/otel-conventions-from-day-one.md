@@ -9,19 +9,17 @@ example:
 ---
 # OTEL Conventions from Day One
 
-**Rule:** Use OpenTelemetry semantic naming for structured logs from the start. You do not need the SDK yet, but you do need the naming discipline.
+**Rule:** Use OpenTelemetry semantic attribute keys and consistent event names for structured logs from the start; the SDK can come later.
 
 See also: [Log at Boundaries, Not Everywhere](../doctrine/boundaries/log-at-boundaries-not-everywhere.md) and [No Magic Values](./no-magic-values.md).
 
 ## Why agents get this wrong
 
-Agents invent local event names such as `webhook_received` or `api_call_failed`. Those names work until the repo adds tracing, dashboards, or log queries that expect semantic consistency. Then every log key becomes a migration project.
+Locally invented log keys require migration when tracing, dashboards, or shared queries need consistent names.
 
 ## What to do instead
 
-Use dotted `domain.action` event names and OTEL semantic attribute keys now, even if the transport is only JSON logs.
-
-Define the keys and event names as constants:
+Use dotted `domain.action` event names and OTEL semantic attribute keys, including when writing plain JSON logs. Define keys and event names as shared constants so logs and later spans use the same names.
 
 ```typescript
 export const OTEL_ATTRS = {
@@ -41,8 +39,6 @@ export const LOG_EVENTS = {
   INTERNAL_ERROR: 'error.internal',
 } as const satisfies Record<string, string>;
 ```
-
-This keeps naming consistent across logs now and spans later.
 
 ## Example
 

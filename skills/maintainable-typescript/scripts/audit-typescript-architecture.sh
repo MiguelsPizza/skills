@@ -9,8 +9,8 @@ TARGET_DIR="$(resolve_target_dir "${1:-.}")"
 echo "Running architecture audit against: $TARGET_DIR"
 
 if has_local_bin "$TARGET_DIR" fallow; then
-  run_or_skip "Fallow circular dependencies" run_local_bin "$TARGET_DIR" fallow --root "$TARGET_DIR" dead-code --circular-deps --quiet
-  run_or_skip "Fallow boundary violations" run_local_bin "$TARGET_DIR" fallow --root "$TARGET_DIR" dead-code --boundary-violations --quiet
+  run_or_skip "Fallow circular dependencies" run_local_bin "$TARGET_DIR" fallow --root "$TARGET_DIR" architecture --cycles --quiet
+  run_or_skip "Fallow boundary violations" run_local_bin "$TARGET_DIR" fallow --root "$TARGET_DIR" architecture --boundaries --quiet
 else
   print_section "Fallow architecture"
   echo "Skipped: install fallow in the target repo"
@@ -19,3 +19,4 @@ fi
 
 echo
 echo "Architecture audit finished."
+exit "$AUDIT_STATUS"

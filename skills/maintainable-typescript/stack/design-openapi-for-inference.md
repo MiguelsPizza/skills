@@ -9,24 +9,17 @@ example:
 ---
 # Design OpenAPI for Inference
 
-**Rule:** Treat the OpenAPI spec as an inferred artifact, not a hand-maintained source of truth. Design the API contract in executable code so oRPC can generate the spec, clients, and docs from the same definitions.
+**Rule:** Generate OpenAPI, clients, and docs from executable oRPC contracts.
 
 See also: [SSOT or Die](../doctrine/abstractions/ssot-or-die.md), [Errors Are Schema, Not Strings](./errors-are-schema.md), and [Use Canonical Named Types, Not Inline Object Shapes](./use-canonical-named-types.md).
 
 ## Why agents get this wrong
 
-Agents often treat OpenAPI as a documentation afterthought. They wire up handlers first, then patch in route metadata, hand-write response descriptions, or maintain a sidecar OpenAPI file because the generated spec is missing details.
-
-That creates two sources of truth:
-
-- the API layer describes what the server really does
-- the OpenAPI layer describes what the docs say it does
-
-Once those drift, the generated clients, docs, and runtime behavior stop agreeing. A stack that claims SSOT cannot accept one truth for code and another for the spec.
+Hand-maintained OpenAPI files and response descriptions drift from handlers. Generated clients then describe a different contract from the one the server implements.
 
 ## What to do instead
 
-Design the API around the inference chain:
+Keep the API contract in this inference chain:
 
 ```text
 Drizzle schema / canonical Zod schema
@@ -36,17 +29,15 @@ Drizzle schema / canonical Zod schema
   -> generated clients and reference docs
 ```
 
-This is why the stack uses oRPC. The contract surface is already the documentation surface:
+Use the oRPC contract builders:
 
-- `.input(...)` owns request validation and request schema
-- `.output(...)` owns response validation and response schema
-- `.errors(...)` owns structured error responses
-- `.route(...)` owns path, method, summary, description, tags, and operation ID
-- OpenAPI plugins and handlers turn that contract into the published spec
+- `.input(...)` for request validation and schema
+- `.output(...)` for response validation and schema
+- `.errors(...)` for structured error responses
+- `.route(...)` for path, method, summary, description, tags, and operation ID
+- OpenAPI plugins and handlers for publishing the spec
 
-Manual OpenAPI YAML, manual response shape prose, and sidecar error documentation should be rare. Use manual OpenAPI config only for top-level spec metadata or narrow extensions that the contract system cannot express.
-
-If you are about to document a response shape by hand, stop and ask whether the contract should own it instead.
+Reserve manual OpenAPI configuration for top-level metadata and narrow extensions the contract cannot express. Put response shapes and error definitions in the contract so changes update the spec, clients, and docs automatically.
 
 ## Example
 
@@ -152,14 +143,3 @@ export const openApiPlugin = new OpenAPIReferencePlugin({
 ```
 
 Example implements: [Design OpenAPI for Inference](./design-openapi-for-inference.md), [SSOT or Die](../doctrine/abstractions/ssot-or-die.md), [Errors Are Schema, Not Strings](./errors-are-schema.md).
-
-## The test
-
-Ask:
-
-- If I change a field in the contract, does the OpenAPI spec update automatically?
-- If I add an error case, do the docs and clients learn it from `.errors(...)`?
-- If I rename or re-describe an endpoint, does that happen in `.route(...)` instead of a sidecar spec file?
-- Am I maintaining any manual OpenAPI description for data the contract could already express?
-
-If the answer to those questions is no, the inference chain is broken.

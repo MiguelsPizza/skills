@@ -4,13 +4,13 @@ This repo publishes opinionated skills under `skills/`. Each opinion is a standa
 
 ## Goal
 
-Push back on default agent behaviors that degrade codebases over time. Agents optimize for "don't break anything right now" — these opinions optimize for "leave the codebase better than you found it." Maintainability is treated as equal priority to working code.
+Keep agent changes maintainable and correct. Both are required.
 
 ## Scope
 
-- **Respect each skill's domain.** `Maintainable TypeScript` assumes strict TypeScript, workspace packages, and modern tooling. `WebMCP Designer` assumes existing human-facing web apps that need agent-accessible instrumentation.
-- **Extremely opinionated.** These are not guidelines — they're rules. If you disagree, fork.
-- **Narrow and focused.** Each opinion covers exactly one behavior. No sprawling style guides.
+- Apply each skill within its domain. `Maintainable TypeScript` covers strict TypeScript, workspace packages, and modern tooling. `WebMCP Designer` covers agent interfaces for existing web apps.
+- Treat the opinions as rules.
+- Keep each opinion focused on one behavior.
 
 ## How to write/edit opinions
 
@@ -56,6 +56,12 @@ Rules:
 - `format` must be one of `code`, `text`, or `workflow`
 - `implements` must include the file slug itself plus at least two other opinion files
 - The `Example implements:` footer in the body must link to the exact same doctrine list
+
+## Prose
+
+State the current rule and the concrete problem it solves. Use common words, active verbs, and short paragraphs. Cut repeated explanations, rhetorical questions, and rebuttals of old decisions. Keep exceptions and technical details that change what the reader should do.
+
+Use [Write Good Docs](skills/write-good-docs/SKILL.md) for prose edits. Preserve commands, identifiers, examples, and source links unless the task changes their meaning.
 
 ## Placement rules
 

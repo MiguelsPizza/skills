@@ -9,29 +9,31 @@ example:
 ---
 # Log at Boundaries, Not Everywhere
 
-**Rule:** Log at system boundaries — incoming requests, outgoing responses, errors, and state transitions. Don't scatter `console.log` through business logic. Every log line should be structured, purposeful, and useful for debugging production issues. If you're paying per log line (Cloudflare Workers, Datadog, etc.), treat logging as a budget.
+**Rule:** Log requests, responses, errors, and operational state transitions at system boundaries. Use structured logs and budget their volume when paying per log line.
 
 See also: [Error Messages Are UX](./error-messages-are-ux.md), [No Defensive Catches](./no-defensive-catches.md), and [OTEL Conventions from Day One](../../stack/otel-conventions-from-day-one.md).
 
 ## Why agents get this wrong
 
-Agents add `console.log` the way humans add `print` when debugging — everywhere, temporarily, and then they forget to remove it. They also confuse logging with error handling: `catch (e) { console.error(e) }` feels like they "handled" the error when they actually just hid it.
+Agents leave temporary logs in business logic and catch errors only to print them. The extra output obscures useful events, and the catch hides the failure.
 
 ## What to do instead
 
 Log:
+
 - incoming requests and completed responses
 - errors that cross a system boundary
 - state transitions that matter operationally
 - external calls that are expensive, flaky, or rate-limited
 
 Do not log:
+
 - function entry and exit
 - values dumped for temporary debugging
 - success paths that happen on every request
 - the same fact at three different layers
 
-Every production log should be structured, queryable, and named consistently. Keep the placement rule here, and take naming conventions from the OTEL stack opinion instead of inventing a second standard.
+Use structured, queryable events with the names defined by [OTEL Conventions from Day One](../../stack/otel-conventions-from-day-one.md).
 
 ## Example
 

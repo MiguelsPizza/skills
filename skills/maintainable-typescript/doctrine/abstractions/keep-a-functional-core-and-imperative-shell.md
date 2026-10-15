@@ -9,21 +9,19 @@ example:
 ---
 # Keep a Functional Core and Imperative Shell
 
-**Rule:** Keep important decisions testable as value-in/value-out code. Do not bury business rules inside I/O, logging, retries, or persistence.
+**Rule:** Express business decisions as functions of values. Keep I/O, logging, retries, and persistence around those functions.
 
 See also: [Pass Values Across Boundaries](../boundaries/pass-values-across-boundaries.md) and [Design Around Composable Primitives](./design-around-composable-primitives.md).
 
 ## Why agents get this wrong
 
-Agents solve tasks locally. They load data, branch on business rules, write to the database, emit logs, and call external APIs all in one function because that is the shortest path to "working code." The result is logic you cannot test without half the application.
+Agents mix business decisions with database access, logs, and API calls. Testing one rule then requires fixtures and mocks for unrelated systems.
 
 ## What to do instead
 
-Keep decisions, transformations, validation, and policy separable from side effects. This does not require a `core/` folder, a `shell/` folder, or one file per step. In a deep module, the public workflow can stay top-to-bottom while the important decision remains a plain function over values.
+Keep decisions, transformations, validation, and policy independent of databases, queues, clocks, and SDK clients when their inputs can be values. Let the public workflow perform I/O and pass results to those functions.
 
-If a rule can be tested without a database, queue, clock, or SDK client, keep it independent of those things. If splitting it out creates more navigation than clarity, keep it in the same module and test through the module's public behavior.
-
-This rule is about side-effect placement, not architectural layering. It complements [Design Around Composable Primitives](./design-around-composable-primitives.md), which is about overall workflow shape.
+Keep the functions in the same module when that makes the workflow easier to follow. Test through the module's public behavior; separate folders or a file per step are optional.
 
 ## Example
 
@@ -40,6 +38,3 @@ await publishReviewRunUpdated(decision.nextState);
 ```
 
 Example implements: [Keep a Functional Core and Imperative Shell](./keep-a-functional-core-and-imperative-shell.md), [Pass Values Across Boundaries](../boundaries/pass-values-across-boundaries.md), [Design Around Composable Primitives](./design-around-composable-primitives.md).
-## The test
-
-If the important rule needs a database fixture just to assert a yes or no answer, I/O is swallowing the decision.

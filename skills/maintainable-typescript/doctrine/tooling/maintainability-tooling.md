@@ -1,6 +1,6 @@
 # Maintainability Tooling
 
-Use these tools when the task is not just "make it work", but "leave the TypeScript repo easier to change next week."
+Use these tools to find maintainability problems in TypeScript repos.
 
 ## When to run the bundled scripts
 
@@ -9,15 +9,15 @@ Use these tools when the task is not just "make it work", but "leave the TypeScr
 - `scripts/audit-typescript-architecture.sh` for Fallow circular imports and boundary violations
 - `scripts/audit-typescript-repo.sh` for a combined first pass, including Fallow health
 
-These scripts are bundled with this skill and target the project you are currently working in. Resolve them from the skill root before running them.
+Resolve bundled scripts from the skill root and run them against the current project.
+
+The scripts run installed tools from the target directory and skip missing tools. Every check runs even after a failure; the final status is the highest exit code. Read tool output to distinguish findings from execution errors. Oxlint skips `node_modules`; keep other generated-file ignores in the project config.
 
 If the target repo uses Vite+, prefer its `vp` workflow for linting, formatting, testing, and package operations. Do not install wrapped tools like Vitest, Oxfmt, Oxlint, or tsdown separately just to reach their binaries.
 
 ## Bundled templates
 
-This skill includes copyable templates under `assets/tooling-templates/` for:
-
-- `.fallowrc.json`
+Copyable Fallow config lives at `assets/tooling-templates/.fallowrc.json`.
 
 Run Fallow once before adding config. Copy `.fallowrc.json` only when the repo needs explicit severities, ignore patterns, boundary policy, thresholds, or committed baselines.
 
@@ -25,7 +25,7 @@ Run Fallow once before adding config. Copy `.fallowrc.json` only when the repo n
 
 ### Fallow
 
-Use `fallow` as the default codebase-intelligence pass for strict TypeScript repos.
+Run `fallow` by default when auditing strict TypeScript repos.
 
 Best for:
 
@@ -52,13 +52,15 @@ Use `--format json --quiet` when an agent or CI job will parse the output. Treat
 
 ### TypeScript, linting, and formatting
 
-Fallow is not a type checker, linter, or formatter. Keep the repo-native commands for those jobs:
+Use repo-native commands for type checking, linting, and formatting:
 
 - use `tsc --noEmit` or the repo's normal type-check command
 - use `vp lint`, not raw `oxlint`, in Vite+ repos
 - use `vp fmt`, not raw `oxfmt`, in Vite+ repos
 
 Put repo-specific local rules in the existing linter config before adding another scanner. Ban `as any`, `@ts-ignore`, deprecated imports, restricted paths, and migration-only APIs through ESLint, Oxlint, or the repo's current lint layer. Keep formatting in the formatter config, not in Fallow.
+
+Use the [Oxlint Maintainability skill](https://github.com/MiguelsPizza/skills/tree/main/skills/oxlint-maintainability) for this doctrine's runnable presets. Native rules enforce casts and compiler directives; custom rules enforce re-exports and internal module mocks. Transparent wrapper and shape checks produce review warnings. Keep graph analysis in Fallow and semantic boundary/schema decisions in review.
 
 ## Vite+ defaults
 
@@ -72,8 +74,7 @@ When the target repo is on Vite+:
 
 ## Interpretation rules
 
-- An audit finding is not automatically a delete.
-- Public APIs, generated files, framework conventions, and intentional compatibility surfaces need human judgment.
-- Prefer fixing the source of truth instead of silencing the tool.
-- Prefer narrow Fallow exceptions over broad ignore patterns.
+- Review audit findings before deleting code, especially public APIs, generated files, framework conventions, and intentional compatibility surfaces.
+- Fix the source of truth.
+- Keep Fallow exceptions narrow.
 - If the same category of lint or formatting issue appears repeatedly, add or tighten a linter or formatter rule instead of relying on memory.

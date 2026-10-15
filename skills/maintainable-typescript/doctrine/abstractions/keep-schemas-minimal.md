@@ -15,20 +15,13 @@ See also: [No Premature Abstractions](./no-premature-abstractions.md), [SSOT or 
 
 ## Why agents get this wrong
 
-Agents over-design schemas immediately. They add `status`, `metadata`, optional foreign keys, future-facing timestamps, and enum states because they assume a real app will need them later. That is speculative configuration at the data-model layer.
-
-This is worse than speculative code. Schema fields are sticky. Once persisted, they show up in queries, contracts, forms, seeds, migrations, and examples. The next agent sees them and assumes they matter.
+Agents add metadata, flags, relations, timestamps, and enum states for imagined future features. Those fields spread into queries, contracts, forms, and migrations, making removal expensive.
 
 ## What to do instead
 
-Start with the minimum shape that supports current behavior.
+Add only fields that current behavior reads or writes. Add future fields through later migrations when the requirement exists.
 
-- add only the columns or fields the current feature reads or writes
-- avoid speculative metadata blobs, flags, optional relations, and enum states
-- prefer a later additive migration over carrying unused structure now
-- treat every persisted field as long-term ownership cost
-
-This matters most for database tables, where removal is expensive. Apply the same discipline to shared contract schemas when the fields will spread across multiple packages or APIs.
+Apply this rule to database tables and shared contract schemas. Every persisted or shared field creates a lasting maintenance cost.
 
 ## Example
 
@@ -40,7 +33,7 @@ import { text } from 'drizzle-orm/sqlite-core';
 export const installationIdColumn = text('installation_id').notNull();
 ```
 
-Minimal first pass
+Good: fields used by the current feature
 
 ```typescript
 import { integer, sqliteTable, text } from 'drizzle-orm/sqlite-core';
@@ -53,7 +46,7 @@ export const reviewRuns = sqliteTable('review_runs', {
 });
 ```
 
-Not this
+Bad: speculative fields
 
 ```typescript
 import { integer, sqliteTable, text } from 'drizzle-orm/sqlite-core';
@@ -72,13 +65,3 @@ export const reviewRuns = sqliteTable('review_runs', {
 ```
 
 Example implements: [Keep Schemas Minimal](./keep-schemas-minimal.md), [No Premature Abstractions](./no-premature-abstractions.md), [SSOT or Die](./ssot-or-die.md).
-
-## The test
-
-For each new field, ask:
-
-- does current behavior read or write this?
-- is this driven by a real requirement or an imagined future?
-- will this field spread into contracts, queries, and UI code just because it exists?
-
-If the justification is "we will probably need it later," do not add it yet.

@@ -9,21 +9,23 @@ example:
 ---
 # No Re-exports
 
-**Rule:** Do not export a symbol from a file that does not own it. No forwarding exports, no alias exports, no compatibility re-exports.
+**Rule:** Export declarations owned by the current module. Do not forward imports through named, wildcard, namespace, type-only, or default exports.
 
 See also: [Delete Obsolete Code](../deletion/delete-obsolete-code.md), [No Backwards Compatibility Shims](../deletion/no-backwards-compat-shims.md), and [Monorepo Package Boundaries](./monorepo-package-boundaries.md).
 
 ## Why agents get this wrong
 
-Agents like "clean" API surfaces, so they add forwarding modules and alias exports to avoid touching imports. That creates fake ownership. Now the symbol appears to live in two places, and every rename or move leaves another compatibility path behind.
-
-In internal monorepos this is usually needless. You control the code. Search for imports, update them, and delete the old path.
+Forwarding modules and alias exports make one declaration appear to have multiple owners. Keeping them after a move leaves stale import paths for later changes to copy.
 
 ## What to do instead
 
-Import from the owning module directly.
+Import directly from the owning module. If it splits, update imports to the new owners in the same change.
 
-That path is a statement of ownership, not a promise that the owner will never split. If the owning module becomes too broad, rename imports to the new leaves in the same change instead of adding forwarding exports.
+Imported bindings remain owned by their source. `import { User } ...; export { User }` and `export default importedUser` are forwarding exports, including when aliased.
+
+Enforce this with `maintainable/no-re-exports` from the [Oxlint Maintainability skill](https://github.com/MiguelsPizza/skills/tree/main/skills/oxlint-maintainability).
+
+An `index.ts` may export schemas, types, functions, or constants it defines.
 
 If a package needs stable public entrypoints, define them in `package.json` subpath exports and point each subpath at the real file:
 
@@ -42,28 +44,50 @@ When moving or renaming:
 2. Update every import
 3. Delete the old export path in the same PR
 
-If nothing imports an internal export anymore, remove the export. Unused exports are not harmless API surface; they are stale ownership claims.
+Remove internal exports that have no remaining importers.
 
-Published external packages may choose a deprecation path. Internal packages should not.
+Use deprecation paths only for published packages with external consumers.
 
 ## Example
 
-Package manifest
+Bad: each export forwards a declaration owned by another module.
+
+```typescript
+export { userSchema } from './users/user';
+export type { User } from './users/user';
+export * from './users/user';
+export * as users from './users/user';
+
+import { userSchema as importedUserSchema } from './users/user';
+export { importedUserSchema as schema };
+export default importedUserSchema;
+```
+
+Good: the owner defines the schema and derives its type, even when named `index.ts`.
+
+```typescript
+// packages/contracts/src/users/index.ts
+import { z } from 'zod';
+
+export const userIdSchema = z.string().min(1).brand<'UserId'>();
+export type UserId = z.infer<typeof userIdSchema>;
+```
+
+Point the public path at that owner.
 
 ```json
 {
   "name": "@repo/contracts",
   "exports": {
-    "./users/user": "./src/users/user.ts"
+    "./users": "./src/users/index.ts"
   }
 }
 ```
 
-Feature module
+Consumers import from the declared public path.
 
 ```typescript
-import type { User } from '@repo/contracts/users/user';
-import { fetchUserById } from '@repo/db/users/fetch-user-by-id';
+import { userIdSchema, type UserId } from '@repo/contracts/users';
 ```
 
 Example implements: [No Re-exports](./no-re-exports.md), [Delete Obsolete Code](../deletion/delete-obsolete-code.md), [No Backwards Compatibility Shims](../deletion/no-backwards-compat-shims.md).

@@ -15,15 +15,14 @@ See also: [Resolve Uncertainty Into Contracts](../foundations/resolve-uncertaint
 
 ## Why agents get this wrong
 
-Agents are too respectful of existing shapes. They preserve old helper splits by adding `Input`, `Context`, `Params`, `State`, or `Result` types, then wrap those shapes in functions that only forward arguments. The code looks organized locally, but no new fact becomes true.
-
-That is fake structure. It deepens the call graph, blurs ownership, and gives future agents more useless patterns to copy.
+Extra `Input`, `Context`, `Params`, `State`, or `Result` types can preserve obsolete helper boundaries. Wrappers that only forward those values deepen the call graph without enforcing any policy.
 
 ## What to do instead
 
-Keep one canonical internal shape inside a subsystem unless another shape earns its keep.
+Keep one canonical internal shape per subsystem unless another shape serves a distinct purpose.
 
-Keep a layer only when it does at least one real job:
+Keep a layer only when it:
+
 - validates untrusted input
 - enforces a domain invariant
 - crosses a real subsystem or vendor boundary
@@ -31,9 +30,9 @@ Keep a layer only when it does at least one real job:
 - owns retry, auth, logging, cleanup, or error normalization
 - guarantees resource setup and teardown
 
-If the layer only renames fields, repackages the same values, forwards arguments, or preserves a helper boundary that no longer matters, delete it.
+Delete layers that only rename fields, repackage values, forward arguments, or preserve obsolete boundaries.
 
-If the change belongs in an existing owner, edit that owner directly. Do not add a sibling helper just to avoid touching the real decision point.
+Edit the existing owner when it owns the behavior being changed.
 
 ## Example
 
@@ -68,7 +67,3 @@ export async function syncRepository(input: {
 ```
 
 Example implements: [Delete Fake Layers](./delete-fake-layers.md), [Edit Real Owners](./edit-real-owners.md), [Build Deep Modules, Not Shallow Abstractions](../abstractions/build-deep-modules-not-shallow-abstractions.md).
-
-## The test
-
-Ask what becomes true after the layer runs. If the honest answer is "same data, different name" or "same call, different function," delete the layer.

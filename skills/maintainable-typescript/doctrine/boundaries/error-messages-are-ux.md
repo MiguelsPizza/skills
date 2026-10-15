@@ -9,34 +9,22 @@ example:
 ---
 # Error Messages Are UX
 
-**Rule:** Every error message has an audience. User-facing errors explain what happened and what to do next. Developer-facing errors include the technical cause. Never surface internal details to users. Never hide actionable context from developers.
+**Rule:** Tell users what happened and what to do next. Give developers the technical cause and debugging context. Keep internal details out of user responses.
 
 See also: [Log at Boundaries, Not Everywhere](./log-at-boundaries-not-everywhere.md) and [Errors Are Schema, Not Strings](../../stack/errors-are-schema.md).
 
 ## Why agents get this wrong
 
-Agents write one error message and use it everywhere. Either it's too technical — `SQLITE_CONSTRAINT_UNIQUE: installations.repo_id` — or too vague — `Something went wrong. Please try again.` Both are failures. The user gets a database column name they can't act on, or a non-answer that wastes their time.
-
-Agents also conflate the error response with the error log. They put the full stack trace in the HTTP response, or they put the generic message in the log. Neither consumer gets what they need.
+Agents reuse one message in responses and logs. Technical messages expose internals to users; generic messages leave developers without enough context to diagnose the failure.
 
 ## What to do instead
 
-Give every error two outputs:
+Give each error a response and a log:
 
-1. The response says what happened in domain language and what the user can do next.
-2. The log records the technical cause, request context, and enough identifiers to debug it.
+- The response explains what happened, why, and what the user can do next, using domain language.
+- The log records the failed operation or boundary, technical cause, request context, and relevant identifiers or inputs.
 
-For user-visible messages, answer:
-- What happened?
-- Why did it happen?
-- What should the user do next?
-
-For developer-visible logs, include:
-- the operation or boundary that failed
-- the technical error
-- the relevant identifiers or inputs
-
-Mask internal failures in production responses. Expose the real failure only in logs, and include a `requestId` so support can bridge the two.
+Mask internal failures in production responses. Include a `requestId` that connects the response to its log.
 
 ## Example
 

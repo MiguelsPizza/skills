@@ -15,30 +15,24 @@ See also: [Boundaries Validate, Internals Trust](./boundaries-validate-internals
 
 ## Why agents get this wrong
 
-Agents thread complex objects everywhere because it is locally convenient. They pass `ctx`, repositories, SDK clients, caches, and feature services through the call graph until every function depends on half the application. That makes code hard to test and harder to move.
+Agents pass `ctx`, repositories, SDK clients, and caches through the call graph. Each function inherits dependencies it does not need, making it harder to test or move.
 
 ## What to do instead
 
-At subsystem boundaries, pass data:
-- ids
-- validated input objects
-- result objects
-- tagged unions
-
-Keep behavior inside the owning module. Let the boundary expose a small contract and hide its internal machinery. If a caller only needs three fields, pass those three fields, not the entire application context.
+Pass IDs, validated inputs, results, or tagged unions across subsystem boundaries. Include only the fields the receiver needs. Keep dependencies and behavior inside the module that owns them.
 
 ## Example
 
 ```typescript
-export async function createRepositoryInstallation(input: {
-  installationId: InstallationId;
-  repositoryName: string;
-}): Promise<RepositoryInstallation> {
-  return await saveRepositoryInstallation(input);
+import type { CreateRepositoryInstallationInput } from '@repo/contracts/installations/installation';
+import { saveRepositoryInstallation } from '@repo/db/installations/save-repository-installation';
+import { enqueueInitialInstallationSync } from '@/installations/enqueue-initial-installation-sync';
+
+export async function createRepositoryInstallation(input: CreateRepositoryInstallationInput) {
+  const installation = await saveRepositoryInstallation(input);
+  await enqueueInitialInstallationSync({ installationId: installation.installationId });
+  return installation;
 }
 ```
 
 Example implements: [Pass Values Across Boundaries](./pass-values-across-boundaries.md), [Boundaries Validate, Internals Trust](./boundaries-validate-internals-trust.md), [No Type Casts](./no-type-casts.md).
-## The test
-
-If moving a function requires dragging five service objects with it, the boundary is carrying behavior instead of data.

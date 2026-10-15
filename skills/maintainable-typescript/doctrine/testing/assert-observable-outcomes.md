@@ -9,36 +9,19 @@ example:
 ---
 # Assert Observable Outcomes
 
-**Rule:** Durable tests should assert outcomes visible at the product boundary: rendered output, HTTP behavior, persisted state, projections, and published artifacts.
+**Rule:** Durable tests must assert outcomes visible to users, callers, or downstream systems.
 
 See also: [Integration-First Testing](./integration-first-testing.md).
 
 ## Why agents get this wrong
 
-Agents often assert the easiest thing to inspect:
-
-- helper call counts
-- mock invocation order
-- which internal method ran first
-
-Those assertions lock tests to implementation choreography. The code can be behaviorally correct and still fail the test after a harmless refactor.
+Assertions on helper calls and internal sequencing break after harmless refactors, even when behavior is unchanged.
 
 ## What to do instead
 
-Ask what the user, caller, or downstream system can actually observe.
+Assert on rendered output, HTTP status and response shapes, persisted records, projections, and published artifacts.
 
-Prefer assertions on:
-
-- rendered text and visible UI states
-- HTTP status codes and response shapes
-- persisted records or projections
-- emitted artifacts or support outputs
-
-Avoid assertions on:
-
-- private helper calls
-- internal sequencing
-- exact generated prose unless the wording is itself the product contract
+Avoid private helper calls and internal sequencing. Assert exact generated prose only when the wording is part of the product contract.
 
 ## Example
 

@@ -9,27 +9,24 @@ example:
 ---
 # Use the Design System, Not Ad Hoc Tailwind
 
-**Rule:** In codebases with an existing design system, use its components, tokens, and patterns. Do not invent new Tailwind styling ad hoc. If the system is missing something, get human approval and add it to the design system first.
+**Rule:** Use existing design-system components, tokens, and patterns. Get human approval before adding a missing primitive to the system.
 
 See also: [Opinionated Stack](./stack-overview.md).
 
 ## Why agents get this wrong
 
-Agents optimize for the local diff. They see a UI task and reach for whatever Tailwind classes seem visually plausible: `bg-blue-600`, `rounded-xl`, `px-3`, `text-zinc-700`, custom shadows, arbitrary spacing. It works in the screenshot, but it bypasses the system the rest of the app depends on.
-
-This creates visual drift, duplicate primitives, and one-off exceptions that spread quickly. The next agent copies the local pattern instead of the canonical one. Soon the codebase has five button styles, three card paddings, and raw colors that don't map to any shared token.
+Local Tailwind choices create competing colors, spacing, and components that spread when later changes copy them.
 
 ## What to do instead
 
 Before writing UI code:
 
-1. Find the existing component for the job and use it
-2. Use semantic tokens, not raw colors or one-off values
-3. Follow the established spacing, radius, typography, and state patterns already in the app
-4. If the design system does not support the requirement, stop and ask for human approval
-5. After approval, add the missing token, variant, or component to the design system, then consume it from feature code
+1. Find and use the existing component or variant.
+2. Use semantic tokens and established spacing, radius, typography, and state patterns.
+3. If the system cannot meet the requirement, stop and ask for human approval.
+4. After approval, add the token, variant, or component to the design system, then use it in feature code.
 
-Do not add local design tokens inside a feature just to get a screen done. A missing system primitive is a design-system change, not a leaf-component shortcut.
+Keep new tokens and primitives in the design system. Do not introduce raw colors, one-off spacing, or custom styling in a feature to bypass it.
 
 ## Example
 
@@ -51,12 +48,3 @@ export function UpgradeBanner() {
 ```
 
 Example implements: [Use the Design System, Not Ad Hoc Tailwind](./use-the-design-system-not-ad-hoc-tailwind.md), [Opinionated Stack](./stack-overview.md), [Monorepo Package Boundaries](../doctrine/packages/monorepo-package-boundaries.md).
-## The test
-
-If a UI change introduces raw Tailwind colors, one-off spacing, new token names, or custom component styling in feature code, ask:
-
-- Does the design system already have a component or variant for this?
-- Am I bypassing semantic tokens with raw visual values?
-- Should this be added centrally before any feature uses it?
-
-If the answer to any of those is yes, do not ship the local styling.

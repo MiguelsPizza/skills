@@ -1,0 +1,19 @@
+{
+  "plugins": ["typescript", "react"],
+  "rules": {
+    "no-console": "warn",
+    "no-magic-numbers": ["warn", {
+      "ignore": [-1, 0, 1],
+      "ignoreArrayIndexes": true,
+      "ignoreNumericLiteralTypes": true,
+      "ignoreTypeIndexes": true
+    }],
+    "react/set-state-in-effect": "error",
+    "no-restricted-imports": ["error", {
+      "patterns": [{
+        "group": ["next", "next/*", "jsdom", "happy-dom"],
+        "message": "Use the house SPA stack and real browser tests. Keep exceptions in an explicit file override."
+      }]
+    }]
+  }
+}

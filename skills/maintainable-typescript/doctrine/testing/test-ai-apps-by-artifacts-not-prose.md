@@ -9,27 +9,19 @@ example:
 ---
 # Test AI Apps by Artifacts, Not Prose
 
-**Rule:** In durable tests for AI applications, assert milestones, status transitions, and published artifacts. Do not pin the test to exact generated prose unless the wording is itself the contract.
+**Rule:** Test AI applications through milestones, status transitions, and published artifacts; assert exact generated prose only when wording is the contract.
 
 See also: [Assert Observable Outcomes](./assert-observable-outcomes.md).
 
 ## Why agents get this wrong
 
-Agents overfit tests to model output because the text is easy to compare.
-
-That makes the test brittle even when the product behavior is correct. Small wording changes, model upgrades, or harmless prompt edits can break the test without breaking the user-facing outcome.
+Exact-text assertions fail after model upgrades or prompt edits that leave product behavior unchanged.
 
 ## What to do instead
 
-Assert on stable outcomes such as:
+Assert that runs start and complete, the UI shows the expected status, artifacts or support outputs exist, and errors are visible to the user.
 
-- run started
-- run completed
-- expected status visible in UI
-- artifact or support output exists
-- error state is surfaced correctly
-
-Only assert on exact text when the exact text is itself the feature.
+Compare exact text only when the wording itself is the feature.
 
 ## Example
 

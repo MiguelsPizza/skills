@@ -13,13 +13,14 @@ example:
 
 ## Why agents get this wrong
 
-Agents validate everywhere. They add Zod parsing inside utility functions, runtime type checks in private methods, and parameter validation in functions that are only called by other functions in the same module. This creates layers of redundant validation that slow execution and obscure the actual trust boundaries.
+Agents repeat boundary validation inside utilities and private methods. Redundant checks obscure where untrusted data enters and add unnecessary work.
 
 ## What to do instead
 
-Draw a clear line between trusted and untrusted zones:
+Validate untrusted data once when it enters the system:
 
-**Untrusted (validate here):**
+**Validate:**
+
 - HTTP request bodies
 - Webhook payloads
 - WebSocket messages
@@ -29,7 +30,8 @@ Draw a clear line between trusted and untrusted zones:
 - Tool call arguments (from agents/LLMs)
 - Environment variables at startup
 
-**Trusted (don't validate here):**
+**Trust:**
+
 - Function calls within the same module
 - Arguments passed between internal services
 - Data already parsed at the boundary

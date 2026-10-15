@@ -9,13 +9,13 @@ example:
 ---
 # Commit Messages Describe Why
 
-**Rule:** Commit messages explain why a change was made, not what changed. The diff shows what changed. One logical change per commit. Never commit generated files, build artifacts, or secrets.
+**Rule:** Explain why the change exists. Keep one logical change per commit. Never commit generated files, build artifacts, or secrets.
 
 See also: [Atomic Changes](./atomic-changes.md).
 
 ## Why agents get this wrong
 
-Agents write commit messages like `update user.ts` or `fix bug in handler` or `add new function`. These describe what happened at the file level — information that's already in the diff. They also batch unrelated changes into one commit ("update various files") making `git bisect` and `git revert` useless.
+Messages such as `update user.ts` repeat the diff without explaining the decision. Commits that bundle unrelated changes make bisecting and reverting harder.
 
 ## What to do instead
 
@@ -29,7 +29,7 @@ Use this format:
 
 Types: `feat`, `fix`, `refactor`, `test`, `docs`, `build`, `chore`
 
-Never batch unrelated work under one message. If one commit needs "and", it probably needs to be two commits.
+Separate unrelated changes into separate commits. A message that joins distinct purposes with "and" usually needs splitting.
 
 ## Example
 

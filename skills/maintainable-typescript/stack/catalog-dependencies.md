@@ -9,17 +9,17 @@ example:
 ---
 # Catalog Dependencies
 
-**Rule:** Pin dependency versions in `pnpm-workspace.yaml` catalog, not per-package. Never install what the toolchain provides. Never add a dependency for something trivial.
+**Rule:** Pin dependency versions in the `pnpm-workspace.yaml` catalog. Do not install tools the toolchain provides or add dependencies for trivial work.
 
 See also: [Opinionated Stack](./stack-overview.md) and [Use Mature Dependencies, Don't Roll Your Own](../doctrine/packages/use-mature-dependencies-dont-roll-your-own.md).
 
 ## Why agents get this wrong
 
-Agents run `pnpm add` in whatever package they're working on, installing the latest version without checking if it's already in the catalog. This creates version drift — the same dependency at different versions across packages. Agents also install tools that are already provided by the toolchain (e.g., installing `vitest` when Vite+ already includes it).
+Adding dependencies within individual packages creates version drift and can duplicate tools already included by Vite+.
 
 ## What to do instead
 
-Use the workspace catalog as the canonical version registry for shared dependencies. Package manifests should reference `catalog:` instead of pinning their own versions.
+Use `catalog:` in package manifests to reference the shared version registry.
 
 ```yaml
 # pnpm-workspace.yaml
@@ -47,11 +47,12 @@ catalog:
 }
 ```
 
-If using Vite+, these are already available — don't install them:
-- `vitest` (use `vp test`)
-- `oxlint` (use `vp lint`)
-- `oxfmt` (use `vp fmt`)
-- `tsdown` (use `vp pack`)
+Vite+ already provides these tools:
+
+- `vitest` through `vp test`
+- `oxlint` through `vp lint`
+- `oxfmt` through `vp fmt`
+- `tsdown` through `vp pack`
 
 Use `vp` for dependency operations:
 
@@ -60,7 +61,7 @@ vp add zod
 vp dlx drizzle-kit generate
 ```
 
-If you decide a dependency is justified, add it through the catalog workflow. This file owns version and toolchain policy, not the broader build-vs-buy doctrine.
+Add justified dependencies through the catalog workflow.
 
 ## Example
 

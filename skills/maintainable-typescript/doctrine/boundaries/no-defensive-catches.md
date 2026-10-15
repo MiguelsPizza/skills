@@ -10,23 +10,24 @@ example:
 ---
 # No Defensive Catches
 
-**Rule:** Don't wrap things in try/catch "just in case." Only catch errors you can meaningfully handle. Let unexpected errors propagate and crash loudly.
+**Rule:** Catch an error only to recover, translate it at a boundary, or clean up resources. Let unexpected errors propagate.
 
 See also: [Boundaries Validate, Internals Trust](./boundaries-validate-internals-trust.md), [Log at Boundaries, Not Everywhere](./log-at-boundaries-not-everywhere.md), and [Use Branded Scalar Types](../../stack/use-branded-scalar-types.md).
 
 ## Why agents get this wrong
 
-Agents add try/catch blocks around anything that *could* throw, even when there's no meaningful recovery. The catch block usually logs the error and returns a default value or silently continues. This feels robust but actually hides bugs — the system appears to work while silently producing wrong results.
+Agents catch anything that could throw, then log and return a default or continue. Callers treat the operation as successful even when it failed.
 
 ## What to do instead
 
-Ask: "What do I do in the catch block?" If the answer is "log it and return undefined" or "log it and continue" — don't catch it. Let it crash. A crash is a signal. A swallowed error is invisible corruption.
+Catch errors when you can:
 
-Catch errors when:
-- You can retry with a different strategy
-- You can return a meaningful fallback (not `undefined`)
-- You're at a system boundary and need to convert to an error response
-- You need to clean up resources (but prefer `finally` or `using` for this)
+- retry with a different strategy
+- return a meaningful fallback other than `undefined`
+- convert the error to a response at a system boundary
+- clean up resources; use `finally` or `using` when possible
+
+Let the error propagate if the catch would only log and continue or return `undefined`.
 
 ## Example
 

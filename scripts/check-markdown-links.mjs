@@ -11,6 +11,7 @@ async function listMarkdownFiles(dir) {
   const files = [];
 
   for (const entry of entries) {
+    if (entry.name === 'node_modules' || entry.name === '.git') continue;
     const fullPath = path.join(dir, entry.name);
     if (entry.isDirectory()) {
       files.push(...(await listMarkdownFiles(fullPath)));
