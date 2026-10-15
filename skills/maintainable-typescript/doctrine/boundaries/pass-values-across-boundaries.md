@@ -30,11 +30,14 @@ Keep behavior inside the owning module. Let the boundary expose a small contract
 ## Example
 
 ```typescript
-export async function createRepositoryInstallation(input: {
-  installationId: InstallationId;
-  repositoryName: string;
-}): Promise<RepositoryInstallation> {
-  return await saveRepositoryInstallation(input);
+import type { CreateRepositoryInstallationInput } from '@repo/contracts/installations/installation';
+import { saveRepositoryInstallation } from '@repo/db/installations/save-repository-installation';
+import { enqueueInitialInstallationSync } from '@/installations/enqueue-initial-installation-sync';
+
+export async function createRepositoryInstallation(input: CreateRepositoryInstallationInput) {
+  const installation = await saveRepositoryInstallation(input);
+  await enqueueInitialInstallationSync({ installationId: installation.installationId });
+  return installation;
 }
 ```
 

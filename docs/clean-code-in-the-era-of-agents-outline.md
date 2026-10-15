@@ -194,7 +194,6 @@ Main sources:
 - `skills/maintainable-typescript/doctrine/abstractions/split-by-stable-seam.md`
 - `skills/maintainable-typescript/doctrine/foundations/naming-is-navigation.md`
 - `skills/maintainable-typescript/doctrine/packages/monorepo-package-boundaries.md`
-- `skills/maintainable-typescript/doctrine/packages/no-barrel-exports.md`
 - `skills/maintainable-typescript/doctrine/packages/no-re-exports.md`
 
 What to say:
@@ -351,7 +350,6 @@ What to say:
 - `skills/maintainable-typescript/doctrine/abstractions/split-by-stable-seam.md`
 - `skills/maintainable-typescript/doctrine/foundations/naming-is-navigation.md`
 - `skills/maintainable-typescript/doctrine/packages/monorepo-package-boundaries.md`
-- `skills/maintainable-typescript/doctrine/packages/no-barrel-exports.md`
 - `skills/maintainable-typescript/doctrine/packages/no-re-exports.md`
 
 ### Best files for tests and safety rails

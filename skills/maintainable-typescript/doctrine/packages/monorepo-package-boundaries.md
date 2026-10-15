@@ -4,14 +4,14 @@ example:
   format: code
   implements:
     - monorepo-package-boundaries
-    - no-barrel-exports
+    - no-re-exports
     - no-premature-abstractions
 ---
 # Monorepo Package Boundaries
 
 **Rule:** Packages are single-purpose, well-tested units with explicit public entrypoints. Dependencies flow one direction: packages never import from apps, shared packages never import from domain packages. Keep runtime behavior in the app by default, but respect established package ownership for canonical contracts and schemas.
 
-See also: [No Premature Abstractions](../abstractions/no-premature-abstractions.md), [Build Deep Modules, Not Shallow Abstractions](../abstractions/build-deep-modules-not-shallow-abstractions.md), and [No Barrel Exports](./no-barrel-exports.md).
+See also: [No Premature Abstractions](../abstractions/no-premature-abstractions.md), [Build Deep Modules, Not Shallow Abstractions](../abstractions/build-deep-modules-not-shallow-abstractions.md), and [No Re-exports](./no-re-exports.md).
 
 ## Why agents get this wrong
 
@@ -80,4 +80,4 @@ Package exports
 }
 ```
 
-Example implements: [Monorepo Package Boundaries](./monorepo-package-boundaries.md), [No Barrel Exports](./no-barrel-exports.md), [No Premature Abstractions](../abstractions/no-premature-abstractions.md).
+Example implements: [Monorepo Package Boundaries](./monorepo-package-boundaries.md), [No Re-exports](./no-re-exports.md), [No Premature Abstractions](../abstractions/no-premature-abstractions.md).

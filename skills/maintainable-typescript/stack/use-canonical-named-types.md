@@ -61,9 +61,12 @@ Feature module
 ```typescript
 import type { CreateInstallationInput } from '@repo/contracts/installations/installation';
 import { saveInstallation } from '@repo/db/installations/save-installation';
+import { enqueueInitialInstallationSync } from '@/installations/enqueue-initial-installation-sync';
 
-export function createInstallation(input: CreateInstallationInput) {
-  return saveInstallation(input);
+export async function createInstallation(input: CreateInstallationInput) {
+  const installation = await saveInstallation(input);
+  await enqueueInitialInstallationSync({ installationId: installation.installationId });
+  return installation;
 }
 ```
 

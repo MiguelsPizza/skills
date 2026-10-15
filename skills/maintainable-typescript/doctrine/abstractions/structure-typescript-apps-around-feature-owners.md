@@ -241,7 +241,7 @@ Package exports must be explicit:
 }
 ```
 
-Do not make `@repo/ui` a root mega-barrel. The import path should tell the model what it is using:
+Point each public path at the module that defines the component. Do not forward components through another module:
 
 ```typescript
 import { Button } from "@repo/ui/button";

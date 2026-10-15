@@ -28,6 +28,8 @@ When you hit a type error:
 
 Do not cast globals to reach your own properties. Declare the global type properly.
 
+Do not replace a cast with explicit `any` or a non-null assertion such as `user!`. Establish the contract or narrow the value where the guarantee becomes true.
+
 ## Example
 
 ```typescript

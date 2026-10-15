@@ -2,6 +2,8 @@
 
 Portable tooling templates and scripts for maintainable TypeScript repos.
 
+[Oxlint Maintainability](../skills/oxlint-maintainability/SKILL.md) ships the executable lint companion. Its canonical source is bundled under the skill's `assets/maintainable/`; [tooling/oxlint/tests/](oxlint/tests) tests that exact source and copied consumer installations. Run `pnpm check` from the repository root.
+
 These are not for maintaining this repo's markdown opinions. They are for auditing real application and package repos.
 
 ## What to copy into a target repo root

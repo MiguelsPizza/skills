@@ -9,7 +9,7 @@ example:
 ---
 # No Re-exports
 
-**Rule:** Do not export a symbol from a file that does not own it. No forwarding exports, no alias exports, no compatibility re-exports.
+**Rule:** Export declarations owned by the current module. Do not forward imports through named, wildcard, namespace, type-only, or default exports.
 
 See also: [Delete Obsolete Code](../deletion/delete-obsolete-code.md), [No Backwards Compatibility Shims](../deletion/no-backwards-compat-shims.md), and [Monorepo Package Boundaries](./monorepo-package-boundaries.md).
 
@@ -24,6 +24,12 @@ In internal monorepos this is usually needless. You control the code. Search for
 Import from the owning module directly.
 
 That path is a statement of ownership, not a promise that the owner will never split. If the owning module becomes too broad, rename imports to the new leaves in the same change instead of adding forwarding exports.
+
+Importing a binding first does not make it locally owned. `import { User } ...; export { User }` and `export default importedUser` are forwarding exports too. Aliases do not change that ownership.
+
+Enforce this with `maintainable/no-re-exports` from the [Oxlint Maintainability skill](https://github.com/MiguelsPizza/skills/tree/main/skills/oxlint-maintainability).
+
+The filename does not decide ownership. An `index.ts` that defines its own schema, type, function, or constant is valid. Check what the file exports, not whether its filename looks like a barrel.
 
 If a package needs stable public entrypoints, define them in `package.json` subpath exports and point each subpath at the real file:
 
@@ -48,22 +54,44 @@ Published external packages may choose a deprecation path. Internal packages sho
 
 ## Example
 
-Package manifest
+Bad: each export forwards a declaration owned by another module.
+
+```typescript
+export { userSchema } from './users/user';
+export type { User } from './users/user';
+export * from './users/user';
+export * as users from './users/user';
+
+import { userSchema as importedUserSchema } from './users/user';
+export { importedUserSchema as schema };
+export default importedUserSchema;
+```
+
+Good: the owner defines the schema and derives its type, even when named `index.ts`.
+
+```typescript
+// packages/contracts/src/users/index.ts
+import { z } from 'zod';
+
+export const userIdSchema = z.string().min(1).brand<'UserId'>();
+export type UserId = z.infer<typeof userIdSchema>;
+```
+
+Point the public path at that owner.
 
 ```json
 {
   "name": "@repo/contracts",
   "exports": {
-    "./users/user": "./src/users/user.ts"
+    "./users": "./src/users/index.ts"
   }
 }
 ```
 
-Feature module
+Consumers import from the declared public path.
 
 ```typescript
-import type { User } from '@repo/contracts/users/user';
-import { fetchUserById } from '@repo/db/users/fetch-user-by-id';
+import { userIdSchema, type UserId } from '@repo/contracts/users';
 ```
 
 Example implements: [No Re-exports](./no-re-exports.md), [Delete Obsolete Code](../deletion/delete-obsolete-code.md), [No Backwards Compatibility Shims](../deletion/no-backwards-compat-shims.md).

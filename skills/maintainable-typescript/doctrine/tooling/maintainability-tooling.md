@@ -60,6 +60,8 @@ Fallow is not a type checker, linter, or formatter. Keep the repo-native command
 
 Put repo-specific local rules in the existing linter config before adding another scanner. Ban `as any`, `@ts-ignore`, deprecated imports, restricted paths, and migration-only APIs through ESLint, Oxlint, or the repo's current lint layer. Keep formatting in the formatter config, not in Fallow.
 
+Use the [Oxlint Maintainability skill](https://github.com/MiguelsPizza/skills/tree/main/skills/oxlint-maintainability) for this doctrine's runnable presets. Native rules enforce casts and compiler directives; custom rules enforce re-exports and internal module mocks. Transparent wrapper and shape checks produce review warnings. Keep graph analysis in Fallow and semantic boundary/schema decisions in review.
+
 ## Vite+ defaults
 
 When the target repo is on Vite+:

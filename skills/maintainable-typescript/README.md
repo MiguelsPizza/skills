@@ -76,6 +76,8 @@ If the target repo already uses Vite+, prefer its `vp` commands for linting, for
 
 Put repo-specific bans and style rules in the target repo's existing linter and formatter configs.
 
+Install [Oxlint Maintainability](../oxlint-maintainability/SKILL.md) for executable enforcement of the syntax-level doctrine. It combines native Oxlint rules with tested custom checks, including strict no-re-exports enforcement. Read its [coverage map](../oxlint-maintainability/references/coverage.md) before enabling optional stack/type-aware presets or acting on wrapper and shape warnings.
+
 If you are working from this repo instead of the standalone skill archive, the same files also exist in [tooling/templates/](../../tooling/templates) and are documented in [tooling/README.md](../../tooling/README.md).
 
 ## Opinions Index
@@ -140,7 +142,6 @@ If you are working from this repo instead of the standalone skill archive, the s
 
 **Monorepo & Package Structure**
 - [No Re-exports](./doctrine/packages/no-re-exports.md)
-- [No Barrel Exports](./doctrine/packages/no-barrel-exports.md)
 - [Monorepo Package Boundaries](./doctrine/packages/monorepo-package-boundaries.md)
 
 ### Opinionated Stack

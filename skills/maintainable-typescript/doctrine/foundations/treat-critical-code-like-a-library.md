@@ -29,7 +29,7 @@ Treat critical code as if you were publishing a small internal library.
 That means:
 
 1. Give it a clear ownership boundary, usually a dedicated package when it is shared or foundational.
-2. Expose explicit public entrypoints instead of letting consumers reach into internal files.
+2. Expose explicit public entrypoints through `package.json` subpath exports that point at owning modules.
 3. Write package-level docs and strong JSDoc on the exports that other code will depend on.
 4. Build the tests first or very close to first when the behavior is security-sensitive, protocol-sensitive, or expensive to get wrong.
 5. Bias toward exhaustive edge-case coverage, not just happy-path verification.
@@ -43,7 +43,6 @@ Do not read this as "everything important must become a package." A one-off app 
 ```text
 packages/auth/
   src/
-    index.ts
     oidc/jwt-verifier.ts
     oidc/discovery.ts
     security/ssrf.ts
@@ -56,28 +55,24 @@ packages/auth/
   vitest.config.ts
 ```
 
-Package entrypoint
+Public paths point directly at their owners. Forwarding TypeScript modules add no contract.
 
-```typescript
-/**
- * Internal authentication library.
- *
- * Owns token verification, issuer validation, JWKS handling, and auth error contracts.
- *
- * Consumers should import from this package entrypoint instead of reaching into internal files.
- */
-export { verifyUserIdentity, type VerifyUserIdentityOptions } from './oidc/jwt-verifier';
-export { validateDiscoveryUrl, validateJwksUri } from './security/ssrf';
-export {
-  AUTH_ERROR_CODE,
-  type AuthErrorCode,
-  createAuthErrorResponse,
-} from './errors';
+```json
+{
+  "name": "@repo/auth",
+  "exports": {
+    "./oidc/jwt-verifier": "./src/oidc/jwt-verifier.ts",
+    "./security/ssrf": "./src/security/ssrf.ts",
+    "./errors/codes": "./src/errors/codes.ts"
+  }
+}
 ```
 
 Contract-first test
 
 ```typescript
+import { verifyUserIdentity } from '@repo/auth/oidc/jwt-verifier';
+
 test('rejects tokens with the wrong issuer', async () => {
   const token = await createToken({ issuer: 'https://evil.example.com' });
 

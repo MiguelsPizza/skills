@@ -73,7 +73,7 @@ export default defineConfig({
 Browser test harness
 
 ```typescript
-import { afterEach, expect, test as testBase, vi } from "vitest";
+import { afterEach, test as testBase } from "vitest";
 import { setupWorker } from "msw/browser";
 
 const worker = setupWorker();
@@ -102,18 +102,18 @@ afterEach(() => {
   document.body.innerHTML = "";
 });
 
-export { expect, vi };
 ```
 
 Browser integration test
 
 ```typescript
 import { page } from "@vitest/browser";
+import { expect } from "vitest";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { http, HttpResponse } from "msw";
 import { createRoot } from "react-dom/client";
 import { UsersPage } from "@/features/users/components/users-page";
-import { test, expect } from "@/test/browser-test";
+import { test } from "@/test/browser-test";
 import type { User } from "@repo/contracts/users/user";
 import { usersResponseSchema } from "@repo/contracts/users/list-users";
 

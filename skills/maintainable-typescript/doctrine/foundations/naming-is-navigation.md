@@ -15,7 +15,7 @@ See also: [Build Deep Modules, Not Shallow Abstractions](../abstractions/build-d
 
 ## Why agents get this wrong
 
-Agents name things generically. They create `utils.ts`, `helpers.ts`, `types.ts`, `index.ts`, `data.ts`, `constants.ts` (singular, catch-all). They name variables `result`, `data`, `response`, `item`, `temp`. Every new session starts by reading file names to build a mental map — generic names force the agent to open every file to understand what it does.
+Agents name things generically. They create `utils.ts`, `helpers.ts`, `types.ts`, `data.ts`, `constants.ts` (singular, catch-all). They name variables `result`, `data`, `response`, `item`, `temp`. Every new session starts by reading file names to build a mental map — generic names force the agent to open every file to understand what it does.
 
 ## What to do instead
 
@@ -40,7 +40,7 @@ Import paths are part of navigation too:
 
 If a name would force a new contributor to open the file just to learn what it contains, the name is too vague.
 
-This is why barrel files are bad navigation. `index.ts` tells you nothing about ownership.
+A conventional filename such as `index.ts` is fine when its directory identifies the owner and the file defines its exports. [No Re-exports](../packages/no-re-exports.md) enforces declaration ownership regardless of filename.
 
 ## Example
 
